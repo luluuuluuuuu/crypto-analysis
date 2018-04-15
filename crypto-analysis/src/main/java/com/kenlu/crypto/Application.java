@@ -1,26 +1,13 @@
 package com.kenlu.crypto;
 
-import org.apache.spark.sql.Dataset;
-import org.apache.spark.sql.Row;
-import org.apache.spark.sql.SparkSession;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-import java.util.Properties;
-
+@SpringBootApplication
 public class Application {
 
-    private static final Logger logger = LoggerFactory.getLogger(Application.class);
+	public static void main(String[] args) {
+		SpringApplication.run(Application.class, args);
+	}
 
-    public static void main(String[] args) {
-        SparkSession spark = SparkSession
-                .builder()
-                .appName("Crypto Analysis")
-                .getOrCreate();
-        Properties connectionProperties = new Properties();
-        connectionProperties.put("user", "username");
-        connectionProperties.put("password", "password");
-        Dataset<Row> jdbcDF = spark.read()
-                .jdbc("jdbc:postgresql://localhost:5432/postgres", "schema.tablename", connectionProperties);
-    }
 }
