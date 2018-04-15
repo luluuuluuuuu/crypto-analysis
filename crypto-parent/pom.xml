@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.kenlu.crypto</groupId>
+    <artifactId>crypto-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Crypto :: Parent</name>
+
+    <properties>
+        <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>
+
+        <java-version>1.8</java-version>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <spark-version>2.3.0</spark-version>
+        <dl4j-version>1.0.0-alpha</dl4j-version>
+        <nd4j-version>1.0.0-alpha</nd4j-version>
+        <datavec-version>1.0.0-alpha</datavec-version>
+        <slf4j-version>1.7.25</slf4j-version>
+        <logback-version>1.2.3</logback-version>
+        <junit-version>4.12</junit-version>
+    </properties>
+
+    <modules>
+        <module>../crypto-analysis</module>
+    </modules>
+
+    <dependencyManagement>
+    </dependencyManagement>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit-version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+</project>
