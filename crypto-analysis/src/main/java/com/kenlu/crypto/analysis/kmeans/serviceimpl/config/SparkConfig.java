@@ -1,4 +1,4 @@
-package com.kenlu.crypto.config;
+package com.kenlu.crypto.analysis.kmeans.serviceimpl.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.sql.SparkSession;
@@ -15,11 +15,11 @@ public class SparkConfig {
     private String master;
     @Value("${spark.conf.appName}")
     private String appName;
-    protected SparkSession spark;
+    public SparkSession sparkSession;
 
     @PostConstruct
-    public void init() {
-        spark = SparkSession
+    private void init() {
+        sparkSession = SparkSession
                 .builder()
                 .master(master)
                 .appName(appName)
