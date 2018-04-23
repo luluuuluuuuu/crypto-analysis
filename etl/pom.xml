@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.kenlu.crypto</groupId>
-    <artifactId>crypto-extraction</artifactId>
+    <artifactId>crypto-etl</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
@@ -15,7 +15,7 @@
         <groupId>com.kenlu.crypto</groupId>
         <artifactId>crypto-parent</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../crypto-parent/</relativePath>
+        <relativePath>../parent/</relativePath>
     </parent>
 
     <properties>
