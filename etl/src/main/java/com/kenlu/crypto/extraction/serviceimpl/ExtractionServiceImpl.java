@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 @Component
 public class ExtractionServiceImpl implements CommandLineRunner {
 
-    private static final int NUM_OF_DAYS = 30;
+    private static final int NUM_OF_DAYS = 365;
     private static final long TO_TIMESTAMP = 1524355200;
 
     @Autowired
@@ -30,12 +30,12 @@ public class ExtractionServiceImpl implements CommandLineRunner {
     @PostConstruct
     private void init() {
         try {
-            boolean isTableExist =
-                    jdbcTemplate.getDataSource()
-                            .getConnection()
-                            .getMetaData()
-                            .getTables(null, null, "daily_changes", null)
-                            .next();
+            boolean isTableExist = jdbcTemplate
+                    .getDataSource()
+                    .getConnection()
+                    .getMetaData()
+                    .getTables(null, null, "daily_changes", null)
+                    .next();
             if (!isTableExist) {
                 createDailyChangeTable();
             }
@@ -51,7 +51,7 @@ public class ExtractionServiceImpl implements CommandLineRunner {
 
     private void insertDailyChangeQuery() {
         StringBuilder insertCols = new StringBuilder();
-        double[][] dataArray = new double[NUM_OF_DAYS][Crypto.values().length];
+        String[][] dataArray = new String[NUM_OF_DAYS][Crypto.values().length];
         List<String> dates = getDates();
 
         for (int i = 0; i < Crypto.values().length; i++) {
@@ -60,12 +60,12 @@ public class ExtractionServiceImpl implements CommandLineRunner {
                     .append("\"")
                     .append(", ");
 
-            double[] values = dataFactory
+            String[] values = dataFactory
                     .getDailyChanges(Crypto.values()[i].name(), NUM_OF_DAYS, TO_TIMESTAMP)
                     .values()
                     .stream()
-                    .mapToDouble(Double::doubleValue)
-                    .toArray();
+                    .map(x -> Double.toString(x))
+                    .toArray(String[]::new);
 
             for (int j = 0; j < values.length; j++) {
                 dataArray[j][i] = values[j];
@@ -83,7 +83,7 @@ public class ExtractionServiceImpl implements CommandLineRunner {
 
             for (int j = 0; j < dataArray[i].length; j++) {
                 insertValues.append("'")
-                        .append(Double.toString(dataArray[i][j]))
+                        .append(dataArray[i][j])
                         .append("'")
                         .append(", ");
             }
@@ -106,7 +106,7 @@ public class ExtractionServiceImpl implements CommandLineRunner {
                         createCols.append("\"")
                                 .append(crypto.name())
                                 .append("\" ")
-                                .append("character varying(30)")
+                                .append("numeric")
                                 .append(", ")
                 );
 
