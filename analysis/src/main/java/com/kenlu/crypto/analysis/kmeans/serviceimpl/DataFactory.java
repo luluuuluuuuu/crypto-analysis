@@ -41,7 +41,7 @@ public class DataFactory {
         JavaSparkContext javaSparkContext = new JavaSparkContext(sparkConfig.sparkSession.sparkContext());
         List<Vector> originalList = vectorJavaRDD.collect();
         List<Vector> transformedList;
-        double[][] transposeDoubles = new double[originalList.size()][originalList.get(0).size()];
+        double[][] transposeDoubles = new double[originalList.get(0).size()][originalList.size()];
 
         for (int i = 0; i < originalList.size(); i++) {
             double[] row = originalList.get(i).toArray();

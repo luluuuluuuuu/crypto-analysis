@@ -1,4 +1,4 @@
-package com.kenlu.crypto.extraction.domain;
+package com.kenlu.crypto.domain;
 
 public enum Crypto {
     BTC, ETH, XRP, BCH, EOS, LTC, ADA, XLM, IOT, NEO,
