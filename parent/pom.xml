@@ -32,8 +32,8 @@
     </properties>
 
     <modules>
-        <module>../crypto-analysis</module>
-        <module>../crypto-extraction</module>
+        <module>../analysis</module>
+        <module>../etl</module>
     </modules>
 
     <dependencyManagement>
