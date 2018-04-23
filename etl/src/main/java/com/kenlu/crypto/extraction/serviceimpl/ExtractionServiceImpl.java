@@ -45,11 +45,11 @@ public class ExtractionServiceImpl implements CommandLineRunner {
     }
 
     @Override
-    public void run(String... args) {
+    public void run(String... args) throws Exception {
         insertDailyChangeQuery();
     }
 
-    private void insertDailyChangeQuery() {
+    private void insertDailyChangeQuery() throws Exception {
         StringBuilder insertCols = new StringBuilder();
         String[][] dataArray = new String[NUM_OF_DAYS][Crypto.values().length];
         List<String> dates = getDates();
