@@ -1,6 +1,6 @@
 package com.kenlu.crypto.extraction.serviceimpl;
 
-import com.kenlu.crypto.extraction.domain.Crypto;
+import com.kenlu.crypto.domain.Crypto;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -19,7 +19,7 @@ import java.util.stream.Stream;
 @Component
 public class ExtractionServiceImpl implements CommandLineRunner {
 
-    private static final int NUM_OF_DAYS = 60;
+    private static final int NUM_OF_DAYS = 30;
     private static final long TO_TIMESTAMP = 1524355200;
 
     @Autowired
