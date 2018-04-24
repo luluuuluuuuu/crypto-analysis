@@ -1,4 +1,4 @@
-package com.kenlu.crypto.analysis.kmeans.serviceimpl.config;
+package com.kenlu.crypto.analysis.config;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.sql.SparkSession;

@@ -26,6 +26,11 @@
 
     <dependencies>
         <dependency>
+            <groupId>com.kenlu.crypto</groupId>
+            <artifactId>crypto-analysis</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-jdbc</artifactId>
         </dependency>

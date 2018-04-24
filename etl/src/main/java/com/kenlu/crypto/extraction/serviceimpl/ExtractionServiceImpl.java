@@ -1,6 +1,6 @@
 package com.kenlu.crypto.extraction.serviceimpl;
 
-import com.kenlu.crypto.domain.Crypto;
+import com.kenlu.crypto.analysis.domain.Crypto;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.joda.time.Days;

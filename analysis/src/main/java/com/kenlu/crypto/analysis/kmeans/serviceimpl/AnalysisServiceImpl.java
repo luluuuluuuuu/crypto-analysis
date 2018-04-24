@@ -1,6 +1,6 @@
 package com.kenlu.crypto.analysis.kmeans.serviceimpl;
 
-import com.kenlu.crypto.domain.Crypto;
+import com.kenlu.crypto.analysis.domain.Crypto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.mllib.clustering.KMeans;
