@@ -1,4 +1,4 @@
-package com.kenlu.crypto.analysis.kmeans.serviceimpl.config;
+package com.kenlu.crypto.analysis.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

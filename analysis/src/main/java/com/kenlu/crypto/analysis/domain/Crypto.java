@@ -1,4 +1,4 @@
-package com.kenlu.crypto.domain;
+package com.kenlu.crypto.analysis.domain;
 
 // NO data for ACT, LET, ECC, RVN
 public enum Crypto {

@@ -1,7 +1,7 @@
 package com.kenlu.crypto.analysis.kmeans.serviceimpl;
 
-import com.kenlu.crypto.analysis.kmeans.serviceimpl.config.DBConfig;
-import com.kenlu.crypto.analysis.kmeans.serviceimpl.config.SparkConfig;
+import com.kenlu.crypto.analysis.config.DBConfig;
+import com.kenlu.crypto.analysis.config.SparkConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
