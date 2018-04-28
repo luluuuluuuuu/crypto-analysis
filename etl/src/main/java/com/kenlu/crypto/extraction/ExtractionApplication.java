@@ -1,13 +1,13 @@
-package com.kenlu.crypto.analysis;
+package com.kenlu.crypto.extraction;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class Application {
+public class ExtractionApplication {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
+        SpringApplication.run(ExtractionApplication.class, args);
     }
 
 }
