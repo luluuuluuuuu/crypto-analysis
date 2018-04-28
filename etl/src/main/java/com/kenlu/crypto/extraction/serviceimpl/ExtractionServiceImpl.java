@@ -20,59 +20,51 @@ import java.util.stream.Stream;
 public class ExtractionServiceImpl implements CommandLineRunner {
 
     private static final int NUM_OF_DAYS = 365;
-    private static final long TO_TIMESTAMP = 1524355200;
+    private static final long TO_TIMESTAMP = System.currentTimeMillis() / 1000;
 
+    private Map<Crypto, List<String>> cryptoDataset;
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private DataFactory dataFactory;
 
     @PostConstruct
-    private void init() {
+    private void init() throws Exception {
         try {
-            boolean isTableExist = jdbcTemplate
-                    .getDataSource()
-                    .getConnection()
-                    .getMetaData()
-                    .getTables(null, null, "daily_changes", null)
-                    .next();
-            if (!isTableExist) {
-                createDailyChangeTable();
-            }
+            this.cryptoDataset = this.getCryptoPairs();
+            dropTable("daily_changes");
+            this.createDailyChangeTable();
+            dropTable("crypto");
+            this.createCryptoTable();
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
     @Override
-    public void run(String... args) throws Exception {
-        insertDailyChangeQuery();
+    public void run(String... args) {
+        this.insertDailyChangeQuery();
+        this.insertCryptoQuery();
     }
 
-    private void insertDailyChangeQuery() throws Exception {
-        StringBuilder insertCols = new StringBuilder();
-        String[][] dataArray = new String[NUM_OF_DAYS][Crypto.values().length];
-        List<String> dates = getDates();
-
-        for (int i = 0; i < Crypto.values().length; i++) {
-            insertCols.append("\"")
-                    .append(Crypto.values()[i])
-                    .append("\"")
-                    .append(", ");
-
-            String[] values = dataFactory
-                    .getDailyChanges(Crypto.values()[i].name(), NUM_OF_DAYS, TO_TIMESTAMP)
-                    .values()
-                    .stream()
-                    .map(x -> Double.toString(x))
-                    .toArray(String[]::new);
-
-            for (int j = 0; j < values.length; j++) {
-                dataArray[j][i] = values[j];
-            }
+    private void dropTable(String table) throws SQLException {
+        boolean isDailyChangeTableExist = this.jdbcTemplate
+                .getDataSource()
+                .getConnection()
+                .getMetaData()
+                .getTables(null, null, table, null)
+                .next();
+        if (isDailyChangeTableExist) {
+            String dropStatement = "DROP TABLE public.daily_changes";
+            this.jdbcTemplate.execute(dropStatement);
         }
+    }
 
-        for (int i = 0; i < dataArray.length; i++) {
+    private void insertDailyChangeQuery() {
+        List<String> dates = this.getDates();
+        List<List<String>> dataArray = new ArrayList<>(cryptoDataset.values());
+
+        for (int i = 0; i < dataArray.get(0).size(); i++) {
             StringBuilder insertValues = new StringBuilder();
             String insertSqlStatement;
 
@@ -81,44 +73,89 @@ public class ExtractionServiceImpl implements CommandLineRunner {
                     .append("'")
                     .append(", ");
 
-            for (int j = 0; j < dataArray[i].length; j++) {
+            for (int j = 0; j < dataArray.size(); j++) {
+                String value = dataArray.get(j).get(i);
+
                 insertValues.append("'")
-                        .append(dataArray[i][j])
+                        .append(value)
                         .append("'")
                         .append(", ");
             }
 
             insertSqlStatement = String.format(
-                    "INSERT INTO public.daily_changes (\"date\", %s) VALUES (%s)",
-                    insertCols.substring(0, insertCols.lastIndexOf(",")),
+                    "INSERT INTO public.daily_changes VALUES (%s)",
                     insertValues.substring(0, insertValues.lastIndexOf(","))
             );
-            jdbcTemplate.update(insertSqlStatement);
+
+            this.jdbcTemplate.update(insertSqlStatement);
         }
+    }
+
+    private void insertCryptoQuery() {
+        cryptoDataset.entrySet().stream()
+                .forEach(pairs -> {
+                        StringBuilder insertValue = new StringBuilder();
+                        String insertSqlStatement;
+
+                        insertValue.append("'")
+                                .append(pairs.getKey().name())
+                                .append("'");
+
+                        insertSqlStatement = String.format(
+                                "INSERT INTO public.crypto VALUES (%s)",
+                                insertValue
+                        );
+
+                        this.jdbcTemplate.update(insertSqlStatement);
+                    }
+                );
+    }
+
+    private Map<Crypto, List<String>> getCryptoPairs() throws Exception {
+        Map<Crypto, List<String>> cryptoPairs = new HashMap<>();
+
+        for (int i = 0; i < Crypto.values().length; i++) {
+            List<String> values = new ArrayList<>(this.dataFactory
+                    .getDailyChanges(Crypto.values()[i], NUM_OF_DAYS, TO_TIMESTAMP)
+                    .values());
+
+            if (isValid(values)) {
+                cryptoPairs.put(Crypto.values()[i], values);
+            }
+        }
+        return cryptoPairs;
     }
 
     private void createDailyChangeTable() {
         String createSqlStatement;
         StringBuilder createCols = new StringBuilder();
 
-        Arrays.stream(Crypto.values())
-                .forEach(crypto ->
-                        createCols.append("\"")
-                                .append(crypto.name())
-                                .append("\" ")
-                                .append("numeric")
-                                .append(", ")
+        cryptoDataset.entrySet().stream()
+                .forEach(pairs ->
+                    createCols.append("\"")
+                            .append(pairs.getKey().name())
+                            .append("\" ")
+                            .append("character varying(30) NOT NULL")
+                            .append(", ")
                 );
 
         createSqlStatement = String.format(
                 "CREATE TABLE public.daily_changes (" +
-                        "\"id\" serial NOT NULL, " +
-                        "\"date\" character varying(30), " +
+                        "\"date\" character varying(30) NOT NULL PRIMARY KEY, " +
                         "%s)",
                 createCols.substring(0, createCols.lastIndexOf(","))
         );
 
-        jdbcTemplate.execute(createSqlStatement);
+        this.jdbcTemplate.execute(createSqlStatement);
+    }
+
+    private void createCryptoTable() {
+        String createSqlStatement;
+
+        createSqlStatement =
+                "CREATE TABLE public.crypto (\"symbol\" character varying(30) NOT NULL PRIMARY KEY)";
+
+        this.jdbcTemplate.execute(createSqlStatement);
     }
 
     private List<String> getDates() {
@@ -129,10 +166,17 @@ public class ExtractionServiceImpl implements CommandLineRunner {
         Stream.iterate(startDate, date -> date.plusDays(1))
                 .limit(Days.daysBetween(startDate, endDate)
                         .getDays())
-                .forEach(date -> {
-                    dates.add(DateTimeFormat.forPattern("yyyy/MM/dd").print(date));
-                });
+                .forEach(date ->
+                    dates.add(DateTimeFormat.forPattern("yyyy/MM/dd").print(date))
+                );
         return dates;
+    }
+
+    private boolean isValid(List<String> list) {
+        return !list.contains("NaN")
+                && !list.contains(null)
+                && !list.contains("")
+                && !list.isEmpty();
     }
 
 }

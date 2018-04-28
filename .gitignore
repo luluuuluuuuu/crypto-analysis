@@ -19,6 +19,7 @@ out/
 .settings
 .tern-project
 .env-*
+spark-warehouse/
 
 pom.xml.tag
 pom.xml.releaseBackup

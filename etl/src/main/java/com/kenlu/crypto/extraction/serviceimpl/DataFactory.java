@@ -2,6 +2,7 @@ package com.kenlu.crypto.extraction.serviceimpl;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.kenlu.crypto.analysis.domain.Crypto;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
@@ -18,15 +19,15 @@ import java.util.concurrent.Future;
 @Component
 public class DataFactory {
 
-    protected Map<String, Double> getDailyChanges(String crypto, int numOfDays, long toTimestamp) throws Exception {
+    protected Map<String, String> getDailyChanges(Crypto crypto, int numOfDays, long toTimestamp) throws Exception {
         Map<String, Object> params = new HashMap<>();
         params.put("extraParams", "crypto-analysis");
         params.put("limit", Integer.toString(numOfDays - 1));
         params.put("toTs", Long.toString(toTimestamp));
 
-        Map<String, Double> row = new TreeMap<>();
+        Map<String, String> row = new TreeMap<>();
 
-        getHistoDay(crypto, "USD", params)
+        this.getHistoDay(crypto.name(), "USD", params)
                 .get("Data")
                 .getAsJsonArray()
                 .iterator()
@@ -36,7 +37,7 @@ public class DataFactory {
                     DateFormat f = new SimpleDateFormat("yyyy/MM/dd");
                     double open = jsonObject.get("open").getAsDouble();
                     double close = jsonObject.get("close").getAsDouble();
-                    double changes = close / open;
+                    String changes = Double.toString(close / open);
 
                     row.put(f.format(date), changes);
                 });
@@ -52,15 +53,15 @@ public class DataFactory {
                 .append("&tsym=")
                 .append(tsym);
         optionalParams.entrySet()
-                .forEach(x -> {
+                .forEach(x ->
                     stringBuilder.append("&")
                             .append(x.getKey())
                             .append("=")
-                            .append(x.getValue());
-                });
+                            .append(x.getValue())
+                );
         String requestUrl = stringBuilder.toString();
 
-        return getHttpResponse(requestUrl);
+        return this.getHttpResponse(requestUrl);
     }
 
     private JsonObject getHttpResponse(String requestUrl) throws InterruptedException, java.util.concurrent.ExecutionException, IOException {
