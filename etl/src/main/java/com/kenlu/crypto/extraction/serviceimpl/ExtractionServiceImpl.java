@@ -10,7 +10,6 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.PostConstruct;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Stream;
@@ -19,8 +18,8 @@ import java.util.stream.Stream;
 @Component
 public class ExtractionServiceImpl implements CommandLineRunner {
 
-    private static final int NUM_OF_DAYS = 365;
     private static final long TO_TIMESTAMP = System.currentTimeMillis() / 1000;
+    private static final long FROM_TIMESTAMP = 1483228800;
 
     private Map<Crypto, List<String>> cryptoDataset;
     @Autowired
@@ -28,35 +27,67 @@ public class ExtractionServiceImpl implements CommandLineRunner {
     @Autowired
     private DataFactory dataFactory;
 
-    @PostConstruct
-    private void init() throws Exception {
+    @Override
+    public void run(String... args) throws Exception {
+        initTables(args);
+        // TODO Insert daily data every day
+    }
+
+    private void initTables(String[] args) throws Exception {
+        log.info("Initiating tables...");
         try {
-            this.cryptoDataset = this.getCryptoPairs();
-            dropTable("daily_changes");
-            this.createDailyChangeTable();
-            dropTable("crypto");
-            this.createCryptoTable();
+            DateTime toDate = new DateTime(TO_TIMESTAMP * 1000);
+            DateTime fromDate = new DateTime(FROM_TIMESTAMP * 1000);
+            int initNumOfDays = Days.daysBetween(fromDate, toDate).getDays();
+            this.cryptoDataset = this.getCryptoPairs(initNumOfDays, TO_TIMESTAMP);
+            initTableIfNotExist("crypto");
+            initTableIfNotExist("daily_changes");
+            log.info("Tables are initiated");
         } catch (SQLException e) {
+            log.error("Tables cannot be initiated");
             e.printStackTrace();
         }
     }
 
-    @Override
-    public void run(String... args) {
-        this.insertDailyChangeQuery();
-        this.insertCryptoQuery();
-    }
-
     private void dropTable(String table) throws SQLException {
-        boolean isDailyChangeTableExist = this.jdbcTemplate
+        boolean isTableExist = this.jdbcTemplate
                 .getDataSource()
                 .getConnection()
                 .getMetaData()
                 .getTables(null, null, table, null)
                 .next();
-        if (isDailyChangeTableExist) {
+        if (isTableExist) {
             String dropStatement = "DROP TABLE public.daily_changes";
             this.jdbcTemplate.execute(dropStatement);
+        }
+    }
+
+    private void initTableIfNotExist(String table) throws SQLException {
+        log.info("Initiating table {}...", table);
+        boolean isTableExist = this.jdbcTemplate
+                .getDataSource()
+                .getConnection()
+                .getMetaData()
+                .getTables(null, null, table, null)
+                .next();
+        if (!isTableExist) {
+            switch (table) {
+                case "daily_changes" :
+                    createDailyChangeTable();
+                    insertDailyChangeQuery();
+                    break;
+                case "crypto" :
+                    createCryptoTable();
+                    insertCryptoQuery();
+                    break;
+                default:
+                    break;
+            }
+        }
+        if (table.equals("daily_changes") || table.equals("crypto")) {
+            log.info("Table {} is initiated", table);
+        } else {
+            log.error("Cannot initiate table {}", table);
         }
     }
 
@@ -64,6 +95,7 @@ public class ExtractionServiceImpl implements CommandLineRunner {
         List<String> dates = this.getDates();
         List<List<String>> dataArray = new ArrayList<>(cryptoDataset.values());
 
+        log.info("Inserting data for table daily_changes...");
         for (int i = 0; i < dataArray.get(0).size(); i++) {
             StringBuilder insertValues = new StringBuilder();
             String insertSqlStatement;
@@ -88,10 +120,12 @@ public class ExtractionServiceImpl implements CommandLineRunner {
             );
 
             this.jdbcTemplate.update(insertSqlStatement);
+            log.info("Daily changes on {} is inserted", dates.get(i));
         }
     }
 
     private void insertCryptoQuery() {
+        log.info("Inserting data for table crypto...");
         cryptoDataset.entrySet().stream()
                 .forEach(pairs -> {
                         StringBuilder insertValue = new StringBuilder();
@@ -107,16 +141,17 @@ public class ExtractionServiceImpl implements CommandLineRunner {
                         );
 
                         this.jdbcTemplate.update(insertSqlStatement);
+                        log.info("Crypto {} is inserted", pairs.getKey().name());
                     }
                 );
     }
 
-    private Map<Crypto, List<String>> getCryptoPairs() throws Exception {
+    private Map<Crypto, List<String>> getCryptoPairs(int numOfDays, long toTimestamp) throws Exception {
         Map<Crypto, List<String>> cryptoPairs = new HashMap<>();
 
         for (int i = 0; i < Crypto.values().length; i++) {
             List<String> values = new ArrayList<>(this.dataFactory
-                    .getDailyChanges(Crypto.values()[i], NUM_OF_DAYS, TO_TIMESTAMP)
+                    .getDailyChanges(Crypto.values()[i], numOfDays, toTimestamp)
                     .values());
 
             if (isValid(values)) {
@@ -129,6 +164,8 @@ public class ExtractionServiceImpl implements CommandLineRunner {
     private void createDailyChangeTable() {
         String createSqlStatement;
         StringBuilder createCols = new StringBuilder();
+
+        log.info("Creating table daily_changes...");
 
         cryptoDataset.entrySet().stream()
                 .forEach(pairs ->
@@ -147,20 +184,24 @@ public class ExtractionServiceImpl implements CommandLineRunner {
         );
 
         this.jdbcTemplate.execute(createSqlStatement);
+        log.info("Table daily_changes is created");
     }
 
     private void createCryptoTable() {
         String createSqlStatement;
 
+        log.info("Creating table crypto...");
+
         createSqlStatement =
                 "CREATE TABLE public.crypto (\"symbol\" character varying(30) NOT NULL PRIMARY KEY)";
 
         this.jdbcTemplate.execute(createSqlStatement);
+        log.info("Table crypto is created");
     }
 
     private List<String> getDates() {
         DateTime endDate = new DateTime(TO_TIMESTAMP * 1000);
-        DateTime startDate = endDate.minusDays(NUM_OF_DAYS);
+        DateTime startDate = new DateTime(FROM_TIMESTAMP * 1000);
         List<String> dates = new ArrayList<>();
 
         Stream.iterate(startDate, date -> date.plusDays(1))
