@@ -1,4 +1,4 @@
-package com.kenlu.crypto.analysis.kmeans.serviceimpl;
+package com.kenlu.crypto.analysis.kmeans;
 
 import com.kenlu.crypto.analysis.config.DBConfig;
 import com.kenlu.crypto.analysis.config.SparkConfig;
@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Component
-public class DataFactory {
+public class KmeansDataFormatter {
 
     @Autowired
     private DBConfig dbConfig;
