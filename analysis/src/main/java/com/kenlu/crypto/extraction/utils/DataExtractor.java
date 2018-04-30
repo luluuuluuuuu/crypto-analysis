@@ -1,4 +1,4 @@
-package com.kenlu.crypto.extraction;
+package com.kenlu.crypto.extraction.utils;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -20,7 +20,7 @@ import java.util.TreeMap;
 import java.util.concurrent.Future;
 
 @Component
-public class DataFactory {
+public class DataExtractor {
 
     public Map<String, String> getDailyChanges(Crypto crypto, int numOfDays, long toTimestamp) throws Exception {
         Map<String, Object> params = new HashMap<>();

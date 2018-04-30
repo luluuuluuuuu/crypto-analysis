@@ -1,7 +1,6 @@
 package com.kenlu.crypto.analysis.formatter;
 
 import com.kenlu.crypto.analysis.config.SparkConfig;
-import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.api.java.JavaSparkContext;
 import org.apache.spark.mllib.linalg.Vector;
