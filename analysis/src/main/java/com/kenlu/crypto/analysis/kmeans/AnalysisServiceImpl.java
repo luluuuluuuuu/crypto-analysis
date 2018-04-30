@@ -32,13 +32,13 @@ public class AnalysisServiceImpl implements CommandLineRunner {
     @Override
     public void run(String... args) {
 
-        List<String> cryptos = kmeansDataFormatter.getTableFromDB("public.crypto")
+        List<String> cryptos = kmeansDataFormatter.getTableFromDB("input.crypto")
                 .select("symbol")
                 .toJavaRDD()
                 .map(row -> row.get(0).toString())
                 .collect();
 
-        Dataset<Row> table = kmeansDataFormatter.getTableFromDB("public.daily_changes")
+        Dataset<Row> table = kmeansDataFormatter.getTableFromDB("input.daily_changes")
                 .selectExpr(cryptos.stream().toArray(String[]::new));
 
         JavaRDD<Vector> vectorJavaRDD = kmeansDataFormatter

@@ -109,7 +109,7 @@ public class ExtractionServiceImpl implements CommandLineRunner {
             }
 
             insertSqlStatement = String.format(
-                    "INSERT INTO public.daily_changes VALUES (%s)",
+                    "INSERT INTO input.daily_changes VALUES (%s)",
                     insertValues.substring(0, insertValues.lastIndexOf(","))
             );
 
@@ -130,7 +130,7 @@ public class ExtractionServiceImpl implements CommandLineRunner {
                                 .append("'");
 
                         insertSqlStatement = String.format(
-                                "INSERT INTO public.crypto VALUES (%s)",
+                                "INSERT INTO input.crypto VALUES (%s)",
                                 insertValue
                         );
 
@@ -171,7 +171,7 @@ public class ExtractionServiceImpl implements CommandLineRunner {
                 );
 
         createSqlStatement = String.format(
-                "CREATE TABLE public.daily_changes (" +
+                "CREATE TABLE input.daily_changes (" +
                         "\"date\" character varying(30) NOT NULL PRIMARY KEY, " +
                         "%s)",
                 createCols.substring(0, createCols.lastIndexOf(","))
@@ -187,7 +187,7 @@ public class ExtractionServiceImpl implements CommandLineRunner {
         log.info("Creating table crypto...");
 
         createSqlStatement =
-                "CREATE TABLE public.crypto (\"symbol\" character varying(30) NOT NULL PRIMARY KEY)";
+                "CREATE TABLE input.crypto (\"symbol\" character varying(30) NOT NULL PRIMARY KEY)";
 
         this.jdbcTemplate.execute(createSqlStatement);
         log.info("Table crypto is created");
