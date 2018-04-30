@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 public class AnalysisServiceImpl implements CommandLineRunner {
 
     @Autowired
-    KMeansClusteringAnalysis kMeansClusteringAnalysis;
+    private KMeansClusteringAnalysis kMeansClusteringAnalysis;
 
     @Override
     public void run(String... args) {

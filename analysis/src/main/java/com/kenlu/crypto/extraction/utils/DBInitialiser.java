@@ -26,7 +26,7 @@ public class DBInitialiser {
     @Autowired
     private QueryHandler queryHandler;
 
-    public void initTables() throws Exception {
+    public void run() throws Exception {
         log.info("Initiating tables...");
         try {
             initTableIfNotExist("crypto");
