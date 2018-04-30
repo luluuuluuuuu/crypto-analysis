@@ -1,8 +1,8 @@
-package com.kenlu.crypto.extraction.serviceimpl;
+package com.kenlu.crypto.extraction;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.kenlu.crypto.analysis.domain.Crypto;
+import com.kenlu.crypto.domain.Crypto;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
@@ -13,13 +13,16 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.Future;
 
 @Component
 public class DataFactory {
 
-    protected Map<String, String> getDailyChanges(Crypto crypto, int numOfDays, long toTimestamp) throws Exception {
+    public Map<String, String> getDailyChanges(Crypto crypto, int numOfDays, long toTimestamp) throws Exception {
         Map<String, Object> params = new HashMap<>();
         params.put("extraParams", "crypto-analysis");
         params.put("limit", Integer.toString(numOfDays - 1));

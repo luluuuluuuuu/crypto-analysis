@@ -33,7 +33,6 @@
 
     <modules>
         <module>../analysis</module>
-        <module>../etl</module>
     </modules>
 
     <dependencyManagement>
