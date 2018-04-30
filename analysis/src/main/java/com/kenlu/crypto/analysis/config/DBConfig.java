@@ -8,7 +8,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
 import java.util.Properties;
 
 @Slf4j
@@ -43,30 +42,10 @@ public class DBConfig {
         return connectionProperties;
     }
 
-    private Dataset<Row> getTableFromDB(String table) {
+    public Dataset<Row> getTableFromDB(String table) {
         log.info("Reading {}...", table);
         return sparkConfig.sparkSession.read()
                 .jdbc(url, table, getConnectionProperties());
-    }
-
-    public Dataset<Row> getCleanDailyChanges() {
-        List<String> cryptoList = getCryptos()
-                .toJavaRDD()
-                .map(row -> row.get(0).toString())
-                .collect();
-
-        return getTableFromDB("input.daily_changes")
-                .selectExpr(cryptoList.stream().toArray(String[]::new));
-    }
-
-    public Dataset<Row> getDates() {
-        return getTableFromDB("input.daily_changes")
-                .select("date");
-    }
-
-    public Dataset<Row> getCryptos() {
-        return getTableFromDB("input.crypto")
-                .select("symbol");
     }
 
 }

@@ -1,6 +1,6 @@
 package com.kenlu.crypto.analysis.unsupervised.kmeans;
 
-import com.kenlu.crypto.analysis.config.DBConfig;
+import com.kenlu.crypto.analysis.factory.DataFactory;
 import com.kenlu.crypto.analysis.formatter.DataFormatter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.api.java.JavaRDD;
@@ -22,14 +22,14 @@ public class KMeansClusteringAnalysis {
     private static final int NUM_ITERATIONS = 20;
 
     @Autowired
-    private DBConfig dbConfig;
+    private DataFactory dataFactory;
     @Autowired
     private DataFormatter dataFormatter;
 
     public void run() {
 
         JavaRDD<Vector> vectorJavaRDD = dataFormatter
-                .toVectorJavaRDD(dbConfig.getCleanDailyChanges());
+                .toVectorJavaRDD(dataFactory.getDailyChanges());
         JavaRDD<Vector> inputData = dataFormatter.transpose(vectorJavaRDD);
 
         // Create a RowMatrix from JavaRDD<Vector>.
