@@ -1,14 +1,22 @@
 package com.kenlu.crypto.analysis.config;
 
+import lombok.extern.slf4j.Slf4j;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
+import java.util.List;
 import java.util.Properties;
 
+@Slf4j
 @Component
 public class DBConfig {
 
+    @Autowired
+    private SparkConfig sparkConfig;
     @Value("${spring.datasource.url}")
     private String url;
     @Value("${spring.datasource.username}")
@@ -33,6 +41,32 @@ public class DBConfig {
 
     public Properties getConnectionProperties() {
         return connectionProperties;
+    }
+
+    private Dataset<Row> getTableFromDB(String table) {
+        log.info("Reading {}...", table);
+        return sparkConfig.sparkSession.read()
+                .jdbc(url, table, getConnectionProperties());
+    }
+
+    public Dataset<Row> getCleanDailyChanges() {
+        List<String> cryptoList = getCryptos()
+                .toJavaRDD()
+                .map(row -> row.get(0).toString())
+                .collect();
+
+        return getTableFromDB("input.daily_changes")
+                .selectExpr(cryptoList.stream().toArray(String[]::new));
+    }
+
+    public Dataset<Row> getDates() {
+        return getTableFromDB("input.daily_changes")
+                .select("date");
+    }
+
+    public Dataset<Row> getCryptos() {
+        return getTableFromDB("input.crypto")
+                .select("symbol");
     }
 
 }
