@@ -24,8 +24,8 @@ public class QueryHandler {
     @Autowired
     private DataExtractor dataExtractor;
 
-    public void insertDailyChangeQuery(Map<Crypto, List<String>> initCryptoDataset, List<String> dates) {
-        List<List<String>> dataArray = new ArrayList<>(initCryptoDataset.values());
+    public void insertDailyChangeQuery(Map<Crypto, List<String>> cryptoDataset, List<String> dates) {
+        List<List<String>> dataArray = new ArrayList<>(cryptoDataset.values());
 
         log.info("Inserting data for table daily_changes...");
         for (int i = 0; i < dataArray.get(0).size(); i++) {
@@ -56,9 +56,9 @@ public class QueryHandler {
         }
     }
 
-    public void insertCryptoQuery(Map<Crypto, List<String>> initCryptoDataset) {
+    public void insertCryptoQuery(Map<Crypto, List<String>> cryptoDataset) {
         log.info("Inserting data for table crypto...");
-        initCryptoDataset.entrySet().stream()
+        cryptoDataset.entrySet().stream()
                 .forEach(pairs -> {
                             StringBuilder insertValue = new StringBuilder();
                             String insertSqlStatement;
@@ -93,13 +93,13 @@ public class QueryHandler {
         return cryptoPairs;
     }
 
-    public void createDailyChangeTable(Map<Crypto, List<String>> initCryptoDataset) {
+    public void createDailyChangeTable(Map<Crypto, List<String>> cryptoDataset) {
         String createSqlStatement;
         StringBuilder createCols = new StringBuilder();
 
         log.info("Creating table daily_changes...");
 
-        initCryptoDataset.entrySet().stream()
+        cryptoDataset.entrySet().stream()
                 .forEach(pairs ->
                         createCols.append("\"")
                                 .append(pairs.getKey().name())

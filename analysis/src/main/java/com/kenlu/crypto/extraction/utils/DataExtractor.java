@@ -29,6 +29,7 @@ public class DataExtractor {
         params.put("toTs", Long.toString(toTimestamp));
 
         Map<String, String> row = new TreeMap<>();
+        DateFormat f = new SimpleDateFormat("yyyy/MM/dd");
 
         this.getHistoDay(crypto.name(), "USD", params)
                 .get("Data")
@@ -37,13 +38,19 @@ public class DataExtractor {
                 .forEachRemaining(x -> {
                     JsonObject jsonObject = x.getAsJsonObject();
                     Date date = new Date(jsonObject.get("time").getAsLong() * 1000);
-                    DateFormat f = new SimpleDateFormat("yyyy/MM/dd");
                     double open = jsonObject.get("open").getAsDouble();
                     double close = jsonObject.get("close").getAsDouble();
                     String changes = Double.toString(close / open);
 
                     row.put(f.format(date), changes);
                 });
+
+        if (numOfDays == 1) {
+            String today = f.format(new Date(toTimestamp));
+            String changes = row.get(today);
+            row.clear();
+            row.put(today, changes);
+        }
 
         return row;
     }
