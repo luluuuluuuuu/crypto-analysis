@@ -1,6 +1,5 @@
-package com.kenlu.crypto.analysis.kmeans;
+package com.kenlu.crypto.analysis.formatter;
 
-import com.kenlu.crypto.analysis.config.DBConfig;
 import com.kenlu.crypto.analysis.config.SparkConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.api.java.JavaRDD;
@@ -16,12 +15,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Component
-public class KmeansDataFormatter {
+public class DataFormatter {
 
-    @Autowired
-    private DBConfig dbConfig;
     @Autowired
     private SparkConfig sparkConfig;
 
@@ -56,12 +52,6 @@ public class KmeansDataFormatter {
                 .collect(Collectors.toList());
 
         return javaSparkContext.parallelize(transformedList);
-    }
-
-    public Dataset<Row> getTableFromDB(String table) {
-        log.info("Reading {}...", table);
-        return sparkConfig.sparkSession.read()
-                .jdbc(dbConfig.getUrl(), table, dbConfig.getConnectionProperties());
     }
 
 }
