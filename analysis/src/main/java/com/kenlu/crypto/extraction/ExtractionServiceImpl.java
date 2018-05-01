@@ -25,7 +25,6 @@ public class ExtractionServiceImpl implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         dbInitialiser.run();
-        // TODO Insert daily data every day
         update();
     }
 

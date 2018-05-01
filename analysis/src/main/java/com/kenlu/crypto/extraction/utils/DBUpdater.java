@@ -23,10 +23,11 @@ public class DBUpdater extends TimerTask {
 
     private void updateDailyChanges() {
         try {
-            DateFormat f = new SimpleDateFormat("yyyy/MM/dd");
+            DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
             String today = f.format(new Date(System.currentTimeMillis()));
+            List<String> cryptos = queryHandler.getCryptos();
             Map<Crypto, List<String>> cryptoDataset =
-                    queryHandler.getCryptoPairs(1, System.currentTimeMillis() / 1000);
+                    queryHandler.getCryptoPairs(cryptos, 1, System.currentTimeMillis() / 1000, true);
             if (cryptoDataset.size() == 0) {
                 log.error("No data available...");
                 return;
