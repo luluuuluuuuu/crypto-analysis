@@ -9,10 +9,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Slf4j
@@ -78,16 +80,16 @@ public class QueryHandler {
                 );
     }
 
-    public Map<Crypto, List<String>> getCryptoPairs(int numOfDays, long toTimestamp) throws Exception {
+    public Map<Crypto, List<String>> getCryptoPairs(List<String> cryptos, int numOfDays, long toTimestamp, boolean isUpdate) throws Exception {
         Map<Crypto, List<String>> cryptoPairs = new HashMap<>();
 
-        for (int i = 0; i < Crypto.values().length; i++) {
+        for (int i = 0; i < cryptos.size(); i++) {
             List<String> values = new ArrayList<>(this.dataExtractor
-                    .getDailyChanges(Crypto.values()[i], numOfDays, toTimestamp)
+                    .getDailyChanges(Crypto.valueOf(cryptos.get(i)), numOfDays, toTimestamp, isUpdate)
                     .values());
 
             if (isValidCrypto(values)) {
-                cryptoPairs.put(Crypto.values()[i], values);
+                cryptoPairs.put(Crypto.valueOf(cryptos.get(i)), values);
             }
         }
         return cryptoPairs;
@@ -110,7 +112,7 @@ public class QueryHandler {
 
         createSqlStatement = String.format(
                 "CREATE TABLE input.daily_changes (" +
-                        "\"date\" character varying(30) NOT NULL PRIMARY KEY, " +
+                        "\"date\" date NOT NULL PRIMARY KEY, " +
                         "%s)",
                 createCols.substring(0, createCols.lastIndexOf(","))
         );
@@ -131,6 +133,22 @@ public class QueryHandler {
         log.info("Table crypto is created");
     }
 
+    public Date getLastDateFromDailyChanges() {
+        String selectSqlStatement =
+                "SELECT date FROM input.daily_changes ORDER BY date DESC LIMIT 1";
+
+        return (Date) this.jdbcTemplate.queryForList(selectSqlStatement).get(0).get("date");
+    }
+
+    public List<String> getCryptos() {
+        String selectSqlStatement =
+                "SELECT symbol FROM input.crypto";
+
+        return this.jdbcTemplate.queryForList(selectSqlStatement).stream()
+                .map(x -> (String) x.get("symbol"))
+                .collect(Collectors.toList());
+    }
+
     public List<String> getDatesBetween(long fromTimestamp, long toTimestamp) {
         DateTime endDate = new DateTime(toTimestamp * 1000);
         DateTime startDate = new DateTime(fromTimestamp * 1000);
@@ -140,7 +158,7 @@ public class QueryHandler {
                 .limit(Days.daysBetween(startDate, endDate)
                         .getDays())
                 .forEach(date ->
-                        dates.add(DateTimeFormat.forPattern("yyyy/MM/dd").print(date))
+                        dates.add(DateTimeFormat.forPattern("yyyy-MM-dd").print(date))
                 );
         return dates;
     }

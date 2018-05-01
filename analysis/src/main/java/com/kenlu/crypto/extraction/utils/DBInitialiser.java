@@ -9,8 +9,10 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @Slf4j
 @Component
@@ -51,7 +53,8 @@ public class DBInitialiser {
             DateTime fromDate = new DateTime(FROM_TIMESTAMP * 1000);
             int initNumOfDays = Days.daysBetween(fromDate, toDate).getDays();
             if (this.initCryptoDataset == null) {
-                this.initCryptoDataset = queryHandler.getCryptoPairs(initNumOfDays, TO_TIMESTAMP);
+                List<String> cryptos = Arrays.stream(Crypto.values()).map(Crypto::name).collect(Collectors.toList());
+                this.initCryptoDataset = queryHandler.getCryptoPairs(cryptos, initNumOfDays, TO_TIMESTAMP, false);
             }
             switch (table) {
                 case "daily_changes" :
