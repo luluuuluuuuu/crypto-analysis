@@ -49,7 +49,7 @@ public class DBInitialiser {
                 .getTables(null, null, table, null)
                 .next();
         if (!isTableExist) {
-            DateTime toDate = new DateTime(TO_TIMESTAMP * 1000);
+            DateTime toDate = new DateTime(TO_TIMESTAMP * 1000).plusDays(1);
             DateTime fromDate = new DateTime(FROM_TIMESTAMP * 1000);
             int initNumOfDays = Days.daysBetween(fromDate, toDate).getDays();
             if (this.initCryptoDataset == null) {
@@ -58,7 +58,7 @@ public class DBInitialiser {
             }
             switch (table) {
                 case "daily_changes" :
-                    List<String> dates = queryHandler.getDatesBetween(FROM_TIMESTAMP, TO_TIMESTAMP);
+                    List<String> dates = queryHandler.getDatesBetween(FROM_TIMESTAMP, TO_TIMESTAMP + 86400000);
                     queryHandler.createDailyChangeTable(initCryptoDataset);
                     queryHandler.insertDailyChangeQuery(initCryptoDataset, dates);
                     break;
