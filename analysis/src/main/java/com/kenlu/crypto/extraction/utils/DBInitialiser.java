@@ -31,8 +31,8 @@ public class DBInitialiser {
     public void run() throws Exception {
         log.info("Initiating tables...");
         try {
-            initTableIfNotExist("crypto");
-            initTableIfNotExist("daily_changes");
+            initTableIfNotExist("input", "crypto");
+            initTableIfNotExist("input", "daily_changes");
             log.info("Tables are initiated");
         } catch (SQLException e) {
             log.error("Tables cannot be initiated");
@@ -40,14 +40,17 @@ public class DBInitialiser {
         }
     }
 
-    private void initTableIfNotExist(String table) throws Exception {
-        log.info("Initiating table {}...", table);
+    private void initTableIfNotExist(String schema, String table) throws Exception {
+        String theTable = schema + "." + table;
         boolean isTableExist = this.jdbcTemplate
                 .getDataSource()
                 .getConnection()
                 .getMetaData()
-                .getTables(null, null, table, null)
+                .getTables(null, schema, table, null)
                 .next();
+
+        log.info("Initiating table {}...", theTable);
+
         if (!isTableExist) {
             DateTime toDate = new DateTime(TO_TIMESTAMP * 1000).plusDays(1);
             DateTime fromDate = new DateTime(FROM_TIMESTAMP * 1000);
@@ -56,13 +59,13 @@ public class DBInitialiser {
                 List<String> cryptos = Arrays.stream(Crypto.values()).map(Crypto::name).collect(Collectors.toList());
                 this.initCryptoDataset = queryHandler.getCryptoPairs(cryptos, initNumOfDays, TO_TIMESTAMP, false);
             }
-            switch (table) {
-                case "daily_changes" :
+            switch (theTable) {
+                case "input.daily_changes" :
                     List<String> dates = queryHandler.getDatesBetween(FROM_TIMESTAMP, TO_TIMESTAMP + 86400000);
                     queryHandler.createDailyChangeTable(initCryptoDataset);
                     queryHandler.insertDailyChangeQuery(initCryptoDataset, dates);
                     break;
-                case "crypto" :
+                case "input.crypto" :
                     queryHandler.createCryptoTable();
                     queryHandler.insertCryptoQuery(initCryptoDataset);
                     break;
@@ -70,10 +73,10 @@ public class DBInitialiser {
                     break;
             }
         }
-        if (table.equals("daily_changes") || table.equals("crypto")) {
-            log.info("Table {} is initiated", table);
+        if (theTable.equals("input.daily_changes") || theTable.equals("input.crypto")) {
+            log.info("Table {} is initiated", theTable);
         } else {
-            log.error("Cannot initiate table {}", table);
+            log.error("Cannot initiate table {}", theTable);
         }
     }
 
