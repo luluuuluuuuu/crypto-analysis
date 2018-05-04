@@ -42,10 +42,15 @@ public class DBConfig {
         return connectionProperties;
     }
 
-    public Dataset<Row> getTableFromDB(String table) {
+    public Dataset<Row> readDatasetFromDB(String table) {
         log.info("Reading {}...", table);
         return sparkConfig.sparkSession.read()
                 .jdbc(url, table, getConnectionProperties());
+    }
+
+    public void writeTableToDB(Dataset<Row> df, String table) {
+        log.info("Writing {}...", table);
+        df.write().jdbc(url, table, getConnectionProperties());
     }
 
 }

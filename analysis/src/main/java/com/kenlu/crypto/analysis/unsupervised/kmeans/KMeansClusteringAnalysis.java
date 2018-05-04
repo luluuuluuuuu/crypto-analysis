@@ -9,10 +9,8 @@ import org.apache.spark.mllib.clustering.KMeansModel;
 import org.apache.spark.mllib.linalg.Matrix;
 import org.apache.spark.mllib.linalg.Vector;
 import org.apache.spark.mllib.linalg.distributed.RowMatrix;
-import org.apache.spark.mllib.stat.Statistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import scala.Int;
 
 @Slf4j
 @Component
@@ -28,9 +26,10 @@ public class KMeansClusteringAnalysis {
 
     public void run() {
 
-        JavaRDD<Vector> vectorJavaRDD = dataFormatter
-                .toVectorJavaRDD(dataFactory.getDailyChanges());
-        JavaRDD<Vector> inputData = dataFormatter.transpose(vectorJavaRDD);
+        JavaRDD<Vector> vectorJavaRDD =
+                dataFormatter.toVectorJavaRDD(dataFactory.getDailyChangeDataset());
+        JavaRDD<Vector> inputData =
+                dataFormatter.transpose(vectorJavaRDD);
 
         // Create a RowMatrix from JavaRDD<Vector>.
         RowMatrix mat = new RowMatrix(inputData.rdd());
@@ -39,7 +38,6 @@ public class KMeansClusteringAnalysis {
         // Principal components are stored in a local dense matrix.
         Matrix pc = mat.computePrincipalComponents(2);
         Matrix covariance = new RowMatrix(vectorJavaRDD.rdd()).computeCovariance();
-        Matrix correlation = Statistics.corr(vectorJavaRDD.rdd());
 
         // Project the rows to the linear space spanned by the top 4 principal components.
         RowMatrix projected = mat.multiply(pc);
@@ -51,7 +49,6 @@ public class KMeansClusteringAnalysis {
 //        System.out.println(covariance.numRows());
 //        System.out.println(covariance.numCols());
 //        System.out.println(covariance.toString(Int.MaxValue(), Int.MaxValue()));
-        System.out.println(correlation.toString(Int.MaxValue(), Int.MaxValue()));
 //        System.out.println(projected.numRows());
 
 //        inputData.cache();

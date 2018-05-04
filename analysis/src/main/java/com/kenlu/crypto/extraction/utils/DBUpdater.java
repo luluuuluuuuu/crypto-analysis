@@ -2,6 +2,7 @@ package com.kenlu.crypto.extraction.utils;
 
 import com.kenlu.crypto.domain.Crypto;
 import lombok.extern.slf4j.Slf4j;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -24,7 +25,10 @@ public class DBUpdater extends TimerTask {
     private void updateDailyChanges() {
         try {
             DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
-            String today = f.format(new Date(System.currentTimeMillis()));
+            long lastDate = queryHandler.getLastDateFromDailyChanges().getTime();
+            long startDate = new DateTime(lastDate).plusDays(1).getMillis() / 1000;
+            long today = System.currentTimeMillis();
+            long endDate = new DateTime(today).plusDays(1).getMillis() / 1000;
             List<String> cryptos = queryHandler.getCryptos();
             Map<Crypto, List<String>> cryptoDataset =
                     queryHandler.getCryptoPairs(cryptos, 1, System.currentTimeMillis() / 1000, true);
@@ -32,8 +36,7 @@ public class DBUpdater extends TimerTask {
                 log.error("No data available...");
                 return;
             }
-            List<String> dates = new ArrayList<>();
-            dates.add(today);
+            List<String> dates = queryHandler.getDatesBetween(startDate, endDate);
             queryHandler.insertDailyChangeQuery(cryptoDataset, dates);
         } catch (Exception e) {
             log.error("Unable to update table daily_changes...");

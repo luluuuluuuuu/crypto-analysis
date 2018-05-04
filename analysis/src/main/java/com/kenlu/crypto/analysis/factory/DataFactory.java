@@ -14,23 +14,23 @@ public class DataFactory {
     @Autowired
     private DBConfig dbConfig;
 
-    public Dataset<Row> getDailyChanges() {
-        List<String> cryptoList = getCryptos()
+    public Dataset<Row> getDailyChangeDataset() {
+        List<String> cryptoList = getCryptoDataset()
                 .toJavaRDD()
                 .map(row -> row.get(0).toString())
                 .collect();
 
-        return dbConfig.getTableFromDB("input.daily_changes")
+        return dbConfig.readDatasetFromDB("input.daily_changes")
                 .selectExpr(cryptoList.stream().toArray(String[]::new));
     }
 
-    public Dataset<Row> getDates() {
-        return dbConfig.getTableFromDB("input.daily_changes")
+    public Dataset<Row> getDateDataset() {
+        return dbConfig.readDatasetFromDB("input.daily_changes")
                 .select("date");
     }
 
-    public Dataset<Row> getCryptos() {
-        return dbConfig.getTableFromDB("input.crypto")
+    public Dataset<Row> getCryptoDataset() {
+        return dbConfig.readDatasetFromDB("input.crypto")
                 .select("symbol");
     }
 
