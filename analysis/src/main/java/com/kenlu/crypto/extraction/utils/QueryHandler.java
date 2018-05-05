@@ -11,10 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.Date;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -82,7 +79,7 @@ public class QueryHandler {
     }
 
     public void insertCorrelationQuery(double[][] correlationMatrix) {
-        List<String> cryptos = this.getCryptos();
+        List<Crypto> cryptos = this.getCryptos();
 
         log.info("Inserting data for table output.correlation...");
         for (int i = 0; i < correlationMatrix.length; i++) {
@@ -90,7 +87,7 @@ public class QueryHandler {
             String insertSqlStatement;
 
             insertValues.append("'")
-                    .append(cryptos.get(i))
+                    .append(cryptos.get(i).name())
                     .append("'")
                     .append(", ");
             for (int j = 0; j < correlationMatrix[i].length; j++) {
@@ -110,18 +107,19 @@ public class QueryHandler {
         }
     }
 
-    public Map<Crypto, List<String>> getCryptoPairs(List<String> cryptos, int numOfDays, long toTimestamp, boolean isUpdate) throws Exception {
-        Map<Crypto, List<String>> cryptoPairs = new HashMap<>();
+    public Map<Crypto, List<String>> getCryptoPairs(List<Crypto> cryptos, int numOfDays, long toTimestamp, boolean isUpdate) throws Exception {
+        Map<Crypto, List<String>> cryptoPairs = new TreeMap<>(Comparator.comparing(Crypto::name));
 
         for (int i = 0; i < cryptos.size(); i++) {
             List<String> values = new ArrayList<>(this.dataExtractor
-                    .getDailyChanges(Crypto.valueOf(cryptos.get(i)), numOfDays, toTimestamp, isUpdate)
+                    .getDailyChanges(cryptos.get(i), numOfDays, toTimestamp, isUpdate)
                     .values());
 
             if (isValidCrypto(values)) {
-                cryptoPairs.put(Crypto.valueOf(cryptos.get(i)), values);
+                cryptoPairs.put(cryptos.get(i), values);
             }
         }
+
         return cryptoPairs;
     }
 
@@ -172,7 +170,7 @@ public class QueryHandler {
         this.getCryptos().stream()
                 .forEach(x -> {
                     createCols.append("\"")
-                            .append(x)
+                            .append(x.name())
                             .append("\" ")
                             .append("character varying(30) NOT NULL")
                             .append(", ");
@@ -196,12 +194,12 @@ public class QueryHandler {
         return (Date) this.jdbcTemplate.queryForList(selectSqlStatement).get(0).get("date");
     }
 
-    public List<String> getCryptos() {
+    public List<Crypto> getCryptos() {
         String selectSqlStatement =
-                "SELECT symbol FROM input.crypto";
+                "SELECT symbol FROM input.crypto ORDER BY symbol ASC";
 
         return this.jdbcTemplate.queryForList(selectSqlStatement).stream()
-                .map(x -> (String) x.get("symbol"))
+                .map(x -> Crypto.valueOf((String) x.get("symbol")))
                 .collect(Collectors.toList());
     }
 

@@ -2,6 +2,7 @@ package com.kenlu.crypto.analysis;
 
 import com.kenlu.crypto.analysis.unsupervised.correlation.CorrelationAnalysis;
 import com.kenlu.crypto.analysis.unsupervised.kmeans.KMeansClusteringAnalysis;
+import com.kenlu.crypto.analysis.unsupervised.pca.PrincipalComponentAnalysis;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -23,11 +24,14 @@ public class AnalysisServiceImpl implements CommandLineRunner {
     private KMeansClusteringAnalysis kMeansClusteringAnalysis;
     @Autowired
     private CorrelationAnalysis correlationAnalysis;
+    @Autowired
+    private PrincipalComponentAnalysis principalComponentAnalysis;
 
     @Override
     public void run(String... args) {
 //        kMeansClusteringAnalysis.run();
         this.analyseCorrelation();
+        this.principalComponentAnalysis.run();
     }
 
     public void analyseCorrelation() {

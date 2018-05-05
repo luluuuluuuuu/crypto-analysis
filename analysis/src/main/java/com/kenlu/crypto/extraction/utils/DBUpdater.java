@@ -29,7 +29,7 @@ public class DBUpdater extends TimerTask {
             long startDate = new DateTime(lastDate).plusDays(1).getMillis() / 1000;
             long today = System.currentTimeMillis();
             long endDate = new DateTime(today).plusDays(1).getMillis() / 1000;
-            List<String> cryptos = queryHandler.getCryptos();
+            List<Crypto> cryptos = queryHandler.getCryptos();
             Map<Crypto, List<String>> cryptoDataset =
                     queryHandler.getCryptoPairs(cryptos, 1, System.currentTimeMillis() / 1000, true);
             if (cryptoDataset.size() == 0) {
