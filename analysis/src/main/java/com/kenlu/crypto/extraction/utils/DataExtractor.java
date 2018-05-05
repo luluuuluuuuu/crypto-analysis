@@ -15,10 +15,7 @@ import java.io.InputStreamReader;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
@@ -35,7 +32,7 @@ public class DataExtractor {
         params.put("toTs", Long.toString(toTimestamp));
 
         Map<String, String> result;
-        Map<String, String> row = new TreeMap<>();
+        Map<String, String> row = new TreeMap<>(Comparator.naturalOrder());
         DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
 
         this.getHistoDay(crypto.name(), "USD", params)

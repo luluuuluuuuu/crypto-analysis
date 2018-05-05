@@ -1,5 +1,7 @@
 package com.kenlu.crypto.analysis.factory;
 
+import static org.apache.spark.sql.functions.*;
+
 import com.kenlu.crypto.analysis.config.DBConfig;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
@@ -21,17 +23,20 @@ public class DataFactory {
                 .collect();
 
         return dbConfig.readDatasetFromDB("input.daily_changes")
-                .selectExpr(cryptoList.stream().toArray(String[]::new));
+                .selectExpr(cryptoList.stream().toArray(String[]::new))
+                .orderBy(asc("date"));
     }
 
     public Dataset<Row> getDateDataset() {
         return dbConfig.readDatasetFromDB("input.daily_changes")
-                .select("date");
+                .select("date")
+                .orderBy(asc("date"));
     }
 
     public Dataset<Row> getCryptoDataset() {
         return dbConfig.readDatasetFromDB("input.crypto")
-                .select("symbol");
+                .select("symbol")
+                .orderBy(asc("symbol"));
     }
 
 }

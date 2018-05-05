@@ -31,40 +31,17 @@ public class KMeansClusteringAnalysis {
         JavaRDD<Vector> inputData =
                 dataFormatter.transpose(vectorJavaRDD);
 
-        // Create a RowMatrix from JavaRDD<Vector>.
-        RowMatrix mat = new RowMatrix(inputData.rdd());
-
-        // Compute the top 4 principal components.
-        // Principal components are stored in a local dense matrix.
-        Matrix pc = mat.computePrincipalComponents(2);
-        Matrix covariance = new RowMatrix(vectorJavaRDD.rdd()).computeCovariance();
-
-        // Project the rows to the linear space spanned by the top 4 principal components.
-        RowMatrix projected = mat.multiply(pc);
-
-//        projected.rows().toJavaRDD().foreach(x -> {
-//            System.out.println(Arrays.toString(x.toArray()));
-//        });
-
-//        System.out.println(covariance.numRows());
-//        System.out.println(covariance.numCols());
-//        System.out.println(covariance.toString(Int.MaxValue(), Int.MaxValue()));
-//        System.out.println(projected.numRows());
-
-//        inputData.cache();
-//
-//
-        KMeansModel clusters = KMeans.train(projected.rows(), NUM_CLUSTERS, NUM_ITERATIONS);
+        KMeansModel clusters = KMeans.train(inputData.rdd(), NUM_CLUSTERS, NUM_ITERATIONS);
 
         System.out.println("Cluster centers:");
         for (Vector center : clusters.clusterCenters()) {
             System.out.println(" " + center);
         }
-        double cost = clusters.computeCost(projected.rows());
+        double cost = clusters.computeCost(inputData.rdd());
         System.out.println("Cost: " + cost);
 
 // Evaluate clustering by computing Within Set Sum of Squared Errors
-        double WSSSE = clusters.computeCost(projected.rows());
+        double WSSSE = clusters.computeCost(inputData.rdd());
         System.out.println("Within Set Sum of Squared Errors = " + WSSSE);
 
     }

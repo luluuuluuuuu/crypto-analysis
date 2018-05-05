@@ -10,10 +10,7 @@ import org.apache.spark.mllib.stat.Statistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Calendar;
-import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 
 @Component
 public class CorrelationAnalysis extends TimerTask {

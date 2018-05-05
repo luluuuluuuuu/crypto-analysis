@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -56,7 +57,10 @@ public class DBInitialiser {
             DateTime fromDate = new DateTime(FROM_TIMESTAMP * 1000);
             int initNumOfDays = Days.daysBetween(fromDate, toDate).getDays();
             if (this.initCryptoDataset == null) {
-                List<String> cryptos = Arrays.stream(Crypto.values()).map(Crypto::name).collect(Collectors.toList());
+                List<Crypto> cryptos =
+                        Arrays.stream(Crypto.values())
+                                .sorted(Comparator.comparing(Crypto::name))
+                                .collect(Collectors.toList());
                 this.initCryptoDataset = queryHandler.getCryptoPairs(cryptos, initNumOfDays, TO_TIMESTAMP, false);
             }
             switch (theTable) {
