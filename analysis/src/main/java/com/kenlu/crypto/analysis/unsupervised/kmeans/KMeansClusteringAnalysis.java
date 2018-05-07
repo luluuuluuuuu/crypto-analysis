@@ -10,11 +10,13 @@ import org.apache.spark.mllib.linalg.Vector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.TimerTask;
+
 @Slf4j
 @Component
-public class KMeansClusteringAnalysis {
+public class KMeansClusteringAnalysis extends TimerTask {
 
-    private static final int NUM_CLUSTERS = 3;
+    private static final int NUM_CLUSTERS = 12;
     private static final int NUM_ITERATIONS = 20;
 
     @Autowired
@@ -23,29 +25,28 @@ public class KMeansClusteringAnalysis {
     private DataFormatter dataFormatter;
 
     public void run() {
-
-//        Schema schema = new Schema.Builder().build();
-//        TransformProcess transformProcess = new TransformProcess.Builder(schema).build();
-//        INDArray indArray = Nd4j.create(3,3).transpose();
-//        Point.toPoints(indArray);
-
         JavaRDD<Vector> vectorJavaRDD =
-                dataFormatter.toVectorJavaRDD(dataFactory.getDailyChangeDataset());
-        JavaRDD<Vector> inputData =
-                dataFormatter.transpose(vectorJavaRDD);
+                dataFormatter.toVectorJavaRDD(dataFactory.getPCADataset());
 
-        KMeansModel clusters = KMeans.train(inputData.rdd(), NUM_CLUSTERS, NUM_ITERATIONS);
+        KMeansModel clusters = KMeans.train(vectorJavaRDD.rdd(), NUM_CLUSTERS, NUM_ITERATIONS);
 
         System.out.println("Cluster centers:");
         for (Vector center : clusters.clusterCenters()) {
             System.out.println(" " + center);
         }
-        double cost = clusters.computeCost(inputData.rdd());
+        double cost = clusters.computeCost(vectorJavaRDD.rdd());
         System.out.println("Cost: " + cost);
 
 // Evaluate clustering by computing Within Set Sum of Squared Errors
-        double WSSSE = clusters.computeCost(inputData.rdd());
+        double WSSSE = clusters.computeCost(vectorJavaRDD.rdd());
         System.out.println("Within Set Sum of Squared Errors = " + WSSSE);
+
+        System.out.println("--------------");
+        clusters.predict(vectorJavaRDD).collect().stream().forEach(integer -> {
+            System.out.print(integer);
+            System.out.print(",");
+        });
+        System.out.println("--------------");
 
     }
 

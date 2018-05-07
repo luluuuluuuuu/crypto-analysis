@@ -39,4 +39,10 @@ public class DataFactory {
                 .orderBy(asc("symbol"));
     }
 
+    public Dataset<Row> getPCADataset() {
+        return dbConfig.readDatasetFromDB("output.pca")
+                .select("0", "1", "2")
+                .orderBy(asc("crypto"));
+    }
+
 }
