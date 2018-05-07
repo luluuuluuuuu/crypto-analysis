@@ -47,7 +47,7 @@ public class DataFormatter {
 
         transformedList = Arrays
                 .stream(transposeDoubles)
-                .map(doubles -> Vectors.dense(doubles))
+                .map(Vectors::dense)
                 .collect(Collectors.toList());
 
         return javaSparkContext.parallelize(transformedList);

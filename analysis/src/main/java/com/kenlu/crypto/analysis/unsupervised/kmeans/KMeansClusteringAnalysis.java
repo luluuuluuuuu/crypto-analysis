@@ -24,6 +24,11 @@ public class KMeansClusteringAnalysis {
 
     public void run() {
 
+//        Schema schema = new Schema.Builder().build();
+//        TransformProcess transformProcess = new TransformProcess.Builder(schema).build();
+//        INDArray indArray = Nd4j.create(3,3).transpose();
+//        Point.toPoints(indArray);
+
         JavaRDD<Vector> vectorJavaRDD =
                 dataFormatter.toVectorJavaRDD(dataFactory.getDailyChangeDataset());
         JavaRDD<Vector> inputData =
