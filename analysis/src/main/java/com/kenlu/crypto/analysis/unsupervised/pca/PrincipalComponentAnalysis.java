@@ -4,14 +4,14 @@ import com.kenlu.crypto.analysis.factory.DataFactory;
 import com.kenlu.crypto.analysis.formatter.DataFormatter;
 import com.kenlu.crypto.extraction.utils.QueryHandler;
 import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.mllib.feature.Normalizer;
 import org.apache.spark.mllib.linalg.Matrix;
 import org.apache.spark.mllib.linalg.Vector;
 import org.apache.spark.mllib.linalg.distributed.RowMatrix;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.TimerTask;
+import java.util.*;
 
 @Component
 public class PrincipalComponentAnalysis extends TimerTask {
@@ -33,8 +33,10 @@ public class PrincipalComponentAnalysis extends TimerTask {
     private void analyse() {
         JavaRDD<Vector> vectorJavaRDD =
                 dataFormatter.toVectorJavaRDD(dataFactory.getDailyChangeDataset());
+        JavaRDD<Vector> normalisedRDD =
+                new Normalizer().transform(vectorJavaRDD);
         JavaRDD<Vector> inputData =
-                dataFormatter.transpose(vectorJavaRDD);
+                dataFormatter.transpose(normalisedRDD);
 
         RowMatrix rowMatrix = new RowMatrix(inputData.rdd());
         Matrix pc = rowMatrix.computePrincipalComponents(NUM_OF_PCS);
