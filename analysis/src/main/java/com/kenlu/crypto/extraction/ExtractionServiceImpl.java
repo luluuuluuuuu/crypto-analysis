@@ -5,17 +5,17 @@ import com.kenlu.crypto.extraction.utils.DBUpdater;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.Timer;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@Service
-@Order(1)
+@Service("ETL")
 public class ExtractionServiceImpl implements CommandLineRunner {
 
     private Timer timer = new Timer();
@@ -27,12 +27,25 @@ public class ExtractionServiceImpl implements CommandLineRunner {
     private DBUpdater dbUpdater;
 
     @Override
-    public void run(String... args) throws Exception {
-        dbInitialiser.run();
-        this.update();
+    public void run(String... args) {
+        CompletableFuture<Void> future = CompletableFuture
+                .runAsync(() -> {
+                    try {
+                        dbInitialiser.run();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                })
+                .thenRun(() -> this.scheduleUpdate());
+
+        try {
+            future.get();
+        } catch (InterruptedException | ExecutionException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void update() {
+    public void scheduleUpdate() {
         today.set(Calendar.HOUR_OF_DAY, 2);
         today.set(Calendar.MINUTE, 0);
         today.set(Calendar.SECOND, 0);

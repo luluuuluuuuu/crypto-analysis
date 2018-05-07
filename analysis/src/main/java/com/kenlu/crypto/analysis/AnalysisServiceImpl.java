@@ -1,11 +1,10 @@
 package com.kenlu.crypto.analysis;
 
-import com.kenlu.crypto.analysis.unsupervised.correlation.CorrelationAnalysis;
-import com.kenlu.crypto.analysis.unsupervised.kmeans.KMeansClusteringAnalysis;
-import com.kenlu.crypto.analysis.unsupervised.pca.PrincipalComponentAnalysis;
+import com.kenlu.crypto.analysis.unsupervised.UnsupervisedLearningTasks;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.context.annotation.DependsOn;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -14,48 +13,27 @@ import java.util.Timer;
 import java.util.concurrent.TimeUnit;
 
 @Slf4j
-@Service
+@Service("Analysis")
+@DependsOn(value = {"ETL"})
 public class AnalysisServiceImpl implements CommandLineRunner {
 
     private Timer timer = new Timer();
     private Calendar today = Calendar.getInstance();
 
     @Autowired
-    private KMeansClusteringAnalysis kMeansClusteringAnalysis;
-    @Autowired
-    private CorrelationAnalysis correlationAnalysis;
-    @Autowired
-    private PrincipalComponentAnalysis principalComponentAnalysis;
+    private UnsupervisedLearningTasks unsupervisedLearningTasks;
 
     @Override
     public void run(String... args) {
-        this.analyseCorrelation();
-        this.analysePCA();
-        this.analyseKMeans();
+        this.scheduleAnalysis();
     }
 
-    public void analyseCorrelation() {
+    public void scheduleAnalysis() {
         today.set(Calendar.HOUR_OF_DAY, 2);
-        today.set(Calendar.MINUTE, 10);
+        today.set(Calendar.MINUTE, 2);
         today.set(Calendar.SECOND, 0);
         Date firstTime = today.getTime();
-        timer.schedule(correlationAnalysis, firstTime, TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
-    }
-
-    public void analysePCA() {
-        today.set(Calendar.HOUR_OF_DAY, 2);
-        today.set(Calendar.MINUTE, 15);
-        today.set(Calendar.SECOND, 0);
-        Date firstTime = today.getTime();
-        timer.schedule(principalComponentAnalysis, firstTime, TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
-    }
-
-    public void analyseKMeans() {
-        today.set(Calendar.HOUR_OF_DAY, 2);
-        today.set(Calendar.MINUTE, 20);
-        today.set(Calendar.SECOND, 0);
-        Date firstTime = today.getTime();
-        timer.schedule(kMeansClusteringAnalysis, firstTime, TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
+        timer.schedule(unsupervisedLearningTasks, firstTime, TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
     }
 
 }

@@ -10,11 +10,9 @@ import org.apache.spark.mllib.linalg.Vector;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.TimerTask;
-
 @Slf4j
 @Component
-public class KMeansClusteringAnalysis extends TimerTask {
+public class KMeansClusteringAnalysis {
 
     private static final int NUM_CLUSTERS = 12;
     private static final int NUM_ITERATIONS = 20;

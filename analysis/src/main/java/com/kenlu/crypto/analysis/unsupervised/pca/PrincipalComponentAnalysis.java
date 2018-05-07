@@ -11,10 +11,10 @@ import org.apache.spark.mllib.linalg.distributed.RowMatrix;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.List;
 
 @Component
-public class PrincipalComponentAnalysis extends TimerTask {
+public class PrincipalComponentAnalysis {
 
     private static final int NUM_OF_PCS = 3;
 
@@ -25,12 +25,7 @@ public class PrincipalComponentAnalysis extends TimerTask {
     @Autowired
     private QueryHandler queryHandler;
 
-    @Override
     public void run() {
-        analyse();
-    }
-
-    private void analyse() {
         JavaRDD<Vector> vectorJavaRDD =
                 dataFormatter.toVectorJavaRDD(dataFactory.getDailyChangeDataset());
         JavaRDD<Vector> normalisedRDD =

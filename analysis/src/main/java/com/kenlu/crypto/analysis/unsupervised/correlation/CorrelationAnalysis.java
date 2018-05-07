@@ -10,10 +10,8 @@ import org.apache.spark.mllib.stat.Statistics;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.TimerTask;
-
 @Component
-public class CorrelationAnalysis extends TimerTask {
+public class CorrelationAnalysis {
 
     @Autowired
     private DataFactory dataFactory;
@@ -22,12 +20,7 @@ public class CorrelationAnalysis extends TimerTask {
     @Autowired
     private QueryHandler queryHandler;
 
-    @Override
     public void run() {
-        analyse();
-    }
-
-    private void analyse() {
         JavaRDD<Vector> vectorJavaRDD =
                 dataFormatter.toVectorJavaRDD(dataFactory.getDailyChangeDataset());
         Matrix correlation = Statistics.corr(vectorJavaRDD.rdd());
