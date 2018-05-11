@@ -63,6 +63,10 @@ public class DataFormatter {
                 });
     }
 
+    public JavaRDD<Vector> toVectorJavaRDD(List<Vector> vectorList) {
+        return javaSparkContext.parallelize(vectorList);
+    }
+
     public JavaRDD<Row> toRowJavaRDD(JavaRDD<Vector> vectorJavaRDD) {
         return vectorJavaRDD.map(vector -> {
             String[] attributes = new String[vector.size()];
