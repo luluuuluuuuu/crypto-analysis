@@ -14,6 +14,7 @@ import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import scala.collection.JavaConverters;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,19 +31,13 @@ public class CorrelationAnalysis {
         JavaRDD<Vector> vectorJavaRDD =
                 dataFormatter.toVectorJavaRDD(dataFactory.getDailyChangeDataset());
         Matrix correlation = Statistics.corr(vectorJavaRDD.rdd());
+        List<Vector> vectorList =
+                new ArrayList<>(JavaConverters.asJavaCollectionConverter(correlation.rowIter().toList()).asJavaCollection());
 
-        String[][] matrix = new String[correlation.numRows()][correlation.numCols()];
-
-        for (int i = 0; i < correlation.numRows(); i++) {
-            for (int j = 0; j < correlation.numCols(); j++) {
-                matrix[i][j] = String.format("%.15f", correlation.apply(i, j));
-            }
-        }
-
-        this.save(matrix);
+        this.save(vectorList);
     }
 
-    private void save(String[][] matrix) {
+    private void save(List<Vector> vectorList) {
         List<String> cryptoList = dataFactory.getCryptoDataset()
                 .toJavaRDD()
                 .map(row -> row.get(0).toString())
@@ -61,9 +56,10 @@ public class CorrelationAnalysis {
                 });
 
         StructType schema = DataTypes.createStructType(fields);
-        JavaRDD<Row> rowJavaRDD = dataFormatter.toRowJavaRDD(matrix);
-        JavaRDD<Row> resultRDD = dataFormatter.addFirstValueToRows(rowJavaRDD, cryptoList);
-        Dataset<Row> rowDataset = dataFormatter.toRowDataset(resultRDD, schema);
+        JavaRDD<Vector> vectorJavaRDD = dataFormatter.toVectorJavaRDD(vectorList);
+        JavaRDD<Row> rowJavaRDD = dataFormatter.toRowJavaRDD(vectorJavaRDD);
+        rowJavaRDD = dataFormatter.addFirstValueToRows(rowJavaRDD, cryptoList);
+        Dataset<Row> rowDataset = dataFormatter.toRowDataset(rowJavaRDD, schema);
 
         dataFactory.writeOutputToDB(rowDataset, "correlation", SaveMode.Overwrite);
     }
