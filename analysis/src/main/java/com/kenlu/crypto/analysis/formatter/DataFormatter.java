@@ -63,6 +63,16 @@ public class DataFormatter {
                 });
     }
 
+    public JavaRDD<Row> toRowJavaRDD(JavaRDD<Vector> vectorJavaRDD) {
+        return vectorJavaRDD.map(vector -> {
+            String[] attributes = new String[vector.size()];
+            for (int i = 0; i < vector.size(); i++) {
+                attributes[i] = String.format("%.15f", vector.apply(i));
+            }
+            return RowFactory.create(attributes);
+        });
+    }
+
     public JavaRDD<Row> toRowJavaRDD(String[][] strings) {
         List<Row> rowList = new ArrayList<>();
         for (int i = 0; i < strings.length; i++) {
@@ -73,6 +83,20 @@ public class DataFormatter {
 
     public Dataset<Row> toRowDataset(JavaRDD<Row> rowJavaRDD, StructType structType) {
         return sparkConfig.sparkSession.createDataFrame(rowJavaRDD, structType);
+    }
+
+    public JavaRDD<Row> addFirstValueToRows(JavaRDD<Row> rowJavaRDD, List<String> firstValues) {
+        List<Row> rowList = rowJavaRDD.collect();
+        List<Row> resultList = new ArrayList<>();
+        for (int i = 0; i < rowList.size(); i++) {
+            String[] attributes = new String[rowList.get(i).size() + 1];
+            attributes[0] = firstValues.get(i);
+            for (int j = 1; j < rowList.get(i).size() + 1; j++) {
+                attributes[j] = rowList.get(i).get(j - 1).toString();
+            }
+            resultList.add(RowFactory.create(attributes));
+        }
+        return javaSparkContext.parallelize(resultList);
     }
 
 }

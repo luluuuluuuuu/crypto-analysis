@@ -77,35 +77,6 @@ public class QueryHandler {
                 );
     }
 
-    public void insertPCAQuery(double[][] pcaMatrix) {
-        List<Crypto> cryptos = this.getCryptos();
-
-        log.info("Inserting data for table output.pca...");
-        for (int i = 0; i < pcaMatrix.length; i++) {
-            StringBuilder insertValues = new StringBuilder();
-            String insertSqlStatement;
-
-            insertValues.append("'")
-                    .append(cryptos.get(i).name())
-                    .append("'")
-                    .append(", ");
-            for (int j = 0; j < pcaMatrix[i].length; j++) {
-                insertValues.append("'")
-                        .append(Double.toString(pcaMatrix[i][j]))
-                        .append("'")
-                        .append(", ");
-            }
-
-            insertSqlStatement = String.format(
-                    "INSERT INTO output.pca VALUES (%s)",
-                    insertValues.substring(0, insertValues.lastIndexOf(","))
-            );
-
-            this.jdbcTemplate.update(insertSqlStatement);
-            log.info("PCs for {} are inserted", cryptos.get(i));
-        }
-    }
-
     public Map<Crypto, List<String>> getCryptoPairs(List<Crypto> cryptos, int numOfDays, long toTimestampInSec, boolean isUpdate) throws Exception {
         Map<Crypto, List<String>> cryptoPairs = new TreeMap<>(Comparator.comparing(Crypto::name));
 
@@ -158,31 +129,6 @@ public class QueryHandler {
 
         this.jdbcTemplate.execute(createSqlStatement);
         log.info("Table input.crypto is created");
-    }
-
-    public void createPCATable(int numOfPc) {
-        String createSqlStatement;
-        StringBuilder createCols = new StringBuilder();
-
-        log.info("Creating table output.pca...");
-
-        for (int i = 0; i < numOfPc; i++) {
-            createCols.append("\"")
-                    .append(Integer.toString(i))
-                    .append("\" ")
-                    .append("character varying(30) NOT NULL")
-                    .append(", ");
-        }
-
-        createSqlStatement = String.format(
-                "CREATE TABLE output.pca (" +
-                        "\"crypto\" character varying(30) NOT NULL PRIMARY KEY, " +
-                        "%s)",
-                createCols.substring(0, createCols.lastIndexOf(","))
-        );
-
-        this.jdbcTemplate.execute(createSqlStatement);
-        log.info("Table output.pca is created");
     }
 
     public Date getLastDateFromDailyChanges() {

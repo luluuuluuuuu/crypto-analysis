@@ -30,25 +30,23 @@ public class CorrelationAnalysis {
         JavaRDD<Vector> vectorJavaRDD =
                 dataFormatter.toVectorJavaRDD(dataFactory.getDailyChangeDataset());
         Matrix correlation = Statistics.corr(vectorJavaRDD.rdd());
+
+        String[][] matrix = new String[correlation.numRows()][correlation.numCols()];
+
+        for (int i = 0; i < correlation.numRows(); i++) {
+            for (int j = 0; j < correlation.numCols(); j++) {
+                matrix[i][j] = String.format("%.15f", correlation.apply(i, j));
+            }
+        }
+
+        this.save(matrix);
+    }
+
+    private void save(String[][] matrix) {
         List<String> cryptoList = dataFactory.getCryptoDataset()
                 .toJavaRDD()
                 .map(row -> row.get(0).toString())
                 .collect();
-
-        int columnNums = correlation.numCols() + 1;
-        String[][] matrix = new String[correlation.numRows()][columnNums];
-
-        for (int i = 0; i < correlation.numRows(); i++) {
-            matrix[i][0] = cryptoList.get(i);
-            for (int j = 1; j < columnNums; j++) {
-                matrix[i][j] = String.format("%.15f", correlation.apply(i, j-1));
-            }
-        }
-
-        this.save(cryptoList, matrix);
-    }
-
-    private void save(List<String> cryptoList, String[][] matrix) {
         List<StructField> fields = new ArrayList<>();
 
         StructField cryptoField =
@@ -64,7 +62,8 @@ public class CorrelationAnalysis {
 
         StructType schema = DataTypes.createStructType(fields);
         JavaRDD<Row> rowJavaRDD = dataFormatter.toRowJavaRDD(matrix);
-        Dataset<Row> rowDataset = dataFormatter.toRowDataset(rowJavaRDD, schema);
+        JavaRDD<Row> resultRDD = dataFormatter.addFirstValueToRows(rowJavaRDD, cryptoList);
+        Dataset<Row> rowDataset = dataFormatter.toRowDataset(resultRDD, schema);
 
         dataFactory.writeOutputToDB(rowDataset, "correlation", SaveMode.Overwrite);
     }
