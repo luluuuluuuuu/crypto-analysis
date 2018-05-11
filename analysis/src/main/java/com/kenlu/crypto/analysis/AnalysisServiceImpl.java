@@ -33,6 +33,10 @@ public class AnalysisServiceImpl implements CommandLineRunner {
         today.set(Calendar.MINUTE, 2);
         today.set(Calendar.SECOND, 0);
         Date firstTime = today.getTime();
+        if(firstTime.before(new Date())){
+            today.add(Calendar.DATE, 1);
+            firstTime = today.getTime();
+        }
         timer.schedule(unsupervisedLearningTasks, firstTime, TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
     }
 

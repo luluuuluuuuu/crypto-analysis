@@ -52,7 +52,7 @@ public class QueryHandler {
             );
 
             this.jdbcTemplate.update(insertSqlStatement);
-            log.info("Daily changes on {} is inserted", dates.get(i));
+            log.info("Daily changes on {} are inserted", dates.get(i));
         }
     }
 
@@ -136,12 +136,12 @@ public class QueryHandler {
         }
     }
 
-    public Map<Crypto, List<String>> getCryptoPairs(List<Crypto> cryptos, int numOfDays, long toTimestamp, boolean isUpdate) throws Exception {
+    public Map<Crypto, List<String>> getCryptoPairs(List<Crypto> cryptos, int numOfDays, long toTimestampInSec, boolean isUpdate) throws Exception {
         Map<Crypto, List<String>> cryptoPairs = new TreeMap<>(Comparator.comparing(Crypto::name));
 
         for (int i = 0; i < cryptos.size(); i++) {
             List<String> values = new ArrayList<>(this.dataExtractor
-                    .getDailyChanges(cryptos.get(i), numOfDays, toTimestamp, isUpdate)
+                    .getDailyChanges(cryptos.get(i), numOfDays, toTimestampInSec, isUpdate)
                     .values());
 
             if (isValidCrypto(values)) {
@@ -258,8 +258,8 @@ public class QueryHandler {
     }
 
     public List<String> getDatesBetween(long fromTimestamp, long toTimestamp) {
-        DateTime endDate = new DateTime(toTimestamp * 1000);
-        DateTime startDate = new DateTime(fromTimestamp * 1000);
+        DateTime endDate = new DateTime(toTimestamp);
+        DateTime startDate = new DateTime(fromTimestamp);
         List<String> dates = new ArrayList<>();
 
         Stream.iterate(startDate, date -> date.plusDays(1))
@@ -279,22 +279,9 @@ public class QueryHandler {
     }
 
     public void dropTable(String schema, String table) {
-
-        try {
-            boolean isTableExist = this.jdbcTemplate
-                    .getDataSource()
-                    .getConnection()
-                    .getMetaData()
-                    .getTables(null, schema, table, null)
-                    .next();
-            if (isTableExist) {
-                log.info("Dropping table {}...", schema + "." + table);
-                String dropStatement = String.format("DROP TABLE %s", schema + "." + table);
-                this.jdbcTemplate.execute(dropStatement);
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-        }
+        log.info("Dropping table {}...", schema + "." + table);
+        String dropStatement = String.format("DROP TABLE IF EXISTS %s", schema + "." + table);
+        this.jdbcTemplate.execute(dropStatement);
     }
 
 }

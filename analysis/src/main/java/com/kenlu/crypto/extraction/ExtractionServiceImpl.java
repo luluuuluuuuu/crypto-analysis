@@ -50,10 +50,6 @@ public class ExtractionServiceImpl implements CommandLineRunner {
         today.set(Calendar.MINUTE, 0);
         today.set(Calendar.SECOND, 0);
         Date firstTime = today.getTime();
-        if(firstTime.before(new Date())){
-            today.add(Calendar.DATE, 1);
-            firstTime = today.getTime();
-        }
         timer.schedule(dbUpdater, firstTime, TimeUnit.MILLISECONDS.convert(1, TimeUnit.DAYS));
     }
 
