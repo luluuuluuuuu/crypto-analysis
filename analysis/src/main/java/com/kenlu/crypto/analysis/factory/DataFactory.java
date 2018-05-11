@@ -5,6 +5,7 @@ import static org.apache.spark.sql.functions.*;
 import com.kenlu.crypto.analysis.config.DBConfig;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SaveMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -22,27 +23,31 @@ public class DataFactory {
                 .map(row -> row.get(0).toString())
                 .collect();
 
-        return dbConfig.readDatasetFromDB("input.daily_changes")
+        return dbConfig.readDatasetFromDB("input", "daily_changes")
                 .selectExpr(cryptoList.stream().toArray(String[]::new))
                 .orderBy(asc("date"));
     }
 
     public Dataset<Row> getDateDataset() {
-        return dbConfig.readDatasetFromDB("input.daily_changes")
+        return dbConfig.readDatasetFromDB("input", "daily_changes")
                 .select("date")
                 .orderBy(asc("date"));
     }
 
     public Dataset<Row> getCryptoDataset() {
-        return dbConfig.readDatasetFromDB("input.crypto")
+        return dbConfig.readDatasetFromDB("input", "crypto")
                 .select("symbol")
                 .orderBy(asc("symbol"));
     }
 
     public Dataset<Row> getPCADataset() {
-        return dbConfig.readDatasetFromDB("output.pca")
+        return dbConfig.readDatasetFromDB("output", "pca")
                 .select("0", "1", "2")
                 .orderBy(asc("crypto"));
+    }
+
+    public void writeOutputToDB(Dataset<Row> df, String table, SaveMode saveMode) {
+        dbConfig.writeTableToDB(df, "output", table, saveMode);
     }
 
 }

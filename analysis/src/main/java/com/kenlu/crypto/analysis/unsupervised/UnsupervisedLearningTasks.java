@@ -22,16 +22,16 @@ public class UnsupervisedLearningTasks extends TimerTask {
 
     @Override
     public void run() {
-        CompletableFuture<Void> future = CompletableFuture
-                .runAsync(() -> principalComponentAnalysis.run())
-                .thenRun(() -> kMeansClusteringAnalysis.run());
+//        CompletableFuture<Void> future = CompletableFuture
+//                .runAsync(() -> principalComponentAnalysis.run())
+//                .thenRun(() -> kMeansClusteringAnalysis.run());
 
         correlationAnalysis.run();
-        try {
-            future.get();
-        } catch (InterruptedException | ExecutionException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            future.get();
+//        } catch (InterruptedException | ExecutionException e) {
+//            e.printStackTrace();
+//        }
     }
 
 }
