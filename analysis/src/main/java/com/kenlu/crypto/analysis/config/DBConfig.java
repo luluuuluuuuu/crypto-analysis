@@ -3,6 +3,7 @@ package com.kenlu.crypto.analysis.config;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SaveMode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -42,15 +43,15 @@ public class DBConfig {
         return connectionProperties;
     }
 
-    public Dataset<Row> readDatasetFromDB(String table) {
-        log.info("Reading {}...", table);
+    public Dataset<Row> readDatasetFromDB(String schema, String table) {
+        log.info("Reading {}...", schema + "." + table);
         return sparkConfig.sparkSession.read()
-                .jdbc(url, table, getConnectionProperties());
+                .jdbc(url, schema + "." + table, getConnectionProperties());
     }
 
-    public void writeTableToDB(Dataset<Row> df, String table) {
-        log.info("Writing {}...", table);
-        df.write().jdbc(url, table, getConnectionProperties());
+    public void writeTableToDB(Dataset<Row> df, String schema, String table, SaveMode saveMode) {
+        log.info("Writing {}...", schema + "." + table);
+        df.write().mode(saveMode).jdbc(url, schema + "." + table, getConnectionProperties());
     }
 
 }

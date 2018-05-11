@@ -10,7 +10,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -76,35 +75,6 @@ public class QueryHandler {
                             log.info("Crypto {} is inserted", pairs.getKey().name());
                         }
                 );
-    }
-
-    public void insertCorrelationQuery(double[][] correlationMatrix) {
-        List<Crypto> cryptos = this.getCryptos();
-
-        log.info("Inserting data for table output.correlation...");
-        for (int i = 0; i < correlationMatrix.length; i++) {
-            StringBuilder insertValues = new StringBuilder();
-            String insertSqlStatement;
-
-            insertValues.append("'")
-                    .append(cryptos.get(i).name())
-                    .append("'")
-                    .append(", ");
-            for (int j = 0; j < correlationMatrix[i].length; j++) {
-                insertValues.append("'")
-                        .append(Double.toString(correlationMatrix[i][j]))
-                        .append("'")
-                        .append(", ");
-            }
-
-            insertSqlStatement = String.format(
-                    "INSERT INTO output.correlation VALUES (%s)",
-                    insertValues.substring(0, insertValues.lastIndexOf(","))
-            );
-
-            this.jdbcTemplate.update(insertSqlStatement);
-            log.info("Correlations for {} are inserted", cryptos.get(i));
-        }
     }
 
     public void insertPCAQuery(double[][] pcaMatrix) {
@@ -188,32 +158,6 @@ public class QueryHandler {
 
         this.jdbcTemplate.execute(createSqlStatement);
         log.info("Table input.crypto is created");
-    }
-
-    public void createCorrelationTable() {
-        String createSqlStatement;
-        StringBuilder createCols = new StringBuilder();
-
-        log.info("Creating table output.correlation...");
-
-        this.getCryptos().stream()
-                .forEach(x -> {
-                    createCols.append("\"")
-                            .append(x.name())
-                            .append("\" ")
-                            .append("character varying(30) NOT NULL")
-                            .append(", ");
-                });
-
-        createSqlStatement = String.format(
-                "CREATE TABLE output.correlation (" +
-                        "\"crypto\" character varying(30) NOT NULL PRIMARY KEY, " +
-                        "%s)",
-                createCols.substring(0, createCols.lastIndexOf(","))
-        );
-
-        this.jdbcTemplate.execute(createSqlStatement);
-        log.info("Table output.correlation is created");
     }
 
     public void createPCATable(int numOfPc) {
