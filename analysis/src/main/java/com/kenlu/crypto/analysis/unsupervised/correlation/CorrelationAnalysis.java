@@ -34,10 +34,10 @@ public class CorrelationAnalysis {
         List<Vector> vectorList =
                 new ArrayList<>(JavaConverters.asJavaCollectionConverter(correlation.rowIter().toList()).asJavaCollection());
 
-        this.save(vectorList);
+        this.save(vectorList, "correlation");
     }
 
-    private void save(List<Vector> vectorList) {
+    private void save(List<Vector> vectorList, String table) {
         List<String> cryptoList = dataFactory.getCryptoDataset()
                 .toJavaRDD()
                 .map(row -> row.get(0).toString())
@@ -56,11 +56,10 @@ public class CorrelationAnalysis {
                 });
 
         StructType schema = DataTypes.createStructType(fields);
-        JavaRDD<Vector> vectorJavaRDD = dataFormatter.toVectorJavaRDD(vectorList);
-        JavaRDD<Row> rowJavaRDD = dataFormatter.toRowJavaRDD(vectorJavaRDD);
+        JavaRDD<Row> rowJavaRDD = dataFormatter.toRowJavaRDD(vectorList);
         rowJavaRDD = dataFormatter.addFirstValueToRows(rowJavaRDD, cryptoList);
         Dataset<Row> rowDataset = dataFormatter.toRowDataset(rowJavaRDD, schema);
 
-        dataFactory.writeOutputToDB(rowDataset, "correlation", SaveMode.Overwrite);
+        dataFactory.writeOutputToDB(rowDataset, table, SaveMode.Overwrite);
     }
 }

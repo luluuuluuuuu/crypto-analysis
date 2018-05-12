@@ -77,6 +77,20 @@ public class DataFormatter {
         });
     }
 
+    public JavaRDD<Row> toRowJavaRDD(List<Vector> vectorList) {
+        JavaRDD<Vector> vectorJavaRDD = this.toVectorJavaRDD(vectorList);
+        return this.toRowJavaRDD(vectorJavaRDD);
+    }
+
+    public JavaRDD<Row> toRowJavaRDD(Vector[] vectors) {
+        JavaRDD<Vector> vectorJavaRDD = this.toVectorJavaRDD(Arrays.asList(vectors));
+        return this.toRowJavaRDD(vectorJavaRDD);
+    }
+
+    public JavaRDD<Row> intToRowJavaRDD(JavaRDD<Integer> integerJavaRDD) {
+        return integerJavaRDD.map(integer -> RowFactory.create(Integer.toString(integer)));
+    }
+
     public JavaRDD<Row> toRowJavaRDD(String[][] strings) {
         List<Row> rowList = new ArrayList<>();
         for (int i = 0; i < strings.length; i++) {
@@ -98,6 +112,20 @@ public class DataFormatter {
             for (int j = 1; j < rowList.get(i).size() + 1; j++) {
                 attributes[j] = rowList.get(i).get(j - 1).toString();
             }
+            resultList.add(RowFactory.create(attributes));
+        }
+        return javaSparkContext.parallelize(resultList);
+    }
+
+    public JavaRDD<Row> addLastValueToRows(JavaRDD<Row> rowJavaRDD, List<String> lastValues) {
+        List<Row> rowList = rowJavaRDD.collect();
+        List<Row> resultList = new ArrayList<>();
+        for (int i = 0; i < rowList.size(); i++) {
+            String[] attributes = new String[rowList.get(i).size() + 1];
+            for (int j = 0; j < rowList.get(i).size(); j++) {
+                attributes[j] = rowList.get(i).get(j).toString();
+            }
+            attributes[rowList.get(i).size()] = lastValues.get(i);
             resultList.add(RowFactory.create(attributes));
         }
         return javaSparkContext.parallelize(resultList);

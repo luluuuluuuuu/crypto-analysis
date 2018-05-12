@@ -7,15 +7,24 @@ import org.apache.spark.api.java.JavaRDD;
 import org.apache.spark.mllib.clustering.KMeans;
 import org.apache.spark.mllib.clustering.KMeansModel;
 import org.apache.spark.mllib.linalg.Vector;
+import org.apache.spark.sql.Dataset;
+import org.apache.spark.sql.Row;
+import org.apache.spark.sql.SaveMode;
+import org.apache.spark.sql.types.DataTypes;
+import org.apache.spark.sql.types.StructField;
+import org.apache.spark.sql.types.StructType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Component
 public class KMeansClusteringAnalysis {
 
     private static final int NUM_CLUSTERS = 12;
-    private static final int NUM_ITERATIONS = 20;
+    private static final int NUM_ITERATIONS = 10000;
 
     @Autowired
     private DataFactory dataFactory;
@@ -26,26 +35,67 @@ public class KMeansClusteringAnalysis {
         JavaRDD<Vector> vectorJavaRDD =
                 dataFormatter.toVectorJavaRDD(dataFactory.getPCADataset());
 
-        KMeansModel clusters = KMeans.train(vectorJavaRDD.rdd(), NUM_CLUSTERS, NUM_ITERATIONS);
+        KMeans kMeans = new KMeans()
+                .setK(NUM_CLUSTERS)
+                .setMaxIterations(NUM_ITERATIONS)
+                .setSeed(1990);
 
-        System.out.println("Cluster centers:");
-        for (Vector center : clusters.clusterCenters()) {
-            System.out.println(" " + center);
+        KMeansModel clusters = kMeans.run(vectorJavaRDD.rdd());
+        Vector[] centres = clusters.clusterCenters();
+        String WSSSE = String.format("%.15f", clusters.computeCost(vectorJavaRDD.rdd()));
+        JavaRDD<Integer> predictions1 = clusters.predict(vectorJavaRDD);
+
+        this.saveCentersAndCost(centres, WSSSE, "kmeans_centers");
+        this.saveClusters(predictions1, "kmeans_clusters");
+
+    }
+
+    private void saveClusters(JavaRDD<Integer> predictions1, String table) {
+        JavaRDD<Row> predictions = dataFormatter.intToRowJavaRDD(predictions1);
+        List<String> cryptoList = dataFactory.getCryptoDataset()
+                .toJavaRDD()
+                .map(row -> row.get(0).toString())
+                .collect();
+        predictions = dataFormatter.addFirstValueToRows(predictions, cryptoList);
+        List<StructField> fields = new ArrayList<>();
+
+        StructField cryptoField =
+                DataTypes.createStructField("crypto", DataTypes.StringType, false);
+        StructField field =
+                DataTypes.createStructField("cluster", DataTypes.StringType, false);
+        fields.add(cryptoField);
+        fields.add(field);
+
+        StructType schema = DataTypes.createStructType(fields);
+        Dataset<Row> rowDataset = dataFormatter.toRowDataset(predictions, schema);
+
+        dataFactory.writeOutputToDB(rowDataset, table, SaveMode.Overwrite);
+    }
+
+    private void saveCentersAndCost(Vector[] centers, String WSSSE, String table) {
+        List<String> lastValues = new ArrayList<>();
+        lastValues.add(WSSSE);
+        for (int i = 1; i < NUM_CLUSTERS; i++) {
+            lastValues.add(null);
         }
-        double cost = clusters.computeCost(vectorJavaRDD.rdd());
-        System.out.println("Cost: " + cost);
+        JavaRDD<Row> rowJavaRDD = dataFormatter.toRowJavaRDD(centers);
+        rowJavaRDD = dataFormatter.addLastValueToRows(rowJavaRDD, lastValues);
 
-// Evaluate clustering by computing Within Set Sum of Squared Errors
-        double WSSSE = clusters.computeCost(vectorJavaRDD.rdd());
-        System.out.println("Within Set Sum of Squared Errors = " + WSSSE);
+        List<StructField> fields = new ArrayList<>();
 
-        System.out.println("--------------");
-        clusters.predict(vectorJavaRDD).collect().stream().forEach(integer -> {
-            System.out.print(integer);
-            System.out.print(",");
-        });
-        System.out.println("--------------");
+        for (int i = 0; i < rowJavaRDD.first().size() - 1; i++) {
+            StructField field =
+                    DataTypes.createStructField(Integer.toString(i), DataTypes.StringType, true);
+            fields.add(field);
+        }
+        StructField WSSSEField =
+                DataTypes.createStructField("WSSSE", DataTypes.StringType, true);
+        fields.add(WSSSEField);
 
+        StructType schema = DataTypes.createStructType(fields);
+        Dataset<Row> rowDataset = dataFormatter.toRowDataset(rowJavaRDD, schema);
+
+        dataFactory.writeOutputToDB(rowDataset, table, SaveMode.Overwrite);
     }
 
 }
