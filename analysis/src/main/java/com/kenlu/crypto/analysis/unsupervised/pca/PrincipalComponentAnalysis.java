@@ -41,10 +41,10 @@ public class PrincipalComponentAnalysis {
         Matrix pc = rowMatrix.computePrincipalComponents(NUM_OF_PCS);
         RowMatrix projected = rowMatrix.multiply(pc);
 
-        this.save(projected);
+        this.save(projected, "pca");
     }
 
-    private void save(RowMatrix projected) {
+    private void save(RowMatrix projected, String table) {
         List<String> cryptoList = dataFactory.getCryptoDataset()
                 .toJavaRDD()
                 .map(row -> row.get(0).toString())
@@ -68,6 +68,6 @@ public class PrincipalComponentAnalysis {
         StructType schema = DataTypes.createStructType(fields);
         Dataset<Row> rowDataset = dataFormatter.toRowDataset(rowJavaRDD, schema);
 
-        dataFactory.writeOutputToDB(rowDataset, "pca", SaveMode.Overwrite);
+        dataFactory.writeOutputToDB(rowDataset, table, SaveMode.Overwrite);
     }
 }
