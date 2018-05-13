@@ -24,7 +24,7 @@ import java.util.List;
 public class KMeansClusteringAnalysis {
 
     private static final int NUM_CLUSTERS = 12;
-    private static final int NUM_ITERATIONS = 10000;
+    private static final int NUM_ITERATIONS = 100;
 
     @Autowired
     private DataFactory dataFactory;
@@ -36,11 +36,26 @@ public class KMeansClusteringAnalysis {
                 dataFormatter.toVectorJavaRDD(dataFactory.getPCADataset());
 
         KMeans kMeans = new KMeans()
-                .setK(NUM_CLUSTERS)
+                .setK(1)
                 .setMaxIterations(NUM_ITERATIONS)
                 .setSeed(1990);
-
         KMeansModel clusters = kMeans.run(vectorJavaRDD.rdd());
+        double cost = clusters.computeCost(vectorJavaRDD.rdd());
+
+        for (int i = 2; i < NUM_CLUSTERS; i++) {
+            KMeans tmpKMeans = new KMeans()
+                    .setK(i)
+                    .setMaxIterations(NUM_ITERATIONS)
+                    .setSeed(1990);
+            KMeansModel tmpClusters = tmpKMeans.run(vectorJavaRDD.rdd());
+
+            if (tmpClusters.computeCost(vectorJavaRDD.rdd()) < cost) {
+                kMeans = tmpKMeans;
+                clusters = kMeans.run(vectorJavaRDD.rdd());
+                cost = clusters.computeCost(vectorJavaRDD.rdd());
+            }
+        }
+
         Vector[] centres = clusters.clusterCenters();
         String WSSSE = String.format("%.15f", clusters.computeCost(vectorJavaRDD.rdd()));
         JavaRDD<Integer> predictions1 = clusters.predict(vectorJavaRDD);
