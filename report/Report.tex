@@ -1,0 +1,92 @@
+\documentclass[11pt]{article} % do not change this line
+\input{BigDataStyle.txt}      % do not change this line
+\usepackage{amsmath,amsfonts,amssymb,amsthm,latexsym,graphicx}
+
+\emergencystretch=5mm
+\tolerance=400
+\allowdisplaybreaks[4]
+
+\theoremstyle{plain}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{problem}[theorem]{Problem}
+
+\theoremstyle{definition}
+\newtheorem*{remark}{Remark}
+
+\title{Machine Learning for Investing Behaviours on Cryptocurrencies}
+\author{Chengkai Lu}
+
+\newcommand{\Programme}{Data Science and Analytics with a Year in Industry}
+% Computational Finance students: uncomment the next line
+%\twodepartmentstrue
+
+\begin{document}
+\maketitle
+
+\declaration
+
+\begin{abstract}
+  Your abstract goes here.
+\end{abstract}
+
+\section{Introduction}
+\subsection{Motivation}
+\subsection{Aims And Objectives}
+\subsection{Project Structure}
+\subsubsection{Technologies}
+\subsubsection{Programme Structure}
+\subsubsection{Report Structure}
+
+\section{Clustering}
+\subsection{Background}
+
+Clustering, cluster analysis or data segmentation is a non-parametric algorithm in the subtree of unsupervised learning. It is used to seperate data into different groups using their natural dissimilarities. Unlike supervised learning, this type of learning algorithms does not have any indicator for assessing the quality of results, and this means that it does not have any meaning or objective itself. Instead, it discovers the distribution of data and uses the definition given by people who have the specific domain knowledge. By giving the rules for partitioning data self-defined meanings, useful information can be obtained and utilised in different domains\cite{hastie/etal:2009}.
+
+\subsection{K-means Clustering}
+
+An example of a reference:
+\cite{adam/dpapa:2017}.
+
+\section{Recurrent Neural Network}
+\subsection{Background}
+\subsection{Long Short-Term Memory}
+
+\section{K-means Clustering on Price Fluctuations}
+\subsection{Data Prepocessing}
+\subsubsection{Data Formats}
+\subsubsection{Normalisation}
+\subsection{Data Analysis}
+\subsubsection{Shifting Along Timeline}
+\subsubsection{Model Training}
+\subsection{Result}
+
+\clearpage
+
+\section{LSTM on Highest/Lowest Nextday Growth Prediction}
+\subsection{Data Prepocessing}
+\subsubsection{Data Formats}
+\subsubsection{Normalisation}
+\subsubsection{Training Set and Validation Set}
+\subsection{Data Analysis}
+\subsubsection{Activation Functions}
+\subsubsection{Parameters}
+\subsubsection{Regularisation}
+\subsubsection{Loss Function}
+\subsubsection{Model Training}
+\subsection{Result}
+\subsubsection{Back Test}
+
+\section{Performance}
+\subsection{K-means Clustering}
+\subsection{Long Short-Term Memory}
+
+\section{Conclusion and Evaluation}
+\subsection{Visualisation}
+\subsection{Further Work}
+
+\bibliographystyle{plain}
+\bibliography{bibliography}
+\end{document}
