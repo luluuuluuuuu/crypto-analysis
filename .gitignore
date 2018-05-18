@@ -20,6 +20,7 @@ out/
 .tern-project
 .env-*
 spark-warehouse/
+*.csv
 
 pom.xml.tag
 pom.xml.releaseBackup
