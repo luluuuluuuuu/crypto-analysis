@@ -1,3 +1,22 @@
 {
-    "python.pythonPath": "/Users/KenLu/anaconda/bin/python3"
+    "python.pythonPath": "python3",
+    "python.autoComplete.extraPaths": [
+        "~/.local/lib/Google/google_appengine",
+        "~/.local/lib/Google/google_appengine/lib"
+    ],
+    "python.autoComplete.preloadModules": [
+        "numpy",
+        "pandas",
+        "matplotlib"
+    ],
+    "jupyter.appendResults": false,
+    "macros": {
+        "pythonExecSelectionAndCursorDown": [
+            "python.execSelectionInTerminal",
+            "cursorDown"
+        ]
+    },
+    "editor.formatOnType": false,
+    "editor.formatOnSave": false,
+    "editor.formatOnPaste": false
 }
