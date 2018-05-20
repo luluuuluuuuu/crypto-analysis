@@ -10,8 +10,7 @@ import time
 SPLITDATE = "2018-01-01"
 windowLen = 10
 
-df = pd.read_csv("daily_changes.csv", sep=",")[
-    ["date", "BTC", "ETH", "DOGE", "LTC", "XRP"]]
+df = pd.read_csv("daily_changes.csv", sep=",")[["date", "BTC", "ETH", "DOGE", "LTC", "XRP"]]
 
 trainingSet, testSet = df[df["date"] < SPLITDATE], df[df["date"] >= SPLITDATE]
 trainingSet = trainingSet.drop(["date"], 1)
@@ -28,10 +27,8 @@ testLabels = testLabels.assign(max=df.max(axis=1))
 
 columns = list(filter(lambda x: x not in ("max", "date"), df.columns))
 for column in columns:
-    trainingLabels.loc[trainingLabels[column]
-                       != trainingLabels["max"], column] = 0
-    trainingLabels.loc[trainingLabels[column]
-                       == trainingLabels["max"], column] = 1
+    trainingLabels.loc[trainingLabels[column] != trainingLabels["max"], column] = 0
+    trainingLabels.loc[trainingLabels[column] == trainingLabels["max"], column] = 1
     testLabels.loc[testLabels[column] != testLabels["max"], column] = 0
     testLabels.loc[testLabels[column] == testLabels["max"], column] = 1
 
@@ -97,8 +94,7 @@ model.fit(
 topK = 1
 
 training_predicted = model.predict(trainingInputs)
-training_predicted_classes = np.fliplr(
-    training_predicted.argsort(axis=1))[:, :topK]
+training_predicted_classes = np.fliplr(training_predicted.argsort(axis=1))[:, :topK]
 training_actual_classes = np.argmax(np.array(trainingLabels), axis=1)
 
 training_predictions = []
@@ -120,18 +116,12 @@ print("Test Accuracy: ", test_predictions.count(True)/len(test_predictions))
 
 # Ploting
 
-plt.scatter(x=range(training_actual_classes[:10].shape[0]),
-            y=training_actual_classes[:10], label="actual")
-plt.scatter(x=range(training_predicted_classes[:10].shape[0]), y=[
-            c[0] for c in training_predicted_classes[:10, 0:]], label="predicted")
-plt.scatter(x=range(training_predicted_classes[:10].shape[0]), y=[
-            c[0] for c in training_predicted_classes[:10, 1:]], label="predicted")
-plt.scatter(x=range(training_predicted_classes[:10].shape[0]), y=[
-            c[0] for c in training_predicted_classes[:10, 2:]], label="predicted")
-plt.scatter(x=range(training_predicted_classes[:10].shape[0]), y=[
-            c[0] for c in training_predicted_classes[:10, 3:]], label="predicted")
-plt.scatter(x=range(training_predicted_classes[:10].shape[0]), y=[
-            c[0] for c in training_predicted_classes[:10, 4:]], label="predicted")
+plt.scatter(x=range(training_actual_classes[:10].shape[0]), y=training_actual_classes[:10], label="actual")
+plt.scatter(x=range(training_predicted_classes[:10].shape[0]), y=[c[0] for c in training_predicted_classes[:10, 0:]], label="predicted")
+plt.scatter(x=range(training_predicted_classes[:10].shape[0]), y=[c[0] for c in training_predicted_classes[:10, 1:]], label="predicted")
+plt.scatter(x=range(training_predicted_classes[:10].shape[0]), y=[c[0] for c in training_predicted_classes[:10, 2:]], label="predicted")
+plt.scatter(x=range(training_predicted_classes[:10].shape[0]), y=[c[0] for c in training_predicted_classes[:10, 3:]], label="predicted")
+plt.scatter(x=range(training_predicted_classes[:10].shape[0]), y=[c[0] for c in training_predicted_classes[:10, 4:]], label="predicted")
 plt.legend()
 plt.show()
 CEL = log_loss(trainingLabels, model.predict(trainingInputs))
