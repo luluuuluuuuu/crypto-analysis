@@ -38,4 +38,6 @@
 \contentsline {section}{\numberline {7}Conclusion and Evaluation}{3}
 \contentsline {subsection}{\numberline {7.1}Visualisation}{3}
 \contentsline {subsection}{\numberline {7.2}Further Work}{3}
+\contentsline {section}{\numberline {8}Appendix}{3}
+\contentsline {subsection}{\numberline {8.1}Programme Usage}{3}
 \contentsline {section}{References}{3}
