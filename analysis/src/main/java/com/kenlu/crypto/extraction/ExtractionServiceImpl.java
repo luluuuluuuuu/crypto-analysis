@@ -1,7 +1,7 @@
 package com.kenlu.crypto.extraction;
 
-import com.kenlu.crypto.extraction.utils.DBInitialiser;
-import com.kenlu.crypto.extraction.utils.DBUpdater;
+import com.kenlu.crypto.extraction.worker.DBInitializer;
+import com.kenlu.crypto.extraction.worker.DBUpdater;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -22,7 +22,7 @@ public class ExtractionServiceImpl implements CommandLineRunner {
     private Calendar today = Calendar.getInstance();
 
     @Autowired
-    private DBInitialiser dbInitialiser;
+    private DBInitializer dbInitializer;
     @Autowired
     private DBUpdater dbUpdater;
 
@@ -31,7 +31,7 @@ public class ExtractionServiceImpl implements CommandLineRunner {
         CompletableFuture<Void> future = CompletableFuture
                 .runAsync(() -> {
                     try {
-                        dbInitialiser.run();
+                        dbInitializer.run();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }

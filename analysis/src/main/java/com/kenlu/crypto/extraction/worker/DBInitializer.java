@@ -1,6 +1,9 @@
-package com.kenlu.crypto.extraction.utils;
+package com.kenlu.crypto.extraction.worker;
 
 import com.kenlu.crypto.domain.Crypto;
+import com.kenlu.crypto.domain.DailyOHLCV;
+import com.kenlu.crypto.extraction.utils.DataExtractor;
+import com.kenlu.crypto.extraction.utils.QueryHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -9,25 +12,23 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.*;
 
 @Slf4j
 @Component
-public class DBInitialiser {
+public class DBInitializer {
 
     private static final long TO_TIMESTAMP = System.currentTimeMillis() / 1000;
     private static final long FROM_TIMESTAMP = 1483228800;
 
-    private Map<Crypto, List<String>> initCryptoDataset;
+    private List<DailyOHLCV> initOhlcvList = new ArrayList<>();
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
     @Autowired
     private QueryHandler queryHandler;
+    @Autowired
+    private DataExtractor dataExtractor;
 
     public void run() throws Exception {
         log.info("Initiating tables...");
@@ -56,22 +57,25 @@ public class DBInitialiser {
             DateTime toDate = new DateTime(TO_TIMESTAMP * 1000).plusDays(1);
             DateTime fromDate = new DateTime(FROM_TIMESTAMP * 1000);
             int initNumOfDays = Days.daysBetween(fromDate, toDate).getDays();
-            if (this.initCryptoDataset == null) {
-                List<Crypto> cryptos =
-                        Arrays.stream(Crypto.values())
-                                .sorted(Comparator.comparing(Crypto::name))
-                                .collect(Collectors.toList());
-                this.initCryptoDataset = queryHandler.getCryptoPairs(cryptos, initNumOfDays, TO_TIMESTAMP, false);
+            if (this.initOhlcvList.size() == 0) {
+                Arrays.stream(Crypto.values())
+                        .forEach(crypto -> {
+                            try {
+                                List<DailyOHLCV> tmpList = dataExtractor.getDailyOHLCVs(crypto, initNumOfDays, TO_TIMESTAMP, false);
+                                initOhlcvList.addAll(tmpList);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        });
             }
             switch (theTable) {
                 case "input.daily_changes" :
-                    List<String> dates = queryHandler.getDatesBetween(FROM_TIMESTAMP, TO_TIMESTAMP + 86400000);
-                    queryHandler.createDailyChangeTable(initCryptoDataset);
-                    queryHandler.insertDailyChangeQuery(initCryptoDataset, dates);
+                    queryHandler.createDailyChangeTable(initOhlcvList);
+                    queryHandler.insertDailyChangeQuery(initOhlcvList);
                     break;
                 case "input.crypto" :
                     queryHandler.createCryptoTable();
-                    queryHandler.insertCryptoQuery(initCryptoDataset);
+                    queryHandler.insertCryptoQuery(initOhlcvList);
                     break;
                 default:
                     break;
