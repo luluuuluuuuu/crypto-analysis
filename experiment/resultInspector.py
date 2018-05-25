@@ -8,9 +8,7 @@ class ResultInspector:
         self.testLabels = testLabels
         self.model = model
 
-    def getAccuracy(self):
-        topK = 1
-
+    def getAccuracy(self, topK = 1):
         dataSets = {
             "training": {
                 "inputs": self.trainingInputs,
