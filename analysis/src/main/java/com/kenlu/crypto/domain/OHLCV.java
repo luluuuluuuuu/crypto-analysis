@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class DailyOHLCV {
+public class OHLCV {
 
     private Crypto crypto;
     private Date date;
@@ -17,6 +17,6 @@ public class DailyOHLCV {
     private BigDecimal volumeFrom;
     private BigDecimal volumeTo;
 
-    public DailyOHLCV() {
+    public OHLCV() {
     }
 }

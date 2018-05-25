@@ -1,6 +1,6 @@
 package com.kenlu.crypto.extraction.worker;
 
-import com.kenlu.crypto.domain.DailyOHLCV;
+import com.kenlu.crypto.domain.OHLCV;
 import com.kenlu.crypto.extraction.utils.DataExtractor;
 import com.kenlu.crypto.extraction.utils.QueryHandler;
 import lombok.extern.slf4j.Slf4j;
@@ -22,22 +22,22 @@ public class DBUpdater extends TimerTask {
 
     @Override
     public void run() {
-        updateDailyChanges();
+        updateTables();
     }
 
-    private void updateDailyChanges() {
+    private void updateTables() {
         try {
             long lastDate = queryHandler.getLastDateFromDailyChanges().getTime();
             long today = System.currentTimeMillis();
             long startDate = new DateTime(lastDate).plusDays(1).getMillis();
             long endDate = new DateTime(today).plusDays(1).getMillis();
             int daysBetween = Days.daysBetween(new DateTime(startDate).plusDays(1), new DateTime(endDate)).getDays();
-            List<DailyOHLCV> ohlcvList = new ArrayList<>();
+            List<OHLCV> ohlcvList = new ArrayList<>();
 
             queryHandler.getCryptos().stream()
                     .forEach(crypto -> {
                         try {
-                            List<DailyOHLCV> tmpList = dataExtractor.getDailyOHLCVs(crypto, daysBetween, System.currentTimeMillis() / 1000, true);
+                            List<OHLCV> tmpList = dataExtractor.getDailyOHLCVs(crypto, daysBetween, System.currentTimeMillis() / 1000, true);
                             ohlcvList.addAll(tmpList);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -48,6 +48,7 @@ public class DBUpdater extends TimerTask {
                 return;
             }
 
+            queryHandler.insertOHLCVQuery(ohlcvList);
             queryHandler.insertDailyChangeQuery(ohlcvList);
         } catch (Exception e) {
             log.error("Unable to update table daily_changes...");
