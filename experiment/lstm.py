@@ -3,11 +3,12 @@ import pandas as pd
 from sklearn.metrics import log_loss
 from sklearn.preprocessing import LabelEncoder
 from sklearn.preprocessing import OneHotEncoder
+from sklearn.preprocessing import normalize
 from lstmModel import LSTMModel
 from resultInspector import ResultInspector
 
 SPLITDATE = "2018-01-01"
-windowLen = 20
+windowLen = 30
 
 daily_changes = pd.read_csv("daily_changes.csv", sep=",")
 clusters = pd.read_csv("clusters.csv", sep=",")
@@ -16,11 +17,14 @@ trainingSet, testSet = daily_changes[daily_changes["date"] < SPLITDATE], daily_c
 
 trainingLabels = trainingSet.copy()[1 + windowLen:]
 testLabels = testSet.copy()[1 + windowLen:]
-trainingSet = trainingSet[:trainingSet.shape[0] - 1]
-testSet = testSet[:testSet.shape[0] - 1]
+trainingSet = trainingSet[:trainingSet.shape[0] - 1].drop(["date"], 1)
+testSet = testSet[:testSet.shape[0] - 1].drop(["date"], 1)
+
+trainingSet = normalize(trainingSet)
+testSet = normalize(testSet)
 
 onehotEncoder = OneHotEncoder(sparse=False)
-for dataset in ["trainingSet", "testSet", "trainingLabels", "testLabels"]:
+for dataset in ["trainingLabels", "testLabels"]:
     vars()[dataset] = vars()[dataset].drop(["date"], 1)
     vars()[dataset] = np.argmax(np.array(vars()[dataset]), axis=1)
     vars()[dataset] = np.array(clusters.loc[vars()[dataset], "cluster"])
