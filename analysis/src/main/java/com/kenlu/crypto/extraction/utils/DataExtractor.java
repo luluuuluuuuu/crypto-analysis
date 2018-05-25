@@ -3,7 +3,7 @@ package com.kenlu.crypto.extraction.utils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.kenlu.crypto.domain.Crypto;
-import com.kenlu.crypto.domain.DailyOHLCV;
+import com.kenlu.crypto.domain.OHLCV;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
@@ -25,14 +25,14 @@ public class DataExtractor {
     @Autowired
     private QueryHandler queryHandler;
 
-    public List<DailyOHLCV> getDailyOHLCVs(Crypto crypto, int numOfDays, long toTimestamp, boolean isUpdate) throws Exception {
+    public List<OHLCV> getDailyOHLCVs(Crypto crypto, int numOfDays, long toTimestamp, boolean isUpdate) throws Exception {
         Map<String, Object> params = new HashMap<>();
         params.put("extraParams", "crypto-analysis");
         params.put("limit", Integer.toString(numOfDays - 1));
         params.put("toTs", Long.toString(toTimestamp));
 
-        List<DailyOHLCV> ohlcvList = new ArrayList<>();
-        List<DailyOHLCV> result;
+        List<OHLCV> ohlcvList = new ArrayList<>();
+        List<OHLCV> result;
 
         this.getHistoDay(crypto.name(), "USD", params)
                 .get("Data")
@@ -47,18 +47,18 @@ public class DataExtractor {
                     BigDecimal close = jsonObject.get("close").getAsBigDecimal();
                     BigDecimal volumeFrom = jsonObject.get("volumefrom").getAsBigDecimal();
                     BigDecimal volumeTo = jsonObject.get("volumeto").getAsBigDecimal();
-                    DailyOHLCV dailyOHLCV = new DailyOHLCV();
+                    OHLCV ohlcv = new OHLCV();
 
-                    dailyOHLCV.setCrypto(crypto);
-                    dailyOHLCV.setDate(date);
-                    dailyOHLCV.setOpen(open);
-                    dailyOHLCV.setHigh(high);
-                    dailyOHLCV.setLow(low);
-                    dailyOHLCV.setClose(close);
-                    dailyOHLCV.setVolumeFrom(volumeFrom);
-                    dailyOHLCV.setVolumeTo(volumeTo);
+                    ohlcv.setCrypto(crypto);
+                    ohlcv.setDate(date);
+                    ohlcv.setOpen(open);
+                    ohlcv.setHigh(high);
+                    ohlcv.setLow(low);
+                    ohlcv.setClose(close);
+                    ohlcv.setVolumeFrom(volumeFrom);
+                    ohlcv.setVolumeTo(volumeTo);
 
-                    ohlcvList.add(dailyOHLCV);
+                    ohlcvList.add(ohlcv);
                 });
         result = ohlcvList;
 
