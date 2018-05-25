@@ -1,6 +1,7 @@
 package com.kenlu.crypto.extraction.utils;
 
 import com.kenlu.crypto.domain.Crypto;
+import com.kenlu.crypto.domain.DailyOHLCV;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -9,7 +10,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
+import java.math.BigDecimal;
 import java.sql.Date;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -20,50 +24,64 @@ public class QueryHandler {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
-    @Autowired
-    private DataExtractor dataExtractor;
 
-    public void insertDailyChangeQuery(Map<Crypto, List<String>> cryptoDataset, List<String> dates) {
-        List<List<String>> dataArray = new ArrayList<>(cryptoDataset.values());
-
+    public void insertDailyChangeQuery(List<DailyOHLCV> ohlcvList) {
         log.info("Inserting data for table input.daily_changes...");
-        for (int i = 0; i < dataArray.get(0).size(); i++) {
-            StringBuilder insertValues = new StringBuilder();
-            String insertSqlStatement;
+        ohlcvList.stream()
+                .sorted(Comparator.comparing(DailyOHLCV::getDate))
+                .map(DailyOHLCV::getDate)
+                .distinct()
+                .forEach(date -> {
+                    StringBuilder insertValues = new StringBuilder();
+                    String insertSqlStatement;
+                    DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+                    String stringDate = f.format(date);
 
-            insertValues.append("'")
-                    .append(dates.get(i))
-                    .append("'")
-                    .append(", ");
+                    insertValues.append("'")
+                            .append(stringDate)
+                            .append("'")
+                            .append(", ");
 
-            for (int j = 0; j < dataArray.size(); j++) {
-                String value = dataArray.get(j).get(i);
+                    ohlcvList.stream()
+                            .filter(dailyOHLCV -> dailyOHLCV.getDate().equals(date))
+                            .sorted((o1, o2) -> o1.getCrypto().name().compareTo(o2.getCrypto().name()))
+                            .forEach(dailyOHLCV -> {
+                                String dailyChange;
+                                try {
+                                    dailyChange = dailyOHLCV.getClose().divide(dailyOHLCV.getOpen(), 15, BigDecimal.ROUND_HALF_UP).toString();
+                                } catch (ArithmeticException e) {
+                                    dailyChange = "NaN";
+                                    e.printStackTrace();
+                                }
 
-                insertValues.append("'")
-                        .append(value)
-                        .append("'")
-                        .append(", ");
-            }
+                                insertValues.append("'")
+                                        .append(dailyChange)
+                                        .append("'")
+                                        .append(", ");
+                            });
 
-            insertSqlStatement = String.format(
-                    "INSERT INTO input.daily_changes VALUES (%s)",
-                    insertValues.substring(0, insertValues.lastIndexOf(","))
-            );
+                    insertSqlStatement = String.format(
+                            "INSERT INTO input.daily_changes VALUES (%s)",
+                            insertValues.substring(0, insertValues.lastIndexOf(","))
+                    );
 
-            this.jdbcTemplate.update(insertSqlStatement);
-            log.info("Daily changes on {} are inserted", dates.get(i));
-        }
+                    this.jdbcTemplate.update(insertSqlStatement);
+                    log.info("Daily changes on {} are inserted", stringDate);
+                });
     }
 
-    public void insertCryptoQuery(Map<Crypto, List<String>> cryptoDataset) {
+    public void insertCryptoQuery(List<DailyOHLCV> ohlcvList) {
         log.info("Inserting data for table input.crypto...");
-        cryptoDataset.entrySet().stream()
-                .forEach(pairs -> {
+        ohlcvList.stream()
+                .sorted((o1, o2) -> o1.getCrypto().name().compareTo(o2.getCrypto().name()))
+                .map(DailyOHLCV::getCrypto)
+                .distinct()
+                .forEach(crypto -> {
                             StringBuilder insertValue = new StringBuilder();
                             String insertSqlStatement;
 
                             insertValue.append("'")
-                                    .append(pairs.getKey().name())
+                                    .append(crypto.name())
                                     .append("'");
 
                             insertSqlStatement = String.format(
@@ -72,37 +90,24 @@ public class QueryHandler {
                             );
 
                             this.jdbcTemplate.update(insertSqlStatement);
-                            log.info("Crypto {} is inserted", pairs.getKey().name());
+                            log.info("Crypto {} is inserted", crypto.name());
                         }
                 );
     }
 
-    public Map<Crypto, List<String>> getCryptoPairs(List<Crypto> cryptos, int numOfDays, long toTimestampInSec, boolean isUpdate) throws Exception {
-        Map<Crypto, List<String>> cryptoPairs = new TreeMap<>(Comparator.comparing(Crypto::name));
-
-        for (int i = 0; i < cryptos.size(); i++) {
-            List<String> values = new ArrayList<>(this.dataExtractor
-                    .getDailyChanges(cryptos.get(i), numOfDays, toTimestampInSec, isUpdate)
-                    .values());
-
-            if (isValidCrypto(values)) {
-                cryptoPairs.put(cryptos.get(i), values);
-            }
-        }
-
-        return cryptoPairs;
-    }
-
-    public void createDailyChangeTable(Map<Crypto, List<String>> cryptoDataset) {
+    public void createDailyChangeTable(List<DailyOHLCV> ohlcvList) {
         String createSqlStatement;
         StringBuilder createCols = new StringBuilder();
 
         log.info("Creating table input.daily_changes...");
 
-        cryptoDataset.entrySet().stream()
-                .forEach(pairs ->
+        ohlcvList.stream()
+                .sorted((o1, o2) -> o1.getCrypto().name().compareTo(o2.getCrypto().name()))
+                .map(DailyOHLCV::getCrypto)
+                .distinct()
+                .forEach(crypto ->
                         createCols.append("\"")
-                                .append(pairs.getKey().name())
+                                .append(crypto.name())
                                 .append("\" ")
                                 .append("character varying(30) NOT NULL")
                                 .append(", ")
@@ -159,13 +164,6 @@ public class QueryHandler {
                         dates.add(DateTimeFormat.forPattern("yyyy-MM-dd").print(date))
                 );
         return dates;
-    }
-
-    private boolean isValidCrypto(List<String> list) {
-        return !list.contains("NaN")
-                && !list.contains(null)
-                && !list.contains("")
-                && !list.isEmpty();
     }
 
     public void dropTable(String schema, String table) {

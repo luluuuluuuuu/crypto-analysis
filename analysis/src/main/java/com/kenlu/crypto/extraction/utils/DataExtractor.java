@@ -3,18 +3,18 @@ package com.kenlu.crypto.extraction.utils;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.kenlu.crypto.domain.Crypto;
+import com.kenlu.crypto.domain.DailyOHLCV;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
+import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.math.BigDecimal;
 import java.util.*;
 import java.util.concurrent.Future;
 import java.util.stream.Collectors;
@@ -25,15 +25,14 @@ public class DataExtractor {
     @Autowired
     private QueryHandler queryHandler;
 
-    public Map<String, String> getDailyChanges(Crypto crypto, int numOfDays, long toTimestamp, boolean isUpdate) throws Exception {
+    public List<DailyOHLCV> getDailyOHLCVs(Crypto crypto, int numOfDays, long toTimestamp, boolean isUpdate) throws Exception {
         Map<String, Object> params = new HashMap<>();
         params.put("extraParams", "crypto-analysis");
         params.put("limit", Integer.toString(numOfDays - 1));
         params.put("toTs", Long.toString(toTimestamp));
 
-        Map<String, String> result;
-        Map<String, String> row = new TreeMap<>(Comparator.naturalOrder());
-        DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
+        List<DailyOHLCV> ohlcvList = new ArrayList<>();
+        List<DailyOHLCV> result;
 
         this.getHistoDay(crypto.name(), "USD", params)
                 .get("Data")
@@ -42,26 +41,33 @@ public class DataExtractor {
                 .forEachRemaining(x -> {
                     JsonObject jsonObject = x.getAsJsonObject();
                     Date date = new Date(jsonObject.get("time").getAsLong() * 1000);
-                    double open = jsonObject.get("open").getAsDouble();
-                    double close = jsonObject.get("close").getAsDouble();
-                    String changes = Double.toString(close / open);
+                    BigDecimal open = jsonObject.get("open").getAsBigDecimal();
+                    BigDecimal high = jsonObject.get("high").getAsBigDecimal();
+                    BigDecimal low = jsonObject.get("low").getAsBigDecimal();
+                    BigDecimal close = jsonObject.get("close").getAsBigDecimal();
+                    BigDecimal volumeFrom = jsonObject.get("volumefrom").getAsBigDecimal();
+                    BigDecimal volumeTo = jsonObject.get("volumeto").getAsBigDecimal();
+                    DailyOHLCV dailyOHLCV = new DailyOHLCV();
 
-                    row.put(f.format(date), changes);
+                    dailyOHLCV.setCrypto(crypto);
+                    dailyOHLCV.setDate(date);
+                    dailyOHLCV.setOpen(open);
+                    dailyOHLCV.setHigh(high);
+                    dailyOHLCV.setLow(low);
+                    dailyOHLCV.setClose(close);
+                    dailyOHLCV.setVolumeFrom(volumeFrom);
+                    dailyOHLCV.setVolumeTo(volumeTo);
+
+                    ohlcvList.add(dailyOHLCV);
                 });
-        result = row;
+        result = ohlcvList;
 
         if (isUpdate) {
             Date lastDate = queryHandler.getLastDateFromDailyChanges();
-            result = row.entrySet().stream()
-                    .filter(x -> {
-                        try {
-                            return f.parse(x.getKey()).after(lastDate);
-                        } catch(ParseException e) {
-                            e.printStackTrace();
-                        }
-                        return false;
-                    })
-                    .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+            DateTime fromDate = new DateTime(lastDate).plusDays(1);
+            result = ohlcvList.stream()
+                    .filter(x -> x.getDate().after(fromDate.toDate()))
+                    .collect(Collectors.toList());
         }
 
         return result;
