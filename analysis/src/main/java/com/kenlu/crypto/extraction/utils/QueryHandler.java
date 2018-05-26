@@ -104,7 +104,6 @@ public class QueryHandler {
                                     dailyChange = ohlcv.getClose().divide(ohlcv.getOpen(), 15, BigDecimal.ROUND_HALF_UP).toString();
                                 } catch (ArithmeticException e) {
                                     dailyChange = "NaN";
-                                    e.printStackTrace();
                                 }
 
                                 insertValues.append("'")
