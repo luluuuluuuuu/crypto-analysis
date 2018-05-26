@@ -34,4 +34,16 @@ public class UnsupervisedLearningTasks extends TimerTask {
         }
     }
 
+    public void runCorrelation() {
+        correlationAnalysis.run();
+    }
+
+    public void runPCA() {
+        principalComponentAnalysis.run();
+    }
+
+    public void runKmeans() {
+        kMeansClusteringAnalysis.run();
+    }
+
 }
