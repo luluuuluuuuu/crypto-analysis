@@ -25,7 +25,29 @@ public class AnalysisServiceImpl implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        this.scheduleAnalysis();
+        if (args.length == 0) {
+            this.scheduleAnalysis();
+            return;
+        } else {
+            switch (args[0]) {
+                case "all":
+                    unsupervisedLearningTasks.run();
+                    return;
+                case "corr":
+                    unsupervisedLearningTasks.runCorrelation();
+                    return;
+                case "pca":
+                    unsupervisedLearningTasks.runPCA();
+                    return;
+                case "kmeans":
+                    unsupervisedLearningTasks.runKmeans();
+                    return;
+                default:
+                    this.scheduleAnalysis();
+                    return;
+            }
+
+        }
     }
 
     public void scheduleAnalysis() {
