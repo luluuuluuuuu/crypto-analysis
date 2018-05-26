@@ -61,7 +61,7 @@ public class PrincipalComponentAnalysis {
 
         for (int i = 0; i < NUM_OF_PCS; i++) {
             StructField field =
-                    DataTypes.createStructField(Integer.toString(i), DataTypes.StringType, false);
+                    DataTypes.createStructField("feature" + Integer.toString(i), DataTypes.StringType, false);
             fields.add(field);
         }
 

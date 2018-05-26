@@ -23,7 +23,7 @@ import java.util.List;
 @Component
 public class KMeansClusteringAnalysis {
 
-    private static final int NUM_CLUSTERS = 12;
+    private static final int MAX_CLUSTER_NUM = 20;
     private static final int NUM_ITERATIONS = 100;
 
     @Autowired
@@ -41,27 +41,33 @@ public class KMeansClusteringAnalysis {
                 .setSeed(1990);
         KMeansModel clusters = kMeans.run(vectorJavaRDD.rdd());
         double cost = clusters.computeCost(vectorJavaRDD.rdd());
+        JavaRDD<Integer> predictions = clusters.predict(vectorJavaRDD);
+        Vector[] centers = clusters.clusterCenters();
 
-        for (int i = 2; i < NUM_CLUSTERS; i++) {
+        for (int i = 2; i < MAX_CLUSTER_NUM; i++) {
             KMeans tmpKMeans = new KMeans()
                     .setK(i)
                     .setMaxIterations(NUM_ITERATIONS)
                     .setSeed(1990);
             KMeansModel tmpClusters = tmpKMeans.run(vectorJavaRDD.rdd());
+            JavaRDD<Integer> tmpPredictions = tmpClusters.predict(vectorJavaRDD);
+            Vector[] tmpCenters = tmpClusters.clusterCenters();
+            double tmpCost = tmpClusters.computeCost(vectorJavaRDD.rdd());
+            boolean isMultipleInClusters = tmpPredictions.collect()
+                    .stream()
+                    .noneMatch(integer -> integer <= 0);
 
-            if (tmpClusters.computeCost(vectorJavaRDD.rdd()) < cost) {
-                kMeans = tmpKMeans;
-                clusters = kMeans.run(vectorJavaRDD.rdd());
-                cost = clusters.computeCost(vectorJavaRDD.rdd());
+            if (tmpCost < cost) {
+                cost = tmpCost;
+                predictions = tmpPredictions;
+                centers = tmpCenters;
             }
         }
 
-        Vector[] centres = clusters.clusterCenters();
-        String WSSSE = String.format("%.15f", clusters.computeCost(vectorJavaRDD.rdd()));
-        JavaRDD<Integer> predictions1 = clusters.predict(vectorJavaRDD);
+        String WSSSE = String.format("%.15f", cost);
 
-        this.saveCentersAndCost(centres, WSSSE, "kmeans_centers");
-        this.saveClusters(predictions1, "kmeans_clusters");
+        this.saveCentersAndCost(centers, WSSSE, "kmeans_centers");
+        this.saveClusters(predictions, "kmeans_clusters");
 
     }
 
@@ -90,7 +96,7 @@ public class KMeansClusteringAnalysis {
     private void saveCentersAndCost(Vector[] centers, String WSSSE, String table) {
         List<String> lastValues = new ArrayList<>();
         lastValues.add(WSSSE);
-        for (int i = 1; i < NUM_CLUSTERS; i++) {
+        for (int i = 1; i < MAX_CLUSTER_NUM; i++) {
             lastValues.add(null);
         }
         JavaRDD<Row> rowJavaRDD = dataFormatter.toRowJavaRDD(centers);
@@ -100,7 +106,7 @@ public class KMeansClusteringAnalysis {
 
         for (int i = 0; i < rowJavaRDD.first().size() - 1; i++) {
             StructField field =
-                    DataTypes.createStructField(Integer.toString(i), DataTypes.StringType, true);
+                    DataTypes.createStructField("feature" + Integer.toString(i), DataTypes.StringType, true);
             fields.add(field);
         }
         StructField WSSSEField =
