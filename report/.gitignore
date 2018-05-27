@@ -9,3 +9,5 @@
 *.bbl
 *.gz
 *.toc
+*.lof
+*.lot
