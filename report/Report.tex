@@ -126,7 +126,7 @@ To achieve this, we can create a matrix which contains all the correlation coeff
 A correlation matrix is a symmetirc matrix to its main diagonal. The values on the main diagonal always equal to 1 because the attributes are fully dependent on themselves. Table \ref{table:cormat} gives an example of how a correlation matrix looks like.
 
 {
-  \begin{table}[h]
+  \begin{table}[ht]
     \centering
     \begin{tabular}{|c|c c c c c|}
       \hline
@@ -150,9 +150,9 @@ A correlation matrix is a symmetirc matrix to its main diagonal. The values on t
 
 \subsection{Dimensionality Reduction}
 
-It is always challenging to analyse a dataset with high-dimensional data points. Due to the curse of dimensionality, which was discovered by Richard Ernest Bellman in 1961, higher dimensional space increases the difficulties of analysing and organising data exponentially\cite{wiki/cod:2018}. Especially in machine learning, given a certain number of samples, the accuracy of predictions on these samples will increase followed by the rising dimensions to a peak but then gradually drop. This is known as Hughes phenomenon\cite{hughes/itoit:1968}. Figure \ref{fig:hughes} shows how the dimensionality influence the accuracy of predictions.
+It is always challenging to analyse a dataset with high-dimensional data points. Due to the curse of dimensionality, which was discovered by Richard Ernest Bellman in 1961, higher-dimensional space increases the difficulties of analysing and organising data exponentially\cite{wiki/cod:2018}. Especially in machine learning, given a certain number of samples, the accuracy of predictions on these samples will increase followed by the rising dimensions to a peak but then gradually drop. This is known as Hughes phenomenon\cite{hughes/itoit:1968}. Figure \ref{fig:hughes} shows how the dimensionality influence the accuracy of predictions.
 
-\begin{figure}[h]
+\begin{figure}[ht]
   \includegraphics[width=0.8\linewidth, center]{resources/dimensionality.png}
   \caption{Hughes phenomenon}
   \label{fig:hughes}
@@ -168,12 +168,16 @@ The reasons and benefits of executing dimensionality reduction can be summarised
 \begin{enumerate}
   \item Computational efficiency: Fewer features mean less computation on dissimilarity between pairs of data points and lower arithmetic complexity. It also implies less storage usage as the variables in each sample decrease.
   \item Statistical generalisation: By removing noise or irrelevant information from the inputs for building models, the prediction rules can be more general among the datasets.
-  \item Better explanation: Visualising a lower dimensional space is much easier. We can effortlessly illustrate the structure of data when the dimension is lower than 3. Higher dimensional space will be more challenging to visualise, explain and comprehend.
+  \item Better explanation: Visualising a lower-dimensional space is much easier. We can effortlessly illustrate the structure of data when the dimension is lower than 3. Higher-dimensional space will be more challenging to visualise, explain and comprehend.
 \end{enumerate}
 
 \subsubsection{Principal Component Analysis}
 
-Principal component analysis (PCA) is a method for feature extraction. 
+Principal component analysis(PCA) is a method for feature extraction. It projects features into a lower-dimensional space based on a linear function. An optimal mapping function is usually non-linear. Nevertheless, a systematic way of finding a non-linear function does not exist currently. PCA therefore exists as a reasonable compromise on finding linear projections. It is a kind of single representation approach as opposed to classification on revealing underlying information in a lower-dimensional space.
+
+The features derived are called principal components(PCs). They represent new orthogonal axes in an order based on the amount of information it contains.
+
+% \cite{bishop/praml:2006}
 
 \subsection{Clustering}
 
