@@ -48,12 +48,11 @@ public class CorrelationAnalysis {
                 DataTypes.createStructField("crypto", DataTypes.StringType, false);
         fields.add(cryptoField);
 
-        cryptoList.stream()
-                .forEach(crypto -> {
-                    StructField field =
-                            DataTypes.createStructField(crypto, DataTypes.StringType, false);
-                    fields.add(field);
-                });
+        cryptoList.forEach(crypto -> {
+                        StructField field =
+                                DataTypes.createStructField(crypto, DataTypes.StringType, false);
+                        fields.add(field);
+        });
 
         StructType schema = DataTypes.createStructType(fields);
         JavaRDD<Row> rowJavaRDD = dataFormatter.toRowJavaRDD(vectorList);

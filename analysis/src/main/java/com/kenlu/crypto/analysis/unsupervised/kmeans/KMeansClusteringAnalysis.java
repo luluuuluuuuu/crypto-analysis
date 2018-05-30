@@ -53,9 +53,6 @@ public class KMeansClusteringAnalysis {
             JavaRDD<Integer> tmpPredictions = tmpClusters.predict(vectorJavaRDD);
             Vector[] tmpCenters = tmpClusters.clusterCenters();
             double tmpCost = tmpClusters.computeCost(vectorJavaRDD.rdd());
-            boolean isMultipleInClusters = tmpPredictions.collect()
-                    .stream()
-                    .noneMatch(integer -> integer <= 0);
 
             if (tmpCost < cost) {
                 cost = tmpCost;

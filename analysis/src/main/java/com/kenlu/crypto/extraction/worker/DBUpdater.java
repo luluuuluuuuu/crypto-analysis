@@ -13,14 +13,13 @@ import java.util.*;
 
 @Slf4j
 @Component
-public class DBUpdater extends TimerTask {
+public class DBUpdater {
 
     @Autowired
     private QueryHandler queryHandler;
     @Autowired
     private DataExtractor dataExtractor;
 
-    @Override
     public void run() {
         updateTables();
     }
@@ -34,7 +33,7 @@ public class DBUpdater extends TimerTask {
             int daysBetween = Days.daysBetween(new DateTime(startDate).plusDays(1), new DateTime(endDate)).getDays();
             List<OHLCV> ohlcvList = new ArrayList<>();
 
-            queryHandler.getCryptos().stream()
+            queryHandler.getCryptos()
                     .forEach(crypto -> {
                         try {
                             List<OHLCV> tmpList = dataExtractor.getDailyOHLCVs(crypto, daysBetween, System.currentTimeMillis() / 1000, true);
