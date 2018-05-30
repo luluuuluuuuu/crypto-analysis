@@ -44,14 +44,14 @@ public class QueryHandler {
 
                     ohlcvList.stream()
                             .filter(ohlcv -> ohlcv.getDate().equals(date))
-                            .sorted((o1, o2) -> o1.getCrypto().name().compareTo(o2.getCrypto().name()))
+                            .sorted(Comparator.comparing(ohlcv -> ohlcv.getCrypto().name()))
                             .forEach(ohlcv -> {
                                 String open = ohlcv.getOpen().toString();
                                 String high = ohlcv.getHigh().toString();
                                 String low = ohlcv.getLow().toString();
                                 String close = ohlcv.getClose().toString();
                                 String volumeFrom = ohlcv.getVolumeFrom().toString();
-                                String volumeTo = ohlcv.getVolumeFrom().toString();
+                                String volumeTo = ohlcv.getVolumeTo().toString();
                                 List<String> values = new ArrayList<>();
                                 values.add(open);
                                 values.add(high);
@@ -97,7 +97,7 @@ public class QueryHandler {
 
                     ohlcvList.stream()
                             .filter(ohlcv -> ohlcv.getDate().equals(date))
-                            .sorted((o1, o2) -> o1.getCrypto().name().compareTo(o2.getCrypto().name()))
+                            .sorted(Comparator.comparing(ohlcv -> ohlcv.getCrypto().name()))
                             .forEach(ohlcv -> {
                                 String dailyChange;
                                 try {
@@ -125,7 +125,7 @@ public class QueryHandler {
     public void insertCryptoQuery(List<OHLCV> ohlcvList) {
         log.info("Inserting data for table input.crypto...");
         ohlcvList.stream()
-                .sorted((o1, o2) -> o1.getCrypto().name().compareTo(o2.getCrypto().name()))
+                .sorted(Comparator.comparing(ohlcv -> ohlcv.getCrypto().name()))
                 .map(OHLCV::getCrypto)
                 .distinct()
                 .forEach(crypto -> {
@@ -155,7 +155,7 @@ public class QueryHandler {
         log.info("Creating table input.ohlcv...");
 
         ohlcvList.stream()
-                .sorted((o1, o2) -> o1.getCrypto().name().compareTo(o2.getCrypto().name()))
+                .sorted(Comparator.comparing(ohlcv -> ohlcv.getCrypto().name()))
                 .filter(ohlcv -> f.format(ohlcv.getDate()).equals("2017-01-01"))
                 .forEach(ohlcv -> {
                     String crypto = ohlcv.getCrypto().name();
@@ -199,7 +199,7 @@ public class QueryHandler {
         log.info("Creating table input.daily_changes...");
 
         ohlcvList.stream()
-                .sorted((o1, o2) -> o1.getCrypto().name().compareTo(o2.getCrypto().name()))
+                .sorted(Comparator.comparing(ohlcv -> ohlcv.getCrypto().name()))
                 .map(OHLCV::getCrypto)
                 .distinct()
                 .forEach(crypto ->

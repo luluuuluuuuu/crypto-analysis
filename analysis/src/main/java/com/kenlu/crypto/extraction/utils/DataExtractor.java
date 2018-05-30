@@ -80,13 +80,12 @@ public class DataExtractor {
                 .append(fsym)
                 .append("&tsym=")
                 .append(tsym);
-        optionalParams.entrySet()
-                .forEach(x ->
-                    stringBuilder.append("&")
-                            .append(x.getKey())
-                            .append("=")
-                            .append(x.getValue())
-                );
+        optionalParams.forEach((key, value) ->
+                        stringBuilder.append("&")
+                                .append(key)
+                                .append("=")
+                                .append(value)
+        );
         String requestUrl = stringBuilder.toString();
 
         return this.getHttpResponse(requestUrl);

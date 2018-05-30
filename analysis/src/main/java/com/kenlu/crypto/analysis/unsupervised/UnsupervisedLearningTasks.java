@@ -6,12 +6,11 @@ import com.kenlu.crypto.analysis.unsupervised.pca.PrincipalComponentAnalysis;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.TimerTask;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
 @Component
-public class UnsupervisedLearningTasks extends TimerTask {
+public class UnsupervisedLearningTasks {
 
     @Autowired
     CorrelationAnalysis correlationAnalysis;
@@ -20,7 +19,6 @@ public class UnsupervisedLearningTasks extends TimerTask {
     @Autowired
     KMeansClusteringAnalysis kMeansClusteringAnalysis;
 
-    @Override
     public void run() {
         CompletableFuture<Void> future = CompletableFuture
                 .runAsync(() -> principalComponentAnalysis.run())
