@@ -29,9 +29,14 @@ public class TaskRunner implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        CompletableFuture
-                .runAsync(extractionService::initialize)
-                .thenRunAsync(this::schedule);
+        try {
+            CompletableFuture
+                    .runAsync(extractionService::initialize)
+                    .thenRunAsync(this::schedule)
+                    .get();
+        } catch (InterruptedException | ExecutionException e) {
+            log.error(e.getMessage());
+        }
     }
 
     private void schedule() {
