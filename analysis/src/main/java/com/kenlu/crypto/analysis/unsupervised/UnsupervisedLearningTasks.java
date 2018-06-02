@@ -3,7 +3,6 @@ package com.kenlu.crypto.analysis.unsupervised;
 import com.kenlu.crypto.analysis.unsupervised.correlation.CorrelationAnalysis;
 import com.kenlu.crypto.analysis.unsupervised.kmeans.KMeansClusteringAnalysis;
 import com.kenlu.crypto.analysis.unsupervised.pca.PrincipalComponentAnalysis;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.concurrent.CompletableFuture;
@@ -12,12 +11,15 @@ import java.util.concurrent.ExecutionException;
 @Component
 public class UnsupervisedLearningTasks {
 
-    @Autowired
-    CorrelationAnalysis correlationAnalysis;
-    @Autowired
-    PrincipalComponentAnalysis principalComponentAnalysis;
-    @Autowired
-    KMeansClusteringAnalysis kMeansClusteringAnalysis;
+    private CorrelationAnalysis correlationAnalysis;
+    private PrincipalComponentAnalysis principalComponentAnalysis;
+    private KMeansClusteringAnalysis kMeansClusteringAnalysis;
+
+    public UnsupervisedLearningTasks(CorrelationAnalysis correlationAnalysis, PrincipalComponentAnalysis principalComponentAnalysis, KMeansClusteringAnalysis kMeansClusteringAnalysis) {
+        this.correlationAnalysis = correlationAnalysis;
+        this.principalComponentAnalysis = principalComponentAnalysis;
+        this.kMeansClusteringAnalysis = kMeansClusteringAnalysis;
+    }
 
     public void run() {
         CompletableFuture<Void> future = CompletableFuture

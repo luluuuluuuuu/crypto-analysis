@@ -9,7 +9,6 @@ import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.RowFactory;
 import org.apache.spark.sql.types.StructType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -21,10 +20,12 @@ import java.util.stream.Collectors;
 @Component
 public class DataFormatter {
 
-    @Autowired
     private SparkConfig sparkConfig;
-
     private JavaSparkContext javaSparkContext;
+
+    public DataFormatter(SparkConfig sparkConfig) {
+        this.sparkConfig = sparkConfig;
+    }
 
     @PostConstruct
     private void init() {
@@ -63,7 +64,7 @@ public class DataFormatter {
                 });
     }
 
-    public JavaRDD<Vector> toVectorJavaRDD(List<Vector> vectorList) {
+    private JavaRDD<Vector> toVectorJavaRDD(List<Vector> vectorList) {
         return javaSparkContext.parallelize(vectorList);
     }
 

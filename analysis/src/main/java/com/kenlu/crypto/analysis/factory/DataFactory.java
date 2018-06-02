@@ -14,8 +14,11 @@ import java.util.List;
 @Component
 public class DataFactory {
 
-    @Autowired
     private DBConfig dbConfig;
+
+    public DataFactory(DBConfig dbConfig) {
+        this.dbConfig = dbConfig;
+    }
 
     public Dataset<Row> getDailyChangeDataset() {
         List<String> cryptoList = getCryptoDataset()

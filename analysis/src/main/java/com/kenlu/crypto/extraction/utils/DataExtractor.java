@@ -9,7 +9,6 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.nio.client.CloseableHttpAsyncClient;
 import org.apache.http.impl.nio.client.HttpAsyncClients;
 import org.joda.time.DateTime;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -22,8 +21,11 @@ import java.util.stream.Collectors;
 @Component
 public class DataExtractor {
 
-    @Autowired
     private QueryHandler queryHandler;
+
+    public DataExtractor(QueryHandler queryHandler) {
+        this.queryHandler = queryHandler;
+    }
 
     public List<OHLCV> getDailyOHLCVs(Crypto crypto, int numOfDays, long toTimestamp, boolean isUpdate) throws Exception {
         Map<String, Object> params = new HashMap<>();

@@ -2,15 +2,17 @@ package com.kenlu.crypto.analysis;
 
 import com.kenlu.crypto.analysis.unsupervised.UnsupervisedLearningTasks;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Slf4j
 @Service("Analysis")
 public class AnalysisServiceImpl {
 
-    @Autowired
     private UnsupervisedLearningTasks unsupervisedLearningTasks;
+
+    public AnalysisServiceImpl(UnsupervisedLearningTasks unsupervisedLearningTasks) {
+        this.unsupervisedLearningTasks = unsupervisedLearningTasks;
+    }
 
     public void runAll() {
         unsupervisedLearningTasks.run();

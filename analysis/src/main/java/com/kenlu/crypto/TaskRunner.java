@@ -3,7 +3,6 @@ package com.kenlu.crypto;
 import com.kenlu.crypto.analysis.AnalysisServiceImpl;
 import com.kenlu.crypto.extraction.ExtractionServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
@@ -19,13 +18,18 @@ import java.util.concurrent.TimeUnit;
 @Service("Main")
 public class TaskRunner implements CommandLineRunner {
 
-    private Timer timer = new Timer();
-    private Calendar today = Calendar.getInstance();
+    private Timer timer;
+    private Calendar today;
 
-    @Autowired
     private ExtractionServiceImpl extractionService;
-    @Autowired
     private AnalysisServiceImpl analysisService;
+
+    public TaskRunner(ExtractionServiceImpl extractionService, AnalysisServiceImpl analysisService) {
+        this.timer = new Timer();
+        this.today = Calendar.getInstance();
+        this.extractionService = extractionService;
+        this.analysisService = analysisService;
+    }
 
     @Override
     public void run(String... args) {

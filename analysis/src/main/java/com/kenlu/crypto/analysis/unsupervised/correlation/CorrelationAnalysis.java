@@ -12,7 +12,6 @@ import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import scala.collection.JavaConverters;
 
@@ -22,10 +21,13 @@ import java.util.List;
 @Component
 public class CorrelationAnalysis {
 
-    @Autowired
     private DataFactory dataFactory;
-    @Autowired
     private DataFormatter dataFormatter;
+
+    public CorrelationAnalysis(DataFactory dataFactory, DataFormatter dataFormatter) {
+        this.dataFactory = dataFactory;
+        this.dataFormatter = dataFormatter;
+    }
 
     public void run() {
         JavaRDD<Vector> vectorJavaRDD =

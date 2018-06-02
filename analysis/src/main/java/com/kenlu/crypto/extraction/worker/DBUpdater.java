@@ -6,7 +6,6 @@ import com.kenlu.crypto.extraction.utils.QueryHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
@@ -15,10 +14,13 @@ import java.util.*;
 @Component
 public class DBUpdater {
 
-    @Autowired
     private QueryHandler queryHandler;
-    @Autowired
     private DataExtractor dataExtractor;
+
+    public DBUpdater(QueryHandler queryHandler, DataExtractor dataExtractor) {
+        this.queryHandler = queryHandler;
+        this.dataExtractor = dataExtractor;
+    }
 
     public void run() {
         updateTables();

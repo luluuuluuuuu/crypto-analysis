@@ -13,7 +13,6 @@ import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -24,10 +23,13 @@ public class PrincipalComponentAnalysis {
 
     private static final int NUM_OF_PCS = 3;
 
-    @Autowired
     private DataFormatter dataFormatter;
-    @Autowired
     private DataFactory dataFactory;
+
+    public PrincipalComponentAnalysis(DataFormatter dataFormatter, DataFactory dataFactory) {
+        this.dataFormatter = dataFormatter;
+        this.dataFactory = dataFactory;
+    }
 
     public void run() {
         JavaRDD<Vector> vectorJavaRDD =
