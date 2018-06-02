@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
 
     <name>Crypto :: Parent</name>
+    <description>Parent for Dependency Versions</description>
 
     <properties>
         <project.build.sourceEncoding>ISO-8859-1</project.build.sourceEncoding>

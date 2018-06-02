@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,7 +14,6 @@ import java.util.Properties;
 @Component
 public class DBConfig {
 
-    @Autowired
     private SparkConfig sparkConfig;
     @Value("${spring.datasource.url}")
     private String url;
@@ -27,6 +25,10 @@ public class DBConfig {
 
     public DBConfig() {
         connectionProperties = new Properties();
+    }
+
+    public DBConfig(SparkConfig sparkConfig) {
+        this.sparkConfig = sparkConfig;
     }
 
     @PostConstruct

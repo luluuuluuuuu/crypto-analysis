@@ -21,14 +21,17 @@ public class DBInitializer {
     private static final long TO_TIMESTAMP = System.currentTimeMillis() / 1000;
     private static final long FROM_TIMESTAMP = 1483228800;
 
-    private List<OHLCV> initOhlcvList = new ArrayList<>();
-
-    @Autowired
+    private List<OHLCV> initOhlcvList;
     private JdbcTemplate jdbcTemplate;
-    @Autowired
     private QueryHandler queryHandler;
-    @Autowired
     private DataExtractor dataExtractor;
+
+    public DBInitializer(JdbcTemplate jdbcTemplate, QueryHandler queryHandler, DataExtractor dataExtractor) {
+        this.initOhlcvList = new ArrayList<>();
+        this.jdbcTemplate = jdbcTemplate;
+        this.queryHandler = queryHandler;
+        this.dataExtractor = dataExtractor;
+    }
 
     public void run() throws Exception {
         log.info("Initiating tables...");

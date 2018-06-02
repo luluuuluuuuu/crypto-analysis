@@ -22,8 +22,11 @@ import java.util.stream.Stream;
 @Component
 public class QueryHandler {
 
-    @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    public QueryHandler(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     public void insertOHLCVQuery(List<OHLCV> ohlcvList) {
         log.info("Inserting data for table input.ohlcv...");

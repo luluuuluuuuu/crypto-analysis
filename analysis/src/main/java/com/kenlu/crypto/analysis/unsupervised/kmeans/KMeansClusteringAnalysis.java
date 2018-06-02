@@ -13,7 +13,6 @@ import org.apache.spark.sql.SaveMode;
 import org.apache.spark.sql.types.DataTypes;
 import org.apache.spark.sql.types.StructField;
 import org.apache.spark.sql.types.StructType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -26,10 +25,13 @@ public class KMeansClusteringAnalysis {
     private static final int MAX_CLUSTER_NUM = 20;
     private static final int NUM_ITERATIONS = 100;
 
-    @Autowired
     private DataFactory dataFactory;
-    @Autowired
     private DataFormatter dataFormatter;
+
+    public KMeansClusteringAnalysis(DataFactory dataFactory, DataFormatter dataFormatter) {
+        this.dataFactory = dataFactory;
+        this.dataFormatter = dataFormatter;
+    }
 
     public void run() {
         JavaRDD<Vector> vectorJavaRDD =
