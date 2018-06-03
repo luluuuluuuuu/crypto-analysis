@@ -2,7 +2,7 @@
 \input{BigDataStyle.txt}      % do not change this line
 \usepackage[hidelinks]{hyperref}
 \usepackage[export]{adjustbox}
-\usepackage{amsmath,amsfonts,amssymb,amsthm,latexsym,graphicx,url,bookmark,enumitem}
+\usepackage{amsmath,amsfonts,amssymb,amsthm,latexsym,graphicx,url,bookmark,enumitem,subcaption}
 
 \emergencystretch=5mm
 \tolerance=400
@@ -22,6 +22,14 @@
 \author{Chengkai Lu}
 
 \newcommand{\Programme}{Data Science and Analytics with a Year in Industry}
+
+\newcommand*{\figuretitle}[1]{
+  {
+    \centering
+    \text{#1}
+    \par\medskip
+  }
+}
 
 \begin{document}
 \maketitle
@@ -229,7 +237,37 @@ These properties mean that each single object will be in exactly one cluster and
   \end{itemize}
 }
 
-% TODO pseudocode, init to result compare chart
+To fulfil the condition above which is \eqref{eq:2.5}, we can simplify the apporach as below to classify our data points into the multiple clusters\cite{james/itsl:2009}:
+{
+  \begin{enumerate}
+    \item Randomly assign an initial number from 1 to K to each observation.
+    \item Iterate over the following steps until the assigned cluster of each observation stops changing:
+    \begin{enumerate}
+      \item for i in range(1, K): \\
+      Compute the centroid of each cluster which is the mean of vectors with the same k(cluster) assigned.
+      \item Calculate the distance(Euclidean distance) between each object and each of the clusters.
+      \item  Assign the nearest k(cluster) to each observation.
+    \end{enumerate}
+  \end{enumerate}
+}
+Figure \ref{fig:kmeans} shows the difference after an optimisation of the cluster assignment. The colors indicate different clusters, and the groups are separated after the implementation of K-means clustering.
+
+\begin{figure}[ht]
+  \centering
+  \figuretitle{K = 4}
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\linewidth, center]{resources/kmeans_before.png}
+    \caption{Before Iteration}
+    \label{fig:before_iter}
+  \end{subfigure}
+  \begin{subfigure}[b]{0.48\textwidth}
+    \includegraphics[width=\linewidth, center]{resources/kmeans_after.png}
+    \caption{After Iteration}
+    \label{fig:after_iter}
+  \end{subfigure}
+  \caption{K-means Clustering}
+  \label{fig:kmeans}
+\end{figure}
 
 \subsection{Recurrent Neural Network}
 \subsubsection{Long Short-Term Memory}
@@ -257,7 +295,6 @@ These properties mean that each single object will be in exactly one cluster and
 \subsubsection{Loss Function}
 \subsubsection{Model Training}
 \subsection{Result}
-\subsubsection{Back Test}
 
 \section{Performance}
 \subsection{K-means Clustering}
