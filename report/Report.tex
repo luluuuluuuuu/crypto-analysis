@@ -88,7 +88,7 @@ In statistics, covariance\eqref{eq:2.1} defines the variability between two indi
   \end{itemize}
 }
 
-However, if we want to measure the strength of the linear relationship in between, covariance is not enough. We also need to consider the variance in each feature to tell whether the linear relationship is strong. In this case, the correlation was introduced. Correlation is a normalised form of covariance. It restricts the numbers to a certain range which shows how strong the relationship is. The most commonly used correlation coefficient is Pearson correlation coefficient\eqref{eq:2.2}. it is calculated by considering the standard deviation of both groups. This can ensure that dispersion of either attribute does not interfere our identification on the strength of mutual linear relationships\cite{wiki/pcc:2018}.
+However, if we want to measure the strength of the linear relationship in between, covariance is not enough. We also need to consider the variance in each feature to tell whether the linear relationship is strong. In this case, the correlation was introduced. Correlation is a normalised form of covariance. It restricts the numbers to a certain range which shows how strong the relationship is. The most commonly used correlation coefficient is Pearson correlation coefficient\eqref{eq:2.2}. it is calculated by considering the standard deviation of both groups. This can ensure that dispersion of either attribute does not interfere our identification on the strength of mutual linear relationships\cite{ghall/pcc:2015}.
 
 {
   \begin{equation}
@@ -108,7 +108,7 @@ However, if we want to measure the strength of the linear relationship in betwee
   \end{itemize}
 }
 
-The value of Pearson correlation coefficient is always between -1 and 1. A positive number means a positive linear correlation, and a negative number means a negative linear correlation. The closer the number towards the extremes, the stronger the relationship is. If the number is 0, it means there is no linear correlation among the pair\eqref{eq:2.3}.
+The value of Pearson correlation coefficient is always between -1 and +1. A positive number means a positive linear correlation, and a negative number means a negative linear correlation. The closer the number towards the extremes, the stronger the relationship is. If the number is 0, it means there is no linear correlation among the pair\eqref{eq:2.3}.
 
 \begin{equation}
   \label{eq:2.3}
@@ -174,7 +174,7 @@ A correlation matrix is a symmetirc matrix to its main diagonal. The values on t
 
 \subsection{Principal Component Analysis}
 
-It is always challenging to analyse a dataset with high-dimensional data points. Due to the curse of dimensionality, which was discovered by Richard Ernest Bellman in 1961, higher-dimensional space increases the difficulties of analysing and organising data exponentially\cite{wiki/cod:2018}. Especially in machine learning, given a certain number of samples, the accuracy of predictions on these samples will increase followed by the rising dimensions to a peak but then gradually drop. This is known as Hughes phenomenon\cite{hughes/itoit:1968}. Figure \ref{fig:hughes} shows how the dimensionality influence the accuracy of predictions.
+It is always challenging to analyse a dataset with high-dimensional data points. Due to the curse of dimensionality, which was discovered by Richard Ernest Bellman in 1957, higher-dimensional space increases the difficulties of analysing and organising data exponentially\cite{keogh/cod:2017}. Especially in machine learning, given a certain number of samples, the accuracy of predictions on these samples will increase followed by the rising dimensions to a peak but then gradually drop. This is known as Hughes phenomenon\cite{hughes/itoit:1968}. Figure \ref{fig:hughes} shows how the dimensionality influence the accuracy of predictions.
 
 \begin{figure}[ht]
   \includegraphics[width=0.8\linewidth, center]{resources/dimensionality.png}
@@ -185,7 +185,7 @@ It is always challenging to analyse a dataset with high-dimensional data points.
 In order to reduce the dimensionality, there are two approaches can be implemented:
 \begin{itemize}
   \item Feature Selection: To select a subset that is more informative or relevant among all the attributes\cite{hastie/etal:2009}.
-  \item Feature Extraction: To generate new features from the initial attributes of existing data\cite{wiki/fe:2018}.
+  \item Feature Extraction: To generate new features from the initial attributes of existing data\cite{wiki/fs:2018}.
 \end{itemize}
 
 The reasons and benefits of executing dimensionality reduction can be summarised as follow:
@@ -197,7 +197,7 @@ The reasons and benefits of executing dimensionality reduction can be summarised
 
 Principal component analysis(PCA) is a method for feature extraction. It projects features onto a lower-dimensional space. A traditional PCA is a kind of single representation approach as opposed to classification on revealing underlying information in a lower-dimensional space with a linear function. 
 
-In practice, an optimal mapping function is usually non-linear. In order to fit the data in a non-linear way, we can apply a kernel method on top of the traditional PCA, and this is called kernel PCA. It performs a linear PCA mapping in a higher dimensional kernel Hilbert space to provide a better classification. The kernel can be a polynomial function, a radial function or other functions\cite{wiki/kpca:2018}. However, in this project, we will assume that the relationship between the dimensions(cryptocurrencies) are linear and will only use a standard linear PCA to perform the dimensionality reduction.
+In practice, an optimal mapping function is usually non-linear. In order to fit the data in a non-linear way, we can apply a kernel method on top of the traditional PCA, and this is called kernel PCA. It performs a linear PCA mapping in a higher dimensional kernel Hilbert space to provide a better classification. The kernel can be a polynomial function, a radial function or other functions\cite{hessam/kpca:2014}. However, in this project, we will assume that the relationship between the dimensions(cryptocurrencies) are linear and will only use a standard linear PCA to perform the dimensionality reduction.
 
 \subsubsection{Principal Components}
 
@@ -288,9 +288,11 @@ Figure \ref{fig:kmeans} shows the difference after an optimisation of the cluste
 \subsection{Data Prepocessing}
 \subsubsection{Data Formats}
 \subsubsection{Normalisation}
+\subsubsection{Feature Extraction}
 \subsection{Data Analysis}
-\subsubsection{Shifting Along Timeline}
+\subsubsection{Correlation Overview}
 \subsubsection{Model Training}
+\subsubsection{Shifting Along Timeline}
 \subsection{Result}
 
 \clearpage
@@ -307,12 +309,10 @@ Figure \ref{fig:kmeans} shows the difference after an optimisation of the cluste
 \subsubsection{Loss Function}
 \subsubsection{Model Training}
 \subsection{Result}
-
-\section{Performance}
-\subsection{K-means Clustering}
-\subsection{Long Short-Term Memory}
+\subsubsection{Back Test}
 
 \section{Conclusion and Evaluation}
+\subsection{Performance}
 \subsection{Visualisation}
 \subsection{Further Work}
 
