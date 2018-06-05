@@ -18,7 +18,7 @@
 \theoremstyle{definition}
 \newtheorem*{remark}{Remark}
 
-\title{Machine Learning for Investor Behaviours on Cryptocurrencies}
+\title{Machine Learning for Investor Behaviour on Cryptocurrencies}
 \author{Chengkai Lu}
 
 \newcommand{\Programme}{Data Science and Analytics with a Year in Industry}
@@ -66,6 +66,15 @@ An implementation of modern algorithms combining nearly pure supply/demand probl
 \subsubsection{Report Structure}
 
 \section{Background Research}
+\subsection{Value at Risk}
+\subsubsection{Historical Simulation Approach}
+\subsubsection{Model-Building Approach}
+
+\subsection{Estimating Volatilities}
+\subsubsection{Exponentially Weighted Moving Average Model}
+\subsubsection{Garch(1,1) Model}
+\subsubsection{Maximum Likelihood}
+
 \subsection{Correlation Analysis}
 
 In statistics, covariance\eqref{eq:2.1} defines the variability between two individual attributes, which means the level of influence from one feature to another. The numbers correspond to similarity/dissimilarity of the two variables. Positive numbers represent a similar behaviour between them, and vice versa\cite{wiki/cov:2018}.
@@ -281,35 +290,36 @@ Figure \ref{fig:kmeans} shows the difference after an optimisation of the cluste
   \label{fig:kmeans}
 \end{figure}
 
+\subsubsection{Hierarchical Clustering}
+
 \subsection{Recurrent Neural Network}
 \subsubsection{Long Short-Term Memory}
 
-\section{K-means Clustering on Price Fluctuations}
-\subsection{Data Prepocessing}
-\subsubsection{Data Formats}
-\subsubsection{Normalisation}
-\subsubsection{Feature Extraction}
-\subsection{Data Analysis}
-\subsubsection{Correlation Overview}
-\subsubsection{Model Training}
-\subsubsection{Shifting Along Timeline}
+\section{Estimation of Value and Correlations}
+\subsection{Financial Models}
+\subsubsection{Data Prepocessing}
+\subsubsection{Value at Risk}
+\subsubsection{Correlation Matrices}
+\subsection{Machine Learning Models}
+\subsubsection{Data Prepocessing}
+\subsubsection{K-means Clustering}
+\subsubsection{Hierarchical Clustering}
 \subsection{Result}
+\subsubsection{Comparison}
 
 \clearpage
 
-\section{LSTM on Highest/Lowest Nextday Growth Prediction}
-\subsection{Data Prepocessing}
-\subsubsection{Data Formats}
-\subsubsection{Normalisation}
-\subsubsection{Training Set and Validation Set}
-\subsection{Data Analysis}
-\subsubsection{Activation Functions}
-\subsubsection{Parameters}
-\subsubsection{Regularisation}
-\subsubsection{Loss Function}
-\subsubsection{Model Training}
+\section{Prediction of Volatilities}
+\subsection{Financial Models}
+\subsubsection{Data Prepocessing}
+\subsubsection{EWMA Model}
+\subsubsection{Garch(1,1) Model}
+\subsection{Machine Learning Models}
+\subsubsection{Data Prepocessing}
+\subsubsection{Long Short-Term Memory}
 \subsection{Result}
 \subsubsection{Back Test}
+\subsubsection{Comparison}
 
 \section{Conclusion and Evaluation}
 \subsection{Performance}
