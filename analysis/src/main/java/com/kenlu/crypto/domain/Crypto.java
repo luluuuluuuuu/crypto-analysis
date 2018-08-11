@@ -1,9 +1,23 @@
 package com.kenlu.crypto.domain;
 
-public enum Crypto {
-    BTC, ETH, XRP, LTC, XMR, DASH, ETC, ZEC, STEEM, BTS,
-    DOGE, STRAT, DCR, ARDR, DGB, SYS, FCT, MONA, RDD, EMC,
-    NXS, VTC, GAME, GRS, BLOCK, BTCD, NAV, BAY, CLOAK, EMC2,
-    PPC, SLS, VIA, XCP, ZCL, FTC, LBC, BURST, NLG, DCT,
-    CSC, AEON, SHIFT, POT, CRW
-}
+public enum Crypto implements Product {
+    BTC, ETH, XRP, LTC, XMR, DASH,
+    DOGE, DGB, SYS, FCT, MONA, RDD,
+    VTC, GAME, GRS, BLOCK, BTCD, NAV, BAY, EMC2,
+    PPC, VIA, XCP, FTC, BURST, NLG,
+    AEON, POT, CRW
+//    BTS,
+//    CLOAK
+//    ZEC
+//    ZCL
+//    SHIFT
+//    ARDR
+//    DCR
+//    DCT
+//    ETC
+//    NXS
+//    LBC
+//    SLS
+//    STEEM
+//    STRAT
+    }

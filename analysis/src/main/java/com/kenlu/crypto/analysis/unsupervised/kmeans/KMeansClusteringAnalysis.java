@@ -22,7 +22,7 @@ import java.util.List;
 @Component
 public class KMeansClusteringAnalysis {
 
-    private static final int MAX_CLUSTER_NUM = 20;
+    private static final int MAX_CLUSTER_NUM = 6;
     private static final int NUM_ITERATIONS = 100;
 
     private DataFactory dataFactory;

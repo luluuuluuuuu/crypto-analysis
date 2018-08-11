@@ -45,7 +45,7 @@ public class DataFactory {
 
     public Dataset<Row> getPCADataset() {
         return dbConfig.readDatasetFromDB("output", "pca")
-                .select("feature0", "feature1", "feature2")
+                .select("feature0", "feature1")
                 .orderBy(asc("crypto"));
     }
 

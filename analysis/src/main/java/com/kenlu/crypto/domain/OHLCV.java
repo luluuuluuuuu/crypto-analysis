@@ -8,14 +8,13 @@ import java.util.Date;
 @Data
 public class OHLCV {
 
-    private Crypto crypto;
+    private Product product;
     private Date date;
     private BigDecimal open;
     private BigDecimal high;
     private BigDecimal low;
     private BigDecimal close;
-    private BigDecimal volumeFrom;
-    private BigDecimal volumeTo;
+    private BigDecimal volume;
 
     public OHLCV() {
     }
