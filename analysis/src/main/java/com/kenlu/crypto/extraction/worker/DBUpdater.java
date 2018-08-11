@@ -38,7 +38,7 @@ public class DBUpdater {
             queryHandler.getCryptos()
                     .forEach(crypto -> {
                         try {
-                            List<OHLCV> tmpList = dataExtractor.getDailyOHLCVs(crypto, daysBetween, System.currentTimeMillis() / 1000, true);
+                            List<OHLCV> tmpList = dataExtractor.getCryptoDailyOHLCVs(crypto, daysBetween, System.currentTimeMillis() / 1000, true);
                             ohlcvList.addAll(tmpList);
                         } catch (Exception e) {
                             e.printStackTrace();
@@ -49,8 +49,8 @@ public class DBUpdater {
                 return;
             }
 
-            queryHandler.insertOHLCVQuery(ohlcvList);
-            queryHandler.insertDailyChangeQuery(ohlcvList);
+            queryHandler.insertCryptoOHLCVQuery(ohlcvList);
+            queryHandler.insertCryptoDailyChangeQuery(ohlcvList);
         } catch (Exception e) {
             log.error("Unable to update table daily_changes...");
             e.printStackTrace();

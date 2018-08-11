@@ -23,12 +23,9 @@ public class DBConfig {
     private String password;
     private Properties connectionProperties;
 
-    public DBConfig() {
-        connectionProperties = new Properties();
-    }
-
     public DBConfig(SparkConfig sparkConfig) {
         this.sparkConfig = sparkConfig;
+        this.connectionProperties = new Properties();
     }
 
     @PostConstruct

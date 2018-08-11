@@ -21,7 +21,7 @@ import java.util.List;
 @Component
 public class PrincipalComponentAnalysis {
 
-    private static final int NUM_OF_PCS = 3;
+    private static final int NUM_OF_PCS = 30;
 
     private DataFormatter dataFormatter;
     private DataFactory dataFactory;
