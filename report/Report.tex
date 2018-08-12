@@ -79,6 +79,8 @@ K-means clustering is an appropriate method for diversifying financial investmen
 
 This project aims on seeing if K-means clustering can diversify financial products with their daily volatilities and improve the result of risk estimation on cryptocurrencies. In addition, it will examine if the effect on cryptocurrencies is different from that on stocks.
 
+Finally, a trading strategy will be constructed based on the result of analysis. This trading strategy will contain investment portfolios which will diversify risks as much as possible to avoid substantial loss. Generating an optimal hedging method is the ultimate goal of this project.
+
 \subsection{Project Structure}
 
 The project includes several parts, experiment, implementation of the analysis and report. The experiment is for developing and adjusting the analysis. After receiving a satisfactory result from the experiment, the analysis will be implemented on a minimal production-level basis. This report will then present the most critical detail of the analysis.
@@ -564,11 +566,132 @@ Our objective is to evaluate the risk based on price volatility which is the dai
   \end{table}
 }
 
+In order to test how good the risk estimation is, we will split the data into training set and test set. The test set is around 40\% of the whole dataset, and the training set is about 60\%. All the data must be in an order because the values are in time series. This kind of method to test the performance of our estimation is called back testing as it tests the model performance on the previous dataset.
+
 \subsection{Risk Estimation}
-\subsubsection{Historical Estimation of VaR}
+
+We will use VaR to evaluate the risk of cryptocurrencies since it provides a simple way of estimating the degree of our loss under risks. In here, we regard each cryptocurrency as a single investment instead of generating a combined portfolio because we want to construct a metric to compare the performance improvement after a risk diversification which will be conducted later. As a result, there will be 29 VaRs corresponding to the 29 cryptocurrencies.
+
+\subsubsection{Historical Simulation of VaR}
+
+A 95\% confidence level of 1-day VaR estimation will be used in this project, which means we want to know how bad our loss of the investment can become for the next day in a 95\% of confidence. A historical simulation method will be applied to the training set in here to simulate the scenarios that have happened and find out the worst 5\% of the experience. The $5_{th}$ percentile of the whole scenarios will then become our VaR.
+
+{
+  \begin{table}[ht]
+    \centering
+    \small
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        Symbol & VaR & Symbol & VaR & Symbol & VaR \\
+        \hline
+        AEON & -0.1382 & BAY & -0.1310 & BLOCK & -0.1260 \\
+        BTC & -0.0751 & BTCD & -0.1116 & BURST & -0.1230 \\
+        CRW & -0.1234 & DASH & -0.0921 & DGB & -0.1250 \\
+        DOGE & -0.1157 & EMC2 & -0.1575 & ETH & -0.0895 \\
+        FCT & -0.1079 & FTC & -0.1170 & GAME & -0.1176 \\
+        GRS & -0.1428 & LTC & -0.0901 & MONA & -0.1227 \\
+        NAV & -0.1147 & NLG & -0.0931 & POT & -0.1088 \\
+        PPC & -0.1208 & RDD & -0.1667 & SYS & -0.1246 \\
+        VIA & -0.1284 & VTC & -0.1296 & XCP & -0.1154 \\
+        XMR & -0.1090 & XRP & -0.1101 & & \\
+        \hline
+    \end{tabular}
+    \caption{VaRs of Cryptocurrencies}
+    \label{table:varcrypto}
+  \end{table}
+}
+
+Table \ref{table:varcrypto} states the 95\% 1-day VaR of each cryptocurrency. The values are the daily returns. Negative numbers represent loss in percentage. Overall, RDD (ReddCoin) is the riskiest cryptocurrency because it has the largest loss of 16.67\% at the $5_{th}$ percentile based on the past experience of our training set. BTC (Bitcoin) is the best product to invest as it is relatively stable with a 95\% confidence that the loss will not be more than 7.51\% of the input in comparison with other investment options.
+
 \subsection{Risk Diversification}
+
+There are many ways of diversifying our investments, either through observation of direct correlations between daily volatilities of individual products or discovery of long-term similarity between volatility movements of the products. We will use both methods to help our construction of trading strategies because short-term and long-term hedging strategies are equally important for investors.
+
 \subsubsection{Product Correlations}
-\subsubsection{Clustering on Price Movement}
+
+The Pearson correlation coefficient is useful and straight forward in here for researching the direct relationships between two cryptocurrencies. It summarises the relationships of pairwise observations between two cryptocurrencies and restricts the result in the range between -1 and +1, and this allows us to observe the strength of connections on those cryptocurrencies based on the daily returns. A larger correlation coefficient means there exists a stronger correlation between their daily returns.
+
+This correlation analysis will use all the data including the training set and test set due to the usage of the result. This analysis aims on helping the construction of trading strategies. The whole dataset should be involved to generate a well-diversified hedging strategy.
+
+We can generate a correlation matrix which states the pairwise correlations of all the cryptocurrencies. Next, a visualisation of the matrix helps us to analyse and observe the degree of correlations easier. Figure \ref{fig:cryptocorr} illustrates the result of a visualisation. The colour bar explains the meaning of different colours. Lighter colours represent a stronger correlation, and vice versa.
+
+\begin{figure}[ht]
+    \includegraphics[width=1\linewidth, center]{resources/crypto_corr.png}
+    \caption{Correlation Matrix of Cryptocurrencies}
+    \label{fig:cryptocorr}
+\end{figure}
+
+There is a diagonal on the chart which represents the correlations between all the cryptocurrencies and themselves. These blocks are all yellow which means the correlations are total positive linear correlation. And the chart is symmetric against the diagonal. We can look at either part to analyse the values.
+
+BTC (Bitcoin) has some interesting features. It has extreme values against other cryptocurrencies. It has a strong correlation at around 0.7 with LTC (Litecoin) and a negative correlation at approximately -0.1 with NLG (Gulden) and MONA (MonaCoin). ETH (Ethereum) and XMR (Monero) are also strongly correlated to BTC (Bitcoin) at arround 0.6 of correlation coefficient. When it comes to XMR (Monero), it is dependent on several cryptocurrencies such as AEON (Aeon), ETH (Ethereum), FCT (Factom) and LTC (Litecoin), and this means the daily changes or returns of XMR (Monero) is similar to those cryptocurrencies.
+
+In contrast, some of the cryptocurrencies seem to be independent and have less influence from other products. BTCD (BitcoinDark) is one of these as the colours on the bar are all close to dark blue whose correlation is around 0, and that means there is no obvious correlation in between. BAY (BitBay), BLOCK (Blocknet), DOGE (Dogecoin) and MONA (MonaCoin) have this kind of phenomenon as well.
+
+When constructing an investment portfolio, the less dependent products should be considered because strongly correlated investments might result in great return, but it might cause enormous loss simultaneously. An unstable investment behaviour should be prevented, especially our purpose is hedging.
+
+\subsubsection{K-means Clustering on Price Movement}
+
+In the context of clustering, we regard the test data which we just split from the previous steps as the unknown data to inspect the performance of improvement on VaR estimation after a clustering. The test data will not be included in our clustering analysis because the influence of knowing the unknown data should be eliminated.
+
+Before starting our clustering analysis, there are some prerequisites to be implemented. First, we need to transpose our data to make the cryptocurrencies become observations/objects and see the time-series as the features. A clustering can then group the cryptocurrencies together based on the similarity/dissimilarity of their daily changes along the timeline. After the trnaspose, a dimensionality reduction should be executed as there are too many dimensions which are dates among the transposed dataset, and this will cause a computational difficulty on K-means clustering.
+
+Table \ref{table:tpcrypto} illustrates how the data looks like after a transpose. It is now a 29 by 954 table which used to be 954 by 29. The rows become the cryptocurrencies and the columns are dates from \date{2016-01-01} to \date{2018-07-31}. The columns are the attributes we will use for our clustering. We can now use PCA (Principal Component Analysis) to reduce the number of dimensions.
+
+{
+  \begin{table}[ht]
+    \centering
+    \scriptsize
+    \begin{tabular}{|c|c c c c c c|}
+      \hline
+       & 2016-01-01 & 2016-01-02 & 2016-01-03 & ... & 2018-07-30 & 2018-07-31 \\ [0.5ex]
+      \hline
+      AEON & 0.030949 & -0.073431 & 0.002903 & ... & -0.023810 & -0.064516 \\
+      \hline
+      BAY & -0.296502 & 0 & -0.085601 & ... & -0.016599 & -0.059292 \\
+      \hline
+      BLOCK & -0.265306 & 0.180451 & -0.078947 & ... & 0.059783 & -0.094542 \\
+      \hline
+      ... & ... & ... & ... & ... & ... & ... \\
+      \hline
+      XCP & -0.038405 & -0.033988 & -0.025285 & ... & 0 & -0.098820 \\
+      \hline
+      XMR & 0.108141 & -0.153010 & 0.059783 & ... & -0.025429 & -0.076615 \\
+      \hline
+      XRP & 0.056676 & 	-0.001364 & 0.014634 & ... & -0.015677 & -0.024002 \\
+      \hline
+    \end{tabular}
+    \caption{Historical Daily Changes of Cryptocurrencies}
+    \label{table:tpcrypto}
+  \end{table}
+}
+
+The number of Principal Components can be decided by the amount of variance that has been explained. Figure \ref{fig:cryptopca} shows the ratio of explained variance with different number of PCs. We choose the number 26 as our number of PCs because it explains around 99\% of the attributes and our objective is to make the clustering computationally efficient without losing too much information. With respect to visualisation, because we only want to know the similarity between shapes of the volatilities, we can illustrate line charts of the cryptocurrencies' PCs even on a higher dimensional space.
+
+After the preparation, K-means clustering can be implemented. The number of clusters, K, we select is 6 owing to avoidance of skewness among clusters, minimisation of the cost in each cluster and prevention from overfitting on the training set since we only implement clustering on the training set. The distance metric we are using is DTW (Dynamic Time Warping) because we want to know how similar the activities between cryptocurrencies are instead of the direct similarity which is restricted by strict time criterion. DTW is computationally more expensive than Euclidean distance, but it provides a more flexible way of comparing the distance between two objects.
+
+
+
+\begin{itemize}
+    \item Cluster 1: BURST, MONA, POT, SYS, XCP, XRP
+    \item Cluster 2: CRW
+    \item Cluster 3: DOGE
+    \item Cluster 4: BTC, ETH, FCT, GAME, LTC, NLG, XMR
+    \item Cluster 5: AEON, BLOCK, BTCD, DGB, GRS, PPC, VIA, VTC
+    \item Cluster 6: BAY, DASH, EMC2, FTC, NAV, RDD
+\end{itemize}
+
+\begin{figure}[ht]
+    \includegraphics[width=1\linewidth, center]{resources/crypto_pca_explained.png}
+    \caption{Cumulative Explained Variance Ratio of PCs on Cryptocurrencies}
+    \label{fig:cryptopca}
+\end{figure}
+
+\begin{figure}[ht]
+    \includegraphics[width=1\linewidth, center]{resources/crypto_kmeans.png}
+    \caption{Clusters of Cryptocurrencies}
+    \label{fig:cryptokmeans}
+\end{figure}
+
 \subsection{Performance}
 \subsubsection{Back Test}
 \subsubsection{Improvement After Risk Diversification}
@@ -579,7 +702,27 @@ Our objective is to evaluate the risk based on price volatility which is the dai
 \subsubsection{Historical Estimation of VaR}
 \subsection{Risk Diversification}
 \subsubsection{Product Correlations}
-\subsubsection{Clustering on Price Movement}
+
+\begin{figure}[ht]
+    \includegraphics[width=1\linewidth, center]{resources/stock_corr.png}
+    \caption{Correlation Matrix of Stocks}
+    \label{fig:stockcorr}
+\end{figure}
+
+\subsubsection{K-means Clustering on Price Movement}
+
+\begin{figure}[ht]
+    \includegraphics[width=1\linewidth, center]{resources/stock_pca_explained.png}
+    \caption{Cumulative Explained Variance Ratio of PCs on Stocks}
+    \label{fig:stockpca}
+\end{figure}
+
+\begin{figure}[ht]
+    \includegraphics[width=1\linewidth, center]{resources/stock_kmeans.png}
+    \caption{Clusters of Stocks}
+    \label{fig:stockkmeans}
+\end{figure}
+
 \subsection{Performance}
 \subsubsection{Back Test}
 \subsubsection{Improvement After Risk Diversification}
