@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.kenlu.crypto.domain.Crypto;
-import com.kenlu.crypto.domain.OHLCV;
+import com.kenlu.crypto.domain.OHLC;
 import com.kenlu.crypto.domain.Stock;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.config.CookieSpecs;
@@ -34,14 +34,14 @@ public class DataExtractor {
         this.queryHandler = queryHandler;
     }
 
-    public List<OHLCV> getCryptoDailyOHLCVs(Crypto crypto, int numOfDays, long toTimestamp, boolean isUpdate) throws Exception {
+    public List<OHLC> getCryptoDailyOHLCVs(Crypto crypto, int numOfDays, long toTimestamp, boolean isUpdate) throws Exception {
         Map<String, Object> params = new HashMap<>();
         params.put("extraParams", "crypto-analysis");
         params.put("limit", Integer.toString(numOfDays - 1));
         params.put("toTs", Long.toString(toTimestamp));
 
-        List<OHLCV> ohlcvList = new ArrayList<>();
-        List<OHLCV> result;
+        List<OHLC> OHLCList = new ArrayList<>();
+        List<OHLC> result;
 
         this.getCryptoHistoDay(crypto.name(), "USD", params)
                 .get("Data")
@@ -54,26 +54,23 @@ public class DataExtractor {
                     BigDecimal high = jsonObject.get("high").getAsBigDecimal();
                     BigDecimal low = jsonObject.get("low").getAsBigDecimal();
                     BigDecimal close = jsonObject.get("close").getAsBigDecimal();
-                    BigDecimal volumeFrom = jsonObject.get("volumefrom").getAsBigDecimal();
-                    BigDecimal volumeTo = jsonObject.get("volumeto").getAsBigDecimal();
-                    OHLCV ohlcv = new OHLCV();
+                    OHLC OHLC = new OHLC();
 
-                    ohlcv.setProduct(crypto);
-                    ohlcv.setDate(date);
-                    ohlcv.setOpen(open);
-                    ohlcv.setHigh(high);
-                    ohlcv.setLow(low);
-                    ohlcv.setClose(close);
-                    ohlcv.setVolume(volumeTo.subtract(volumeFrom));
+                    OHLC.setProduct(crypto);
+                    OHLC.setDate(date);
+                    OHLC.setOpen(open);
+                    OHLC.setHigh(high);
+                    OHLC.setLow(low);
+                    OHLC.setClose(close);
 
-                    ohlcvList.add(ohlcv);
+                    OHLCList.add(OHLC);
                 });
-        result = ohlcvList;
+        result = OHLCList;
 
         if (isUpdate) {
             Date lastDate = queryHandler.getLastDateFromDailyChanges();
             DateTime fromDate = new DateTime(lastDate).plusDays(1);
-            result = ohlcvList.stream()
+            result = OHLCList.stream()
                     .filter(x -> x.getDate().after(fromDate.toDate()))
                     .collect(Collectors.toList());
         }
@@ -81,9 +78,9 @@ public class DataExtractor {
         return result;
     }
 
-    public List<OHLCV> getStockDailyOHLCVs(Stock stock, int numOfDays, long toTimestamp, boolean isUpdate) throws Exception {
-        List<OHLCV> ohlcvList = new ArrayList<>();
-        List<OHLCV> result;
+    public List<OHLC> getStockDailyOHLCVs(Stock stock, int numOfDays, long toTimestamp, boolean isUpdate) throws Exception {
+        List<OHLC> OHLCList = new ArrayList<>();
+        List<OHLC> result;
 
         this.getStockHistoDay(stock.name())
                 .iterator()
@@ -105,26 +102,24 @@ public class DataExtractor {
                         BigDecimal high = jsonObject.get("high").getAsBigDecimal();
                         BigDecimal low = jsonObject.get("low").getAsBigDecimal();
                         BigDecimal close = jsonObject.get("close").getAsBigDecimal();
-                        BigDecimal volume = jsonObject.get("volume").getAsBigDecimal();
-                        OHLCV ohlcv = new OHLCV();
+                        OHLC OHLC = new OHLC();
 
-                        ohlcv.setProduct(stock);
-                        ohlcv.setDate(date);
-                        ohlcv.setOpen(open);
-                        ohlcv.setHigh(high);
-                        ohlcv.setLow(low);
-                        ohlcv.setClose(close);
-                        ohlcv.setVolume(volume);
+                        OHLC.setProduct(stock);
+                        OHLC.setDate(date);
+                        OHLC.setOpen(open);
+                        OHLC.setHigh(high);
+                        OHLC.setLow(low);
+                        OHLC.setClose(close);
 
-                        ohlcvList.add(ohlcv);
+                        OHLCList.add(OHLC);
                     }
                 });
-        result = ohlcvList;
+        result = OHLCList;
 
         if (isUpdate) {
             Date lastDate = queryHandler.getLastDateFromDailyChanges();
             DateTime fromDate = new DateTime(lastDate).plusDays(1);
-            result = ohlcvList.stream()
+            result = OHLCList.stream()
                     .filter(x -> x.getDate().after(fromDate.toDate()))
                     .collect(Collectors.toList());
         }
