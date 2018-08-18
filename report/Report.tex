@@ -65,7 +65,7 @@ Machine learning has become a popular area which focuses on enabling machines or
 
 \subsection{Motivation}
 
-When we talk about the risk of an investment, we are normally curious about the risk for the future. Prediction of risks can be tricky because a randomly unpredictable event will impact on the market movement. An unexpected financial event might collapse the market and result in a crash. All the products in the market will be influenced by the risks. These kinds of risks are called \textit{Systematic Risk}, which cannot be avoided through a diversified investment portfolio. However, we can spread the risks over diffirent investments by generating a well-diversified investment portfolio.
+When we talk about the risk of an investment, we are normally curious about the risk for the future. Prediction of risks can be tricky because a randomly unpredictable event will impact on the market movement. An unexpected financial event might collapse the market and result in a crash. All the products in the market will be influenced by the risks. These kinds of risks are called \textsl{Systematic Risk}, which cannot be avoided through a diversified investment portfolio. However, we can spread the risks over diffirent investments by generating a well-diversified investment portfolio.
 
 Traditional risk management methods have been developed for centuries and they can produce reasonable result of hedges, but there still exists possibilities to improve the performance. Machine learning are also used for avoidance of risk or market prediction. We want to seek for a way of improving traditional risk management methods by applying machine learning algorithms on top.
 
@@ -99,41 +99,41 @@ In this project, the following technologies are used for different purposes:
 
   \item Database
   \begin{itemize}
-    \item \textsl{PostgreSQL} : We use PostgreSQL as our database because it is well-developed and supports efficient quaries.
+    \item \textsl{PostgreSQL}\cite{postgresql} : We use PostgreSQL as our database because it is well-developed and supports efficient quaries.
   \end{itemize}
 
   \item Containerisation
   \begin{itemize}
-    \item \textsl{Docker} : An open source operating-system-level virtualisation tool to build an environment for running programmes. It not only provides an diffirent environment such as Linux on a local machine, but makes the same configuration and environment portable. We use Docker for a quick construction of PostgreSQL database.
+    \item \textsl{Docker}\cite{docker} : An open source operating-system-level virtualisation tool to build an environment for running programmes. It not only provides an diffirent environment such as Linux on a local machine, but makes the same configuration and environment portable. We use Docker for a quick construction of PostgreSQL database.
   \end{itemize}
 
   \item Version Control
   \begin{itemize}
-    \item \textsl{Git} : A popular tool for version control. The project uses it for managing records of development.
-    \item \textsl{GitHub} : All the records and resources of this project are stored into a private repository on GitHub which is a website for storing local Gits onto the cloud.
+    \item \textsl{Git}\cite{git} : A popular tool for version control. The project uses it for managing records of development.
+    \item \textsl{GitHub}\cite{github} : All the records and resources of this project are stored into a private repository on GitHub which is a website for storing local Gits onto the cloud.
   \end{itemize}
 
   \item Frameworks
   \begin{itemize}
-    \item \textsl{Apache Spark} : An open source framework for cluster computing. We will use Spark SQL to accelerate reading data from the database and the MLlib for analysis with machine learning.
-    \item \textsl{Spring Framework} : An open source Java framework for implementation of inversion of control. We use it to facilitate programming process and for preparation of building a web server in the future.
+    \item \textsl{Apache Spark}\cite{spark} : An open source framework for cluster computing. We will use Spark SQL to accelerate reading data from the database and the MLlib for analysis with machine learning.
+    \item \textsl{Spring Framework}\cite{spring} : An open source Java framework for implementation of inversion of control. We use it to facilitate programming process and for preparation of building a web server in the future.
   \end{itemize}
 
   \item Python Packages
   \begin{itemize}
-    \item \textsl{Numpy} : Array manipulation.
-    \item \textsl{Pandas} : Data manipulation and analysis.
-    \item \textsl{Scikit-Learn} : Machine learning and data mining.
-    \item \textsl{Tslearn} : Time series data processing and analysis.
-    \item \textsl{Matplotlib} : Data visualisation.
+    \item \textsl{Numpy}\cite{scipy} : Array manipulation.
+    \item \textsl{Pandas}\cite{scipy} : Data manipulation and analysis.
+    \item \textsl{Scikit-Learn}\cite{scipy} : Machine learning and data mining.
+    \item \textsl{Tslearn}\cite{tslearn} : Time series data processing and analysis.
+    \item \textsl{Matplotlib}\cite{scipy} : Data visualisation.
   \end{itemize}
 
   \item Java Libraries
   \begin{itemize}
-    \item \textsl{Joda-Time} : Datetime and timestamps manipulation.
-    \item \textsl{Project Lombok} : Being used for simplifying code and logging.
-    \item \textsl{Gson} : Json format data processing.
-    \item \textsl{Apache HttpComponents} : Asynchronous http request.
+    \item \textsl{Joda-Time}\cite{jodatime} : Datetime and timestamps manipulation.
+    \item \textsl{Project Lombok}\cite{lombok} : Being used for simplifying code and logging.
+    \item \textsl{Gson}\cite{gson} : Json format data processing.
+    \item \textsl{Apache HttpComponents}\cite{httpcomponents} : Asynchronous http request.
   \end{itemize}
 
 \end{itemize}
@@ -147,7 +147,7 @@ Value at Risk (VaR) is a method used to evaluate the risk of a financial portfol
 
 Financial specialists are usually interested in the statement which indicates a specific criterion that helps there decision making. As a result, VaR is normally interpreted as follow:
 
-\textit{"I have X\% of confidence that the loss of our investment will not be more than \$V in the next N days."}
+\textsl{"I have X\% of confidence that the loss of our investment will not be more than \$V in the next N days."}
 
 {
   \footnotesize
@@ -169,7 +169,7 @@ An N-day VaR\eqref{eq:2.1} is usually calculated on the basis of 1-day VaR:
   {\text{N-day VaR} = \text{1-day VaR} \times \sqrt{N}}
 \end{equation}
 
-There are several approaches for calculating VaRs. In this project, as our objective is to see if clustering algorithms can improve the VaR estimation, we will only talk about the simplest one - \textit{historical simulation approach}\cite{john/ofaod:2017}.
+There are several approaches for calculating VaRs. In this project, as our objective is to see if clustering algorithms can improve the VaR estimation, we will only talk about the simplest one - \textsl{historical simulation approach}\cite{john/ofaod:2017}.
 
 \subsubsection{Historical Simulation Approach}
 
@@ -465,13 +465,13 @@ We can use a recursion\eqref{eq:2.8} to find out the minimal accumulative distan
 
 \section{Analysis of Cryptocurrencies}
 
-The data of cryptocurrencies is obtained from a RESTful API \url{https://min-api.cryptocompare.com/} which is free for non-profit purposes. We store the data into our local Docker based PostgreSQL database for development and convenience in case the internet or the API are unstable. Our Java programme will then update the latest data on a daily basis.
+The data of cryptocurrencies is obtained from the RESTful API \url{https://min-api.cryptocompare.com/}\cite{cryptocompare} which is free for non-profit purposes. We store the data into our local Docker based PostgreSQL database for development and convenience in case the internet or the API are unstable. Our Java programme will then update the latest data on a daily basis.
 
-This analysis will use the historical daily OHLCV (Open price, High price, Low price, Close price, Volume) data of cryptocurrencies as the initial input obtained from the API and will only consider 29 cryptocurrencies that have complete data from \date{1st January 2016} to \date{31st July 2018}. The reason why we choose the number 29 is because we want to compare the performance on cryptocurrencies with that on stocks and we will choose Dow Jones 30 as our counterpart. We want to make them have the same size of products and DWDP in Dow Jones does not have the data before \date{1st September 2017}.
+This analysis will use the historical daily OHLC (Open price, High price, Low price, Close price) data of cryptocurrencies as the initial input obtained from the API and will only consider 29 cryptocurrencies that have complete data from \date{1st January 2016} to \date{31st July 2018}. The reason why we choose the number 29 is because we want to compare the performance on cryptocurrencies with that on stocks and we will choose Dow Jones 30 as our counterpart. We want to make them have the same size of products and DWDP (DowDuPont) in Dow Jones does not have the data before \date{1st September 2017}.
 
 \subsection{Data Preprocessing}
 
-The original data of cryptocurrencies contains the open price, highest price, lowest price, close price and volume changes of different cryptocurrencies for each day. The unit of the price is USD. There is no specific trading hours for cryptocurrencies. The metric the API used to split the values into days is based on 00:00 GMT time. For simplicity, we will use symbols to represent cryptocurrencies. Table \ref{table:symbolcrypto} shows the corresponding cryptocurrency of each symbol.
+The original OHLC data of cryptocurrencies contains the open price, highest price, lowest price and close price of different cryptocurrencies for each day. The unit of the price is USD. There is no specific trading hours for cryptocurrencies. The metric the API used to split the values into days is based on 00:00 GMT time. For simplicity, we will use symbols to represent cryptocurrencies. Table \ref{table:symbolcrypto} shows the corresponding cryptocurrency of each symbol.
 
 {
   \begin{table}[ht]
@@ -482,7 +482,7 @@ The original data of cryptocurrencies contains the open price, highest price, lo
         Symbol & Crypto & Symbol & Crypto & Symbol & Crypto \\
         \hline
         AEON & Aeon & BAY & BitBay & BLOCK & Blocknet \\
-        BTC & Bitcoin & BTCD & BitcoinDark & BURST & Burst \\
+        BTC & Bitcoin & BTS & BitShares & BURST & Burst \\
         CRW & Crown & DASH & Dash & DGB & DigiByte \\
         DOGE & Dogecoin & EMC2 & Einsteinium & ETH & Ethereum \\
         FCT & Factom & FTC & Feathercoin & GAME & GameCredits \\
@@ -498,7 +498,11 @@ The original data of cryptocurrencies contains the open price, highest price, lo
   \end{table}
 }
 
+<<<<<<< Updated upstream
 Before we start our analysis, we need to preprocess the data to ensure that the data is clean enough and in the format which can be used as the input of the analysis. The historical daily OHLCV data requested from the API is on the crypto by crypto basis. In this case, we extract all the data, combine them into the format of Table \ref{table:ohlcvcrypto} and store them into the database.
+=======
+Before we start our analysis, we need to preprocess the data to ensure that the data is clean enough and in the format which can be used as the input of the analysis. The historical daily OHLC data requested from the API is on the crypto by crypto basis. In this case, we extract all the data, combine them into the format of Table \ref{table:ohlccrypto} and store them into the database. Overall, there is a huge growth among the price of most of the cryptocurrencies.
+>>>>>>> Stashed changes
 
 {
   \begin{table}[ht]
@@ -506,33 +510,37 @@ Before we start our analysis, we need to preprocess the data to ensure that the 
     \scriptsize
     \begin{tabular}{|c|c c c c c c|}
       \hline
-       & AEON\_open & AEON\_high & AEON\_low & ... & XRP\_close & XRP\_volume \\ [0.5ex]
+      Date & AEON\_open & AEON\_high & AEON\_low & ... & XRP\_low & XRP\_close \\ [0.5ex]
       \hline
-      2016-01-01 & 0.01454 & 0.0217 & 0.01316 & ... & 0.0055 & 0 \\
+      2016-01-01 & 0.01454 & 0.0217 & 0.01316 & ... & 0.005132 & 0.0055 \\
       \hline
-      2016-01-02 & 0.01498 & 0.01734 & 0.01388 & ... & 0.005125 & -496.94 \\
+      2016-01-02 & 0.01498 & 0.01734 & 0.01388 & ... & 0.005 & 0.005125 \\
       \hline
-      2016-01-03 & 0.01378 & 0.01536 & 0.01379 & ... & 0.0052 & -23.8623 \\
+      2016-01-03 & 0.01378 & 0.01536 & 0.01379 & ... & 0.005 & 0.0052 \\
       \hline
-      2016-01-04 & 0.01391 & 0.0143 & 0.01218 & ... & 0.0051 & 0 \\
+      2016-01-04 & 0.01391 & 0.0143 & 0.01218 & ... & 0.0051 & 0.0051 \\
       \hline
       ... & ... & ... & ... & ... & ... & ... \\
       \hline
-      2018-07-28 & 1.58 & 1.75 & 1.58 & ... & 0.4576 & -6853079.88 \\
+      2018-07-28 & 1.58 & 1.75 & 1.58 & ... & 0.4482 & 0.4576 \\
       \hline
-      2018-07-29 & 1.67 & 1.78 & 1.58 & ... & 0.4529 & -5774418.55 \\
+      2018-07-29 & 1.67 & 1.78 & 1.58 & ... & 0.4503 & 0.4529 \\
       \hline
-      2018-07-30 & 1.68 & 1.69 & 1.57 & ... & 0.4458 & -15453544.47 \\
+      2018-07-30 & 1.68 & 1.69 & 1.57 & ... & 0.4346 & 0.4458 \\
       \hline
-      2018-07-31 & 1.55 & 1.55 & 1.42 & ... & 0.4351 & -16047905.37 \\
+      2018-07-31 & 1.55 & 1.55 & 1.42 & ... & 0.4272 & 0.4351 \\
       \hline
     \end{tabular}
-    \caption{Historical OHLCV of Cryptocurrencies}
-    \label{table:ohlcvcrypto}
+    \caption{Historical OHLC of Cryptocurrencies}
+    \label{table:ohlccrypto}
   \end{table}
 }
 
+<<<<<<< Updated upstream
 Our objective is to evaluate the risk based on price volatility which is the daily price changes ($g$) or daily rate of return ($r$). We can calculate the daily price changes through dividing the close price by the open price. The rate of return ($r$) is then equal to $1 - g$. Table \ref{table:dccrypto} shows the daily price changes after transformation from the historical OHLCV dataset.
+=======
+Our objective is to evaluate the risk based on price volatility which is the daily price changes ($g$) or daily rate of return ($r$). We can calculate the daily price changes through dividing the close price by the open price. The rate of return ($r$) is then equal to $1 - g$. Table \ref{table:drcrypto} shows the daily price changes after transformation from the historical OHLC dataset.
+>>>>>>> Stashed changes
 
 {
   \begin{table}[ht]
@@ -540,7 +548,7 @@ Our objective is to evaluate the risk based on price volatility which is the dai
     \scriptsize
     \begin{tabular}{|c|c c c c c c c|}
       \hline
-       & AEON & BAY & BLOCK & ... & XCP & XMR & XRP \\ [0.5ex]
+      Date & AEON & BAY & BLOCK & ... & XCP & XMR & XRP \\ [0.5ex]
       \hline
       2016-01-01 & 0.030949 & -0.296502 & -0.265306 & ... & -0.038405 & 0.108141 & 0.056676 \\
       \hline
@@ -561,12 +569,12 @@ Our objective is to evaluate the risk based on price volatility which is the dai
       2018-07-31 & -0.064516 & -0.059292 & -0.094542 & ... & -0.098820 & -0.076615 & -0.024002 \\
       \hline
     \end{tabular}
-    \caption{Historical Daily Changes of Cryptocurrencies}
-    \label{table:dccrypto}
+    \caption{Historical Daily Returns of Cryptocurrencies}
+    \label{table:drcrypto}
   \end{table}
 }
 
-In order to test how good the risk estimation is, we will split the data into training set and test set. The test set is around 40\% of the whole dataset, and the training set is about 60\%. All the data must be in an order because the values are in time series. This kind of method to test the performance of our estimation is called back testing as it tests the model performance on the previous dataset.
+In order to test how good the risk estimation is, we will use sliding window mehtod to split the whole dataset into multiple parts. We use 100 as the size of the sliding window in this analysis. This kind of method will conduct a prediction or estimation on each part of dataset. For example, there are 500 datapoints, and the size of the window is 200. We can then estimate the $201_{th}$ VaR using the first 200 datapoints and use the $2_{th}$ to $201_{th}$ datapoints to estimate the $202_{th}$ value and so on. As a result, there will be 300 VaRs that can be predicted.
 
 \subsection{Risk Estimation}
 
@@ -574,26 +582,29 @@ We will use VaR to evaluate the risk of cryptocurrencies since it provides a sim
 
 \subsubsection{Historical Simulation of VaR}
 
-A 95\% confidence level of 1-day VaR estimation will be used in this project, which means we want to know how bad our loss of the investment can become for the next day in a 95\% of confidence. A historical simulation method will be applied to the training set in here to simulate the scenarios that have happened and find out the worst 5\% of the experience. The $5_{th}$ percentile of the whole scenarios will then become our VaR.
+A 95\% confidence level of 1-day VaR estimation will be used in this project, which means we want to know how bad our loss of the investment can become for the next day in a 95\% of confidence. A historical simulation method will be applied to the sliding windows in here to simulate the scenarios that have happened and find out the worst 5\% of the experience. The $5_{th}$ percentile of the whole scenarios will then become our VaR.
 
 {
   \begin{table}[ht]
     \centering
     \small
-    \begin{tabular}{|c|c|c|c|c|c|}
+    \begin{tabular}{|c|c c c c c c|}
         \hline
-        Symbol & VaR & Symbol & VaR & Symbol & VaR \\
+        Crypto & 2016-03-10 & 2016-03-11 & 2016-03-12 & ... & 2018-07-30 & 2018-07-31 \\ [0.5ex]
         \hline
-        AEON & -0.1382 & BAY & -0.1310 & BLOCK & -0.1260 \\
-        BTC & -0.0751 & BTCD & -0.1116 & BURST & -0.1230 \\
-        CRW & -0.1234 & DASH & -0.0921 & DGB & -0.1250 \\
-        DOGE & -0.1157 & EMC2 & -0.1575 & ETH & -0.0895 \\
-        FCT & -0.1079 & FTC & -0.1170 & GAME & -0.1176 \\
-        GRS & -0.1428 & LTC & -0.0901 & MONA & -0.1227 \\
-        NAV & -0.1147 & NLG & -0.0931 & POT & -0.1088 \\
-        PPC & -0.1208 & RDD & -0.1667 & SYS & -0.1246 \\
-        VIA & -0.1284 & VTC & -0.1296 & XCP & -0.1154 \\
-        XMR & -0.1090 & XRP & -0.1101 & & \\
+        AEON & -0.17212 & -0.17212 & -0.17212 & ... & -0.06261 & -0.06261 \\
+        \hline
+        BAY & -0.16117 & -0.15626 & -0.15626 & ... & -0.06569 & -0.06569 \\
+        \hline
+        BLOCK & -0.22696 & -0.19087 & -0.19087 & ... & -0.08441 & -0.08441 \\
+        \hline
+        ... & ... & ... & ... & ... & ... & ... \\
+        \hline
+        XCP & -0.13631 & -0.13631 & -0.13631 & ... & -0.07843 & -0.07843 \\
+        \hline
+        XMR & -0.15443 & -0.15443 & -0.15443 & ... & -0.09825 & -0.09825 \\
+        \hline
+        XRP & -0.08568 & -0.08568 & -0.08568 & ... & -0.07522 & -0.07522 \\
         \hline
     \end{tabular}
     \caption{VaRs of Cryptocurrencies}
@@ -601,7 +612,7 @@ A 95\% confidence level of 1-day VaR estimation will be used in this project, wh
   \end{table}
 }
 
-Table \ref{table:varcrypto} states the 95\% 1-day VaR of each cryptocurrency. The values are the daily returns. Negative numbers represent loss in percentage. Overall, RDD (ReddCoin) is the riskiest cryptocurrency because it has the largest loss of 16.67\% at the $5_{th}$ percentile based on the past experience of our training set. BTC (Bitcoin) is the best product to invest as it is relatively stable with a 95\% confidence that the loss will not be more than 7.51\% of the input in comparison with other investment options.
+Table \ref{table:varcrypto} states the 95\% 1-day VaRs of each cryptocurrency. The values are the daily returns. Negative numbers represent loss in percentage. Normally, the VaRs stay in the same values for several days because the historical data used for the estimation only changes slightly in every steps. When we estimate a new VaR, we only move the window one-day forward. This will not cause the $5_{th}$ percentile of the returns change significantly.
 
 \subsection{Risk Diversification}
 
@@ -609,9 +620,7 @@ There are many ways of diversifying our investments, either through observation 
 
 \subsubsection{Product Correlations}
 
-The Pearson correlation coefficient is useful and straight forward in here for researching the direct relationships between two cryptocurrencies. It summarises the relationships of pairwise observations between two cryptocurrencies and restricts the result in the range between -1 and +1, and this allows us to observe the strength of connections on those cryptocurrencies based on the daily returns. A larger correlation coefficient means there exists a stronger correlation between their daily returns.
-
-This correlation analysis will use all the data including the training set and test set due to the usage of the result. This analysis aims on helping the construction of trading strategies. The whole dataset should be involved to generate a well-diversified hedging strategy.
+The Pearson correlation coefficient is useful and straight forward in here for researching the direct relationships between two cryptocurrencies. It summarises the relationships of pairwise observations between two cryptocurrencies and restricts the result in the range between -1 and +1, and this allows us to observe the strength of connections on those cryptocurrencies based on the daily returns. A larger correlation coefficient means there exists a stronger correlation between their daily returns. This analysis aims on helping the construction of trading strategies. The whole dataset should be involved to generate a well-diversified hedging strategy.
 
 We can generate a correlation matrix which states the pairwise correlations of all the cryptocurrencies. Next, a visualisation of the matrix helps us to analyse and observe the degree of correlations easier. Figure \ref{fig:cryptocorr} illustrates the result of a visualisation. The colour bar explains the meaning of different colours. Lighter colours represent a stronger correlation, and vice versa.
 
@@ -631,11 +640,11 @@ When constructing an investment portfolio, the less dependent products should be
 
 \subsubsection{K-means Clustering on Price Movement}
 
-In the context of clustering, we regard the test data which we just split from the previous steps as the unknown data to inspect the performance of improvement on VaR estimation after a clustering. The test data will not be included in our clustering analysis because the influence of knowing the unknown data should be eliminated.
+In the context of clustering, we use all the data without any split because we want to make the best use of every datapoints to illustrate the pattern of the attributes.
 
-Before starting our clustering analysis, there are some prerequisites to be implemented. First, we need to transpose our data to make the cryptocurrencies become observations/objects and see the time-series as the features. A clustering can then group the cryptocurrencies together based on the similarity/dissimilarity of their daily changes along the timeline. After the trnaspose, a dimensionality reduction should be executed as there are too many dimensions which are dates among the transposed dataset, and this will cause a computational difficulty on K-means clustering.
+Before starting our clustering analysis, there are some prerequisites to be implemented. First, we need to transpose our data to make the cryptocurrencies become observations/objects and see the time-series as the features. A clustering can then group the cryptocurrencies together based on the similarity/dissimilarity of their daily returns along the timeline. After the trnaspose, a dimensionality reduction should be executed as there are too many dimensions which are dates among the transposed dataset, and this will cause a computational difficulty on K-means clustering.
 
-Table \ref{table:tpcrypto} illustrates how the data looks like after a transpose. It is now a 29 by 954 table which used to be 954 by 29. The rows become the cryptocurrencies and the columns are dates from \date{2016-01-01} to \date{2018-07-31}. The columns are the attributes we will use for our clustering. We can now use PCA (Principal Component Analysis) to reduce the number of dimensions.
+We first take the daily returns dataset as our input dataset. Table \ref{table:tpcrypto} illustrates how the data looks like after a transpose. It is now a 29 by 943 table which used to be 943 by 29. The rows become the cryptocurrencies and the columns are dates from \date{2016-01-01} to \date{2018-07-31}. The columns are the attributes we will use for our clustering. We can now use the PCA (Principal Component Analysis) to reduce the number of dimensions.
 
 {
   \begin{table}[ht]
@@ -660,13 +669,14 @@ Table \ref{table:tpcrypto} illustrates how the data looks like after a transpose
       XRP & 0.056676 & 	-0.001364 & 0.014634 & ... & -0.015677 & -0.024002 \\
       \hline
     \end{tabular}
-    \caption{Historical Daily Changes of Cryptocurrencies}
+    \caption{Transposed Daily Returns of Cryptocurrencies}
     \label{table:tpcrypto}
   \end{table}
 }
 
-The number of Principal Components can be decided by the amount of variance that has been explained. Figure \ref{fig:cryptopca} shows the ratio of explained variance with different number of PCs. We choose the number 26 as our number of PCs because it explains around 99\% of the attributes and our objective is to make the clustering computationally efficient without losing too much information. With respect to visualisation, because we only want to know the similarity between shapes of the volatilities, we can illustrate line charts of the cryptocurrencies' PCs even on a higher dimensional space.
+The number of Principal Components can be decided by the amount of variance that has been explained. Figure \ref{fig:cryptopca} shows the percentage of explained variance with different number of PCs. We choose the number 26 as our number of PCs because it explains around 99\% of the attributes and our objective is to make the clustering computationally efficient without losing too much information. With respect to visualisation, because we only want to know the similarity between shapes of the volatilities, we can illustrate line charts of the cryptocurrencies' PCs even on a higher dimensional space.
 
+<<<<<<< Updated upstream
 After the preparation, K-means clustering can be implemented. The number of clusters, K, we select is 6 owing to avoidance of skewness among clusters, minimisation of the cost in each cluster and prevention from overfitting on the training set since we only implement clustering on the training set. The distance metric we are using is DTW (Dynamic Time Warping) because we want to know how similar the activities between cryptocurrencies are instead of the direct similarity which is restricted by strict time criterion. DTW is computationally more expensive than Euclidean distance, but it provides a more flexible way of comparing the distance between two objects.
 
 
@@ -685,6 +695,29 @@ After the preparation, K-means clustering can be implemented. The number of clus
     \caption{Cumulative Explained Variance Ratio of PCs on Cryptocurrencies}
     \label{fig:cryptopca}
 \end{figure}
+=======
+\begin{figure}[ht]
+    \includegraphics[width=1\linewidth, center]{resources/crypto_pca_explained.png}
+    \caption{Cumulative Explained Variance Percentage of PCs on Cryptocurrencies}
+    \label{fig:cryptopca}
+\end{figure}
+
+After the preparation, K-means clustering can be implemented. The number of clusters, K, we select is 8 because of minimisation of the cost in each cluster and properly distribute the cryptos into clusters. The distance metric we are using is DTW (Dynamic Time Warping) because we want to know how similar the activities between cryptocurrencies are instead of the direct similarity which is restricted by strict time criterion. DTW is computationally more expensive than Euclidean distance, but it provides a more flexible way of comparing the distance between two objects.
+
+The cryptocurrencies are distributed into 8 clusters after multiple iteration until the cost\eqref{eq:2.7} is minimised. The cluster contents are described as follow:
+\begin{itemize}
+    \item \textsl{Cluster 1}: DGB, MONA, POT, VIA, VTC
+    \item \textsl{Cluster 2}: BTC, BTS, ETH, FCT, LTC, NLG, XMR, XRP
+    \item \textsl{Cluster 3}: AEON, BLOCK, GRS
+    \item \textsl{Cluster 4}: CRW
+    \item \textsl{Cluster 5}: DOGE
+    \item \textsl{Cluster 6}: BAY, BURST, FTC, GAME, PPC, SYS, XCP
+    \item \textsl{Cluster 7}: EMC2, NAV
+    \item \textsl{Cluster 8}: DASH, RDD
+\end{itemize}
+
+There is a skewness among the clusters. \textsl{Cluster 1}, \textsl{Cluster 2} and \textsl{Cluster 6} have more components than other clusters, and \textsl{Cluster 2} contains some of the most popular cryptocurrencies of the market. Apart from this, other cryptocurrencies seem to scatter around clusters.
+>>>>>>> Stashed changes
 
 \begin{figure}[ht]
     \includegraphics[width=1\linewidth, center]{resources/crypto_kmeans.png}
@@ -692,16 +725,168 @@ After the preparation, K-means clustering can be implemented. The number of clus
     \label{fig:cryptokmeans}
 \end{figure}
 
+<<<<<<< Updated upstream
+=======
+We can then look at Figure \ref{fig:cryptokmeans} which shows the result of our K-means clustering. The red lines represent the centres or the means of elements in each cluster, and the grey lines are the cryptocurrencies. Each cluster has a distinct shape of the central line. Those elements which are in the same cluster should have similar shapes of lines. The objects in \textsl{Cluster 2} are more stable than other those in other clusters. \textsl{Cluster 1}, \textsl{Cluster 3}, \textsl{Cluster 6}, \textsl{Cluster 7} and \textsl{Cluster 8} are more fluctuated. \textsl{Cluster 4} and \textsl{Cluster 5} have strange activities and have some extreme phenomena.
+
+>>>>>>> Stashed changes
 \subsection{Performance}
-\subsubsection{Back Test}
+\subsubsection{Accuracy and p-value}
 \subsubsection{Improvement After Risk Diversification}
 
 \section{Analysis of Stocks}
+
+Since the risk diversification helps our estimation of risks on cryptocurrencies, it might be also applicable to stock data. The stock data is retrieved from the RESTful API \url{https://iextrading.com/developer/}\cite{iextrading} which is also an open source. As what has been conducted on cryptocurrencies, we extract the data to our local database and use the Java programme to implement daily ETL.
+
+The analysis of stocks will use the same criterion and standard as that of cryptocurrencies, which means the input dataset is also the historical dialy OHLC. It contains the data from \date{1st January 2016} to \date{31st July 2018} of 29 stocks in Dow Jones 30, and this excludes DWDP (DowDuPont) because there is no complete data for DWDP (DowDuPont) over the period.
+
 \subsection{Data Preprocessing}
+
+The data for stocks is also using USD as the unit of prices. However, there are trading hours for stocks. The stocks of Dow Jones are listed under NYSE (New York Stock Exchange) or the Nasdaq Stock Market, and the trading hours for both exchanges are 09:30 to 16:00 EST from Monday to Friday except public holidays. As a result, there is no data for weekends. Table \ref{table:symbolstock} lists the full company name of each stcok.
+
+{
+  \begin{table}[ht]
+    \centering
+    \small
+    \begin{tabular}{|c|c|c|c|}
+        \hline
+        Symbol & Stock & Symbol & Stock \\
+        \hline
+        AAPL & Apple & AXP & American Express \\
+        BA & Boeing & CAT & Caterpillar \\
+        CSCO & Cisco Systems & CVX & Chevron \\
+        DIS & Walt Disney & GS & Goldman Sachs \\
+        HD & The Home Depot & IBM & IBM \\
+        INTC & Intel & JNJ & Johnson \& Johnson \\
+        JPM & JPMorgan Chase & KO & Coca-Cola \\
+        MCD & McDonald's & MMM & 3M \\
+        MRK & Merck \& Company & MSFT & Microsoft \\
+        NKE & Nike & PFE & Pfizer \\
+        PG & Procter \& Gamble & TRV & Travelers \\
+        UNH & UnitedHealth Group & UTX & United Technologies \\
+        V & Visa & VZ & Verizon \\
+        WBA & Walgreens Boots Alliance & WMT & Walmart \\
+        XOM & ExxonMobil & & \\
+        \hline
+    \end{tabular}
+    \caption{Symbols of Stocks}
+    \label{table:symbolstock}
+  \end{table}
+}
+
+Similar to our previous analysis on cryptocurrencies, we also need to preprocess the data extracted from the RESTful API. An organised OHLC dataset after extraction looks like Table \ref{table:ohlcstock}. The data starts from \date{4th January 2016} because \date{1st January 2016} is a public holiday, and the following two days are Saturday and Sunday, which are day offs of the exchanges.
+
+{
+  \begin{table}[ht]
+    \centering
+    \scriptsize
+    \begin{tabular}{|c|c c c c c c|}
+      \hline
+       & AAPL\_open & AAPL\_high & AAPL\_low & ... & XOM\_low & XOM\_close \\ [0.5ex]
+      \hline
+      2016-01-04 & 97.6663 & 100.2915 & 97.0857 & ... & 68.3743 & 69.2731 \\
+      \hline
+      2016-01-05 & 100.6551 & 100.7502 & 97.476 & ... & 68.7922 & 69.8633 \\
+      \hline
+      2016-01-06 & 95.7151 & 97.4379 & 95.0584 & ... & 68.495 & 69.282 \\
+      \hline
+      2016-01-07 & 93.9257 & 95.3058 & 91.7841 & ... & 67.878 & 68.1731 \\
+      \hline
+      ... & ... & ... & ... & ... & ... & ... \\
+      \hline
+      2018-07-26 & 193.9298 & 195.2751 & 192.9333 & ... & 82.5189 & 83.38 \\
+      \hline
+      2018-07-27 & 194.3085 & 194.5078 & 189.4356 & ... & 79.9801 & 81.0837 \\
+      \hline
+      2018-07-30 & 191.2293 & 191.5283 & 188.4092 & ... & 79.887 & 80.9055 \\
+      \hline
+      2018-07-31 & 189.6349 & 191.4685 & 188.6783 & ... & 80.6086 & 80.6779 \\
+      \hline
+    \end{tabular}
+    \caption{Historical OHLC of Stocks}
+    \label{table:ohlcstock}
+  \end{table}
+}
+
+Table \ref{table:drstock} illustrates the daily retruns transfromed from the previous ohlc data - Table \ref{table:ohlcstock}. This dataset includes daily returns of each stock and is also stored in the database to help us quickly load our input dataset for analysis without transforming the data every time, which causes a computational issue.
+
+{
+  \begin{table}[ht]
+    \centering
+    \scriptsize
+    \begin{tabular}{|c|c c c c c c c|}
+      \hline
+       & AAPL & AXP & BA & ... & WBA & WMT & XOM \\ [0.5ex]
+      \hline
+      2016-01-04 & 0.026703 & -0.007343 & -0.006224 & ... & -0.007766 & 0.015867 & -0.000515 \\
+      \hline
+      2016-01-05 & -0.028748 & -0.012172 & 0.000568 & ... & -0.023191 & 0.014347 & 0.012048 \\
+      \hline
+      2016-01-06 & 0.001393 & -0.012569 & 0 & ... & -0.011299 & 0.017126 & 0.010830 \\
+      \hline
+      2016-01-07 & -0.022599 & 0.008372 & -0.024711 & ... & -0.014928 & 0.032714 & 0.002236 \\
+      \hline
+      ... & ... & ... & ... & ... & ... & ... & ... \\
+      \hline
+      2018-07-26 & -0.002055 & -0.003306 & 0.011087 & ... & 0.002523 & -0.003050 & 0.004891 \\
+      \hline
+      2018-07-27 & -0.020565 & 0.009527 & -0.001136 & ... & 0.013436 & -0.005754 & 0.011733 \\
+      \hline
+      2018-07-30 & -0.010370 & -0.018300 & -0.030194 & ... & 0.011259 & 0.010000 & -0.004748 \\
+      \hline
+      2018-07-31 & -0.000053 & -0.015141 & 0.005418 & ... & -0.024383 & 0.002585 & -0.001591 \\
+      \hline
+    \end{tabular}
+    \caption{Historical Daily Returns of Stocks}
+    \label{table:drstock}
+  \end{table}
+}
+
 \subsection{Risk Estimation}
+
+The same methods will be used in the context of stcoks to estimate the risk of each product. The whole daily returns data is split into sliding windows and the data in each window is used to estimate the 95\% 1-day VaRs for the next days from \date{10th March 2016} to \date{31st July 2018} excluding the holidays.
+
 \subsubsection{Historical Estimation of VaR}
+
+The 29 by 549 estimated 95\% 1-day VaRs of the stocks are presented on Table \ref{table:varstock}. In comparison with the VaRs of cryptocurrencies on Table \ref{table:varcrypto}, the values for stocks are proportionally much smaller than that of cryptocurrencies, and this means that the risks of investing in stocks are lower. When investors lose money on their investment of stocks, they do not suffer from the same degree of loss as their investment on cryptocurrencies.
+
+{
+  \begin{table}[ht]
+    \centering
+    \small
+    \begin{tabular}{|c|c c c c c c|}
+        \hline
+        Crypto & 2016-03-11 & 2016-03-12 & 2016-03-13 & ... & 2018-07-30 & 2018-07-31 \\ [0.5ex]
+        \hline
+        AAPL & -0.02591 & -0.02591 & -0.02568 & ... & -0.02049 & -0.02049 \\
+        \hline
+        AXP & -0.01537 & -0.01537 & -0.01537 & ... & -0.01493 & -0.01514 \\
+        \hline
+        BA & -0.02219 & -0.02219 & -0.02219 & ... & -0.02868 & -0.02945 \\
+        \hline
+        ... & ... & ... & ... & ... & ... & ... \\
+        \hline
+        WBA & -0.02121 & -0.02121 & -0.02068 & ... & -0.02412 & -0.02412 \\
+        \hline
+        WMT & -0.01608 & -0.01608 & -0.01608 & ... & -0.01939 & -0.01939 \\
+        \hline
+        XOM & -0.01770 & -0.01770 & -0.01770 & ... & -0.01298 & -0.01298 \\
+        \hline
+    \end{tabular}
+    \caption{VaRs of Stocks}
+    \label{table:varstock}
+  \end{table}
+}
+
+The VaR estimation of stocks starts from \date{11th March 2016} which is one day later than the previous VaR estimation at cryptos because \date{10th Macth 2016} is Sunday. Also, the number of dates is smaller due to the trading hours of the exchanges. With respect to the variance between the VaRs, those of stocks are much smaller than those of cryptos, which means the loss can be smaller when suffering from a crash.
+
 \subsection{Risk Diversification}
+
+A popular way of diversify investments in stock products is to find the industrial relationships between them. The stocks of the companies in the same industry normally have the similar risk factor which is called industrial risk. Industrial risks can be hedged by putting investments into different industry sectors. In this part, we will also use correlations and K-means clustering to find the dissimilarities between stocks and try to see if there is an industrial causation behind the correlations.
+
 \subsubsection{Product Correlations}
+
+The whole stock data will be used in here to calculate the correlation matrix. There is a similar correlation matrix chart, Figure \ref{fig:stockcorr}, to the one of cryptos. They have same attributes such as yellow diagonal and symmetry against the diagonal. In comparison with the pattern of cryptos at \ref{fig:cryptocorr}, more colours are lighter in the chart of cryptos. That means there are more correlated pairs of stocks.
 
 \begin{figure}[ht]
     \includegraphics[width=1\linewidth, center]{resources/stock_corr.png}
@@ -709,13 +894,71 @@ After the preparation, K-means clustering can be implemented. The number of clus
     \label{fig:stockcorr}
 \end{figure}
 
+GS (Goldman Sachs) and JPM (JPMorgan Chase) have a light green with a correlation coefficient of around 0.85 on their intersection which means they are highly positive correlated. This relationship is caused by their business similarity because they are both investment banking companies. They also have positive correlations with some financial companies, e.g. AXP (American Express), TRV (Travelers).
+
+With respect to technology companies, there are connections between them including software and hardware companies. AAPL (Apple) has higher correlations with CSCO (Cisco Systems), INTC (Intel) and MSFT(Microsoft). It is also positively correlated to V (Visa), and this might be because AAPL (Apple) has Apple Pay which is relevant to credit cards and debit cards which are the products of V (Visa).
+
+In the pharmaceutical industry, the daily returns between the stocks are highly correlated as well. For example, the colours on the blocks between PFE (Pfizer), JNJ (Johnson \& Johnson) and MRK (Merck \& Company) are lighter than others. Some of the companies producing the complementary goods like MMM (3M) and PG (Procter \& Gamble) are also correlated to this industry.
+
+XOM (ExxonMobil) and CVX (Chevron) are both oil and gas companies. As a result, they have a large correlation. Apart from this, they have positive correlations with MMM (3M) and CAT (Caterpillar) because these companies manufacture products using oil as materials.
+
 \subsubsection{K-means Clustering on Price Movement}
+
+Another data preprocessing needs to be completed in this section before starting K-means clustering analysis. A transpose of the daily returns dataset is crucial because this part of analysis aims on grouping the stocks together. The stocks should be the objects or observations in here. Table \ref{table:tpstock} illustrates the data of daily returns after transposing Table \ref{table:drstock}.
+
+{
+  \begin{table}[ht]
+    \centering
+    \scriptsize
+    \begin{tabular}{|c|c c c c c c|}
+      \hline
+       & 2016-01-04 & 2016-01-05 & 2016-01-06 & ... & 2018-07-30 & 2018-07-31 \\ [0.5ex]
+      \hline
+      AAPL & 0.026703 & -0.028748 & 0.001393 & ... & -0.010370 & -0.000053 \\
+      \hline
+      AXP & -0.007343 & -0.012172 & -0.012569 & ... & -0.018300 & -0.015141 \\
+      \hline
+      BA & -0.006224 & 0.000568 & 0 & ... & -0.030194 & 0.005418 \\
+      \hline
+      ... & ... & ... & ... & ... & ... & ... \\
+      \hline
+      WBA & -0.007766 & -0.023191 & -0.011299 & ... & 0.011259 & -0.024383 \\
+      \hline
+      WMT & 0.015867 & 0.014347 & 0.017126 & ... & 0.010000 & 0.002585 \\
+      \hline
+      XOM & -0.000515 & 0.012048 & 0.010830 & ... & -0.004748 & -0.001591 \\
+      \hline
+    \end{tabular}
+    \caption{Transposed Daily Returns of Stocks}
+    \label{table:tpstock}
+  \end{table}
+}
+
+Similarly, the dimensionality needs to be reduced as 649 attributes are too many for an efficient computation. We use the PCA (Principal Component Analysis) to conduct data extraction and obtain the most informative elements from all the dimensions. The PCs (Principal Components) are ordered by their informativity. The first PC which is the most informative explains approximately 11.73\% of the variance across all the PCs.
 
 \begin{figure}[ht]
     \includegraphics[width=1\linewidth, center]{resources/stock_pca_explained.png}
-    \caption{Cumulative Explained Variance Ratio of PCs on Stocks}
+    \caption{Cumulative Explained Variance Percentage of PCs on Stocks}
     \label{fig:stockpca}
 \end{figure}
+
+The cumulative percentage of explained variance is shown on Figure \ref{fig:stockpca}. The blue bars represents the explaned variance percentage of each PC. The orange line means the cumulative percentage of the PCs in an order of the informativity, and it will approach 1 until PC29. We select 27 as the number of PCs because the percentage of explained variance is around 99\% in here.
+
+The data has become a 29 by 27 array which means there are 27 dimensions in each stock. We can then use this dataset to implement K-means clustering. To form consistency and compare with the result of cryptocurrencies, we select the same number of K with 8. DTW (Dynamic Time Warping) is used as the distance metric, and this metric outperforms the L2 distance (Euclidean) in the context of shape comparison.
+
+The result after implementation of K-means clustering on the transposed daily returns dataset of stocks after PCA is presented as follow:
+\begin{itemize}
+    \item \textsl{Cluster 1}: JNJ, KO, MCD, MRK, PFE, PG, VZ, WMT
+    \item \textsl{Cluster 2}: GS, JPM
+    \item \textsl{Cluster 3}: AXP, BA, INTC, NKE, WBA
+    \item \textsl{Cluster 4}: AAPL, CSCO, MSFT, V
+    \item \textsl{Cluster 5}: CAT
+    \item \textsl{Cluster 6}: CVX, UNH, XOM
+    \item \textsl{Cluster 7}: DIS, HD, IBM, TRV, UTX
+    \item \textsl{Cluster 8}: MMM
+\end{itemize}
+
+There are some industrial correlations behind each cluster. In \textsl{Cluster 2}, GS (Goldman Sachs) and JPM (JPMorgan Chase) are both investment banks. Just as what we have anlalysed on the correlation matrix Figure \ref{fig:stockcorr}, These 2 stocks are also correlated in the long-term analysis of activity similarity. \textsl{Cluster 4} also shows the similar result to the one we have analysed on the technology companies. AAPL (Apple), CSCO (Cisco Systems) and MSFT (Microsoft) are all technology companies except V (Visa), but Visa is also slightly relevant to technology as they are developing electronic devices. These results may prove that our assumption on the relation in industry is correct, which states that stocks/companies in the same industry have similar price fluctuation.
 
 \begin{figure}[ht]
     \includegraphics[width=1\linewidth, center]{resources/stock_kmeans.png}
@@ -723,8 +966,10 @@ After the preparation, K-means clustering can be implemented. The number of clus
     \label{fig:stockkmeans}
 \end{figure}
 
+Figure \ref{fig:stockkmeans} shows the movement of the daily returns for each cluster after the implementation of K-means clustering. The returns of the stocks generally fluctuate between a small range between -0.2 and 0.2, and this is significantly smaller than the range of cryptocurrencies. \textsl{Cluster 2}, \textsl{Cluster 3}, \textsl{Cluster 5} and \textsl{Cluster 6} have a bigger range of return movement, which means investment in these clusters might cause significant gain or loss.
+
 \subsection{Performance}
-\subsubsection{Back Test}
+\subsubsection{Accuracy and p-value}
 \subsubsection{Improvement After Risk Diversification}
 
 \clearpage
