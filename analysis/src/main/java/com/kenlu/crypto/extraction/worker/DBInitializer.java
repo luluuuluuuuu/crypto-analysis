@@ -1,7 +1,7 @@
 package com.kenlu.crypto.extraction.worker;
 
 import com.kenlu.crypto.domain.Crypto;
-import com.kenlu.crypto.domain.OHLCV;
+import com.kenlu.crypto.domain.OHLC;
 import com.kenlu.crypto.domain.Stock;
 import com.kenlu.crypto.extraction.utils.DataExtractor;
 import com.kenlu.crypto.extraction.utils.QueryHandler;
@@ -21,15 +21,15 @@ public class DBInitializer {
     private static final long TO_TIMESTAMP = System.currentTimeMillis() / 1000;
     private static final long FROM_TIMESTAMP = 1451606400;
 
-    private List<OHLCV> initCryptoOhlcvList;
-    private List<OHLCV> initStockOhlcvList;
+    private List<OHLC> initCryptoOHLCList;
+    private List<OHLC> initStockOHLCList;
     private JdbcTemplate jdbcTemplate;
     private QueryHandler queryHandler;
     private DataExtractor dataExtractor;
 
     public DBInitializer(JdbcTemplate jdbcTemplate, QueryHandler queryHandler, DataExtractor dataExtractor) {
-        this.initCryptoOhlcvList = new ArrayList<>();
-        this.initStockOhlcvList = new ArrayList<>();
+        this.initCryptoOHLCList = new ArrayList<>();
+        this.initStockOHLCList = new ArrayList<>();
         this.jdbcTemplate = jdbcTemplate;
         this.queryHandler = queryHandler;
         this.dataExtractor = dataExtractor;
@@ -66,23 +66,23 @@ public class DBInitializer {
             DateTime toDate = new DateTime(TO_TIMESTAMP * 1000).plusDays(1);
             DateTime fromDate = new DateTime(FROM_TIMESTAMP * 1000);
             int initNumOfDays = Days.daysBetween(fromDate, toDate).getDays();
-            if (initCryptoOhlcvList.size() == 0) {
+            if (initCryptoOHLCList.size() == 0) {
                 Arrays.stream(Crypto.values())
                         .forEach(crypto -> {
                             try {
-                                List<OHLCV> tmpList = dataExtractor.getCryptoDailyOHLCVs(crypto, initNumOfDays, TO_TIMESTAMP, false);
-                                initCryptoOhlcvList.addAll(tmpList);
+                                List<OHLC> tmpList = dataExtractor.getCryptoDailyOHLCVs(crypto, initNumOfDays, TO_TIMESTAMP, false);
+                                initCryptoOHLCList.addAll(tmpList);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
                         });
             }
-            if (initStockOhlcvList.size() == 0) {
+            if (initStockOHLCList.size() == 0) {
                 Arrays.stream(Stock.values())
                         .forEach(stock -> {
                             try {
-                                List<OHLCV> tmpList = dataExtractor.getStockDailyOHLCVs(stock, initNumOfDays, TO_TIMESTAMP, false);
-                                initStockOhlcvList.addAll(tmpList);
+                                List<OHLC> tmpList = dataExtractor.getStockDailyOHLCVs(stock, initNumOfDays, TO_TIMESTAMP, false);
+                                initStockOHLCList.addAll(tmpList);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
@@ -90,28 +90,28 @@ public class DBInitializer {
             }
             switch (theTable) {
                 case "input.crypto_ohlcv" :
-                    queryHandler.createCryptoOHLCVTable(initCryptoOhlcvList);
-                    queryHandler.insertCryptoOHLCVQuery(initCryptoOhlcvList);
+                    queryHandler.createCryptoOHLCVTable(initCryptoOHLCList);
+                    queryHandler.insertCryptoOHLCVQuery(initCryptoOHLCList);
                     break;
                 case "input.crypto_daily_changes" :
-                    queryHandler.createCryptoDailyChangeTable(initCryptoOhlcvList);
-                    queryHandler.insertCryptoDailyChangeQuery(initCryptoOhlcvList);
+                    queryHandler.createCryptoDailyChangeTable(initCryptoOHLCList);
+                    queryHandler.insertCryptoDailyChangeQuery(initCryptoOHLCList);
                     break;
                 case "input.crypto" :
                     queryHandler.createCryptoTable();
-                    queryHandler.insertCryptoQuery(initCryptoOhlcvList);
+                    queryHandler.insertCryptoQuery(initCryptoOHLCList);
                     break;
                 case "input.stock_ohlcv" :
-                    queryHandler.createStockOHLCVTable(initStockOhlcvList);
-                    queryHandler.insertStockOHLCVQuery(initStockOhlcvList);
+                    queryHandler.createStockOHLCVTable(initStockOHLCList);
+                    queryHandler.insertStockOHLCVQuery(initStockOHLCList);
                     break;
                 case "input.stock_daily_changes" :
-                    queryHandler.createStockDailyChangeTable(initStockOhlcvList);
-                    queryHandler.insertStockDailyChangeQuery(initStockOhlcvList);
+                    queryHandler.createStockDailyChangeTable(initStockOHLCList);
+                    queryHandler.insertStockDailyChangeQuery(initStockOHLCList);
                     break;
                 case "input.stock" :
                     queryHandler.createStockTable();
-                    queryHandler.insertStockQuery(initStockOhlcvList);
+                    queryHandler.insertStockQuery(initStockOHLCList);
                     break;
                 default:
                     break;

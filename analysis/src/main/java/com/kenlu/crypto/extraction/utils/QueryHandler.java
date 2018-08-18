@@ -1,7 +1,7 @@
 package com.kenlu.crypto.extraction.utils;
 
 import com.kenlu.crypto.domain.Crypto;
-import com.kenlu.crypto.domain.OHLCV;
+import com.kenlu.crypto.domain.OHLC;
 import lombok.extern.slf4j.Slf4j;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -26,11 +26,11 @@ public class QueryHandler {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public void insertCryptoOHLCVQuery(List<OHLCV> ohlcvList) {
+    public void insertCryptoOHLCVQuery(List<OHLC> OHLCList) {
         log.info("Inserting data for table input.crypto_ohlcv...");
-        ohlcvList.stream()
-                .sorted(Comparator.comparing(OHLCV::getDate))
-                .map(OHLCV::getDate)
+        OHLCList.stream()
+                .sorted(Comparator.comparing(OHLC::getDate))
+                .map(OHLC::getDate)
                 .distinct()
                 .forEach(date -> {
                     StringBuilder insertValues = new StringBuilder();
@@ -43,7 +43,7 @@ public class QueryHandler {
                             .append("'")
                             .append(", ");
 
-                    handleOHLCVInsert(ohlcvList, date, insertValues);
+                    handleOHLCVInsert(OHLCList, date, insertValues);
 
                     insertSqlStatement = String.format(
                             "INSERT INTO input.crypto_ohlcv VALUES (%s)",
@@ -55,11 +55,11 @@ public class QueryHandler {
                 });
     }
 
-    public void insertStockOHLCVQuery(List<OHLCV> ohlcvList) {
+    public void insertStockOHLCVQuery(List<OHLC> OHLCList) {
         log.info("Inserting data for table input.stock_ohlcv...");
-        ohlcvList.stream()
-                .sorted(Comparator.comparing(OHLCV::getDate))
-                .map(OHLCV::getDate)
+        OHLCList.stream()
+                .sorted(Comparator.comparing(OHLC::getDate))
+                .map(OHLC::getDate)
                 .distinct()
                 .forEach(date -> {
                     StringBuilder insertValues = new StringBuilder();
@@ -72,7 +72,7 @@ public class QueryHandler {
                             .append("'")
                             .append(", ");
 
-                    handleOHLCVInsert(ohlcvList, date, insertValues);
+                    handleOHLCVInsert(OHLCList, date, insertValues);
 
                     insertSqlStatement = String.format(
                             "INSERT INTO input.stock_ohlcv VALUES (%s)",
@@ -84,22 +84,20 @@ public class QueryHandler {
                 });
     }
 
-    private void handleOHLCVInsert(List<OHLCV> ohlcvList, Date date, StringBuilder insertValues) {
-        ohlcvList.stream()
-                .filter(ohlcv -> ohlcv.getDate().equals(date))
-                .sorted(Comparator.comparing(ohlcv -> ohlcv.getProduct().toString()))
-                .forEach(ohlcv -> {
-                    String open = ohlcv.getOpen().toString();
-                    String high = ohlcv.getHigh().toString();
-                    String low = ohlcv.getLow().toString();
-                    String close = ohlcv.getClose().toString();
-                    String volume = ohlcv.getVolume().toString();
+    private void handleOHLCVInsert(List<OHLC> OHLCList, Date date, StringBuilder insertValues) {
+        OHLCList.stream()
+                .filter(OHLC -> OHLC.getDate().equals(date))
+                .sorted(Comparator.comparing(OHLC -> OHLC.getProduct().toString()))
+                .forEach(OHLC -> {
+                    String open = OHLC.getOpen().toString();
+                    String high = OHLC.getHigh().toString();
+                    String low = OHLC.getLow().toString();
+                    String close = OHLC.getClose().toString();
                     List<String> values = new ArrayList<>();
                     values.add(open);
                     values.add(high);
                     values.add(low);
                     values.add(close);
-                    values.add(volume);
 
                     values.forEach(s ->
                             insertValues.append("'")
@@ -110,11 +108,11 @@ public class QueryHandler {
                 });
     }
 
-    public void insertCryptoDailyChangeQuery(List<OHLCV> ohlcvList) {
+    public void insertCryptoDailyChangeQuery(List<OHLC> OHLCList) {
         log.info("Inserting data for table input.crypto_daily_changes...");
-        ohlcvList.stream()
-                .sorted(Comparator.comparing(OHLCV::getDate))
-                .map(OHLCV::getDate)
+        OHLCList.stream()
+                .sorted(Comparator.comparing(OHLC::getDate))
+                .map(OHLC::getDate)
                 .distinct()
                 .forEach(date -> {
                     StringBuilder insertValues = new StringBuilder();
@@ -127,7 +125,7 @@ public class QueryHandler {
                             .append("'")
                             .append(", ");
 
-                    handleDailyChangeInsert(ohlcvList, date, insertValues);
+                    handleDailyChangeInsert(OHLCList, date, insertValues);
 
                     insertSqlStatement = String.format(
                             "INSERT INTO input.crypto_daily_changes VALUES (%s)",
@@ -139,11 +137,11 @@ public class QueryHandler {
                 });
     }
 
-    public void insertStockDailyChangeQuery(List<OHLCV> ohlcvList) {
+    public void insertStockDailyChangeQuery(List<OHLC> OHLCList) {
         log.info("Inserting data for table input.stock_daily_changes...");
-        ohlcvList.stream()
-                .sorted(Comparator.comparing(OHLCV::getDate))
-                .map(OHLCV::getDate)
+        OHLCList.stream()
+                .sorted(Comparator.comparing(OHLC::getDate))
+                .map(OHLC::getDate)
                 .distinct()
                 .forEach(date -> {
                     StringBuilder insertValues = new StringBuilder();
@@ -156,7 +154,7 @@ public class QueryHandler {
                             .append("'")
                             .append(", ");
 
-                    handleDailyChangeInsert(ohlcvList, date, insertValues);
+                    handleDailyChangeInsert(OHLCList, date, insertValues);
 
                     insertSqlStatement = String.format(
                             "INSERT INTO input.stock_daily_changes VALUES (%s)",
@@ -168,14 +166,14 @@ public class QueryHandler {
                 });
     }
 
-    private void handleDailyChangeInsert(List<OHLCV> ohlcvList, Date date, StringBuilder insertValues) {
-        ohlcvList.stream()
-                .filter(ohlcv -> ohlcv.getDate().equals(date))
-                .sorted(Comparator.comparing(ohlcv -> ohlcv.getProduct().toString()))
-                .forEach(ohlcv -> {
+    private void handleDailyChangeInsert(List<OHLC> OHLCList, Date date, StringBuilder insertValues) {
+        OHLCList.stream()
+                .filter(OHLC -> OHLC.getDate().equals(date))
+                .sorted(Comparator.comparing(OHLC -> OHLC.getProduct().toString()))
+                .forEach(OHLC -> {
                     String dailyChange;
                     try {
-                        dailyChange = ohlcv.getClose().divide(ohlcv.getOpen(), 15, BigDecimal.ROUND_HALF_UP).toString();
+                        dailyChange = OHLC.getClose().divide(OHLC.getOpen(), 15, BigDecimal.ROUND_HALF_UP).toString();
                     } catch (ArithmeticException e) {
                         dailyChange = "NaN";
                     }
@@ -187,11 +185,11 @@ public class QueryHandler {
                 });
     }
 
-    public void insertCryptoQuery(List<OHLCV> ohlcvList) {
+    public void insertCryptoQuery(List<OHLC> OHLCList) {
         log.info("Inserting data for table input.crypto...");
-        ohlcvList.stream()
-                .sorted(Comparator.comparing(ohlcv -> ohlcv.getProduct().toString()))
-                .map(OHLCV::getProduct)
+        OHLCList.stream()
+                .sorted(Comparator.comparing(OHLC -> OHLC.getProduct().toString()))
+                .map(OHLC::getProduct)
                 .distinct()
                 .forEach(crypto -> {
                             StringBuilder insertValue = new StringBuilder();
@@ -212,11 +210,11 @@ public class QueryHandler {
                 );
     }
 
-    public void insertStockQuery(List<OHLCV> ohlcvList) {
+    public void insertStockQuery(List<OHLC> OHLCList) {
         log.info("Inserting data for table input.stock...");
-        ohlcvList.stream()
-                .sorted(Comparator.comparing(ohlcv -> ohlcv.getProduct().toString()))
-                .map(OHLCV::getProduct)
+        OHLCList.stream()
+                .sorted(Comparator.comparing(OHLC -> OHLC.getProduct().toString()))
+                .map(OHLC::getProduct)
                 .distinct()
                 .forEach(stock -> {
                             StringBuilder insertValue = new StringBuilder();
@@ -237,18 +235,18 @@ public class QueryHandler {
                 );
     }
 
-    public void createCryptoOHLCVTable(List<OHLCV> ohlcvList) {
+    public void createCryptoOHLCVTable(List<OHLC> OHLCList) {
         String createSqlStatement;
         StringBuilder createCols = new StringBuilder();
         DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
 
         log.info("Creating table input.crypto_ohlcv...");
 
-        ohlcvList.stream()
-                .sorted(Comparator.comparing(ohlcv -> ohlcv.getProduct().toString()))
-                .filter(ohlcv -> f.format(ohlcv.getDate()).equals("2016-01-01"))
-                .forEach(ohlcv -> {
-                    handleOHLCVCreate(createCols, ohlcv);
+        OHLCList.stream()
+                .sorted(Comparator.comparing(OHLC -> OHLC.getProduct().toString()))
+                .filter(OHLC -> f.format(OHLC.getDate()).equals("2016-01-01"))
+                .forEach(OHLC -> {
+                    handleOHLCVCreate(createCols, OHLC);
                 });
 
         createSqlStatement = String.format(
@@ -262,18 +260,18 @@ public class QueryHandler {
         log.info("Table input.crypto_ohlcv is created");
     }
 
-    public void createStockOHLCVTable(List<OHLCV> ohlcvList) {
+    public void createStockOHLCVTable(List<OHLC> OHLCList) {
         String createSqlStatement;
         StringBuilder createCols = new StringBuilder();
         DateFormat f = new SimpleDateFormat("yyyy-MM-dd");
 
         log.info("Creating table input.stock_ohlcv...");
 
-        ohlcvList.stream()
-                .sorted(Comparator.comparing(ohlcv -> ohlcv.getProduct().toString()))
-                .filter(ohlcv -> f.format(ohlcv.getDate()).equals("2016-01-04"))
-                .forEach(ohlcv -> {
-                    handleOHLCVCreate(createCols, ohlcv);
+        OHLCList.stream()
+                .sorted(Comparator.comparing(OHLC -> OHLC.getProduct().toString()))
+                .filter(OHLC -> f.format(OHLC.getDate()).equals("2016-01-04"))
+                .forEach(OHLC -> {
+                    handleOHLCVCreate(createCols, OHLC);
                 });
 
         createSqlStatement = String.format(
@@ -287,19 +285,17 @@ public class QueryHandler {
         log.info("Table input.stock_ohlcv is created");
     }
 
-    private void handleOHLCVCreate(StringBuilder createCols, OHLCV ohlcv) {
-        String product = ohlcv.getProduct().toString();
+    private void handleOHLCVCreate(StringBuilder createCols, OHLC OHLC) {
+        String product = OHLC.getProduct().toString();
         String open = product + "_open";
         String high = product + "_high";
         String low = product + "_low";
         String close = product + "_close";
-        String volume = product + "_volume";
         List<String> columns = new ArrayList<>();
         columns.add(open);
         columns.add(high);
         columns.add(low);
         columns.add(close);
-        columns.add(volume);
         columns.forEach(s ->
                 createCols.append("\"")
                         .append(s)
@@ -309,13 +305,13 @@ public class QueryHandler {
         );
     }
 
-    public void createCryptoDailyChangeTable(List<OHLCV> ohlcvList) {
+    public void createCryptoDailyChangeTable(List<OHLC> OHLCList) {
         String createSqlStatement;
         StringBuilder createCols = new StringBuilder();
 
         log.info("Creating table input.crypto_daily_changes...");
 
-        handleDailyChangeCreate(ohlcvList, createCols);
+        handleDailyChangeCreate(OHLCList, createCols);
 
         createSqlStatement = String.format(
                 "CREATE TABLE input.crypto_daily_changes (" +
@@ -328,13 +324,13 @@ public class QueryHandler {
         log.info("Table input.crypto_daily_changes is created");
     }
 
-    public void createStockDailyChangeTable(List<OHLCV> ohlcvList) {
+    public void createStockDailyChangeTable(List<OHLC> OHLCList) {
         String createSqlStatement;
         StringBuilder createCols = new StringBuilder();
 
         log.info("Creating table input.stock_daily_changes...");
 
-        handleDailyChangeCreate(ohlcvList, createCols);
+        handleDailyChangeCreate(OHLCList, createCols);
 
         createSqlStatement = String.format(
                 "CREATE TABLE input.stock_daily_changes (" +
@@ -347,10 +343,10 @@ public class QueryHandler {
         log.info("Table input.stock_daily_changes is created");
     }
 
-    private void handleDailyChangeCreate(List<OHLCV> ohlcvList, StringBuilder createCols) {
-        ohlcvList.stream()
-                .sorted(Comparator.comparing(ohlcv -> ohlcv.getProduct().toString()))
-                .map(OHLCV::getProduct)
+    private void handleDailyChangeCreate(List<OHLC> OHLCList, StringBuilder createCols) {
+        OHLCList.stream()
+                .sorted(Comparator.comparing(OHLC -> OHLC.getProduct().toString()))
+                .map(OHLC::getProduct)
                 .distinct()
                 .forEach(product ->
                         createCols.append("\"")

@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 import java.util.Date;
 
 @Data
-public class OHLCV {
+public class OHLC {
 
     private Product product;
     private Date date;
@@ -14,8 +14,7 @@ public class OHLCV {
     private BigDecimal high;
     private BigDecimal low;
     private BigDecimal close;
-    private BigDecimal volume;
 
-    public OHLCV() {
+    public OHLC() {
     }
 }
