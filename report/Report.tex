@@ -498,11 +498,7 @@ The original OHLC data of cryptocurrencies contains the open price, highest pric
   \end{table}
 }
 
-<<<<<<< Updated upstream
-Before we start our analysis, we need to preprocess the data to ensure that the data is clean enough and in the format which can be used as the input of the analysis. The historical daily OHLCV data requested from the API is on the crypto by crypto basis. In this case, we extract all the data, combine them into the format of Table \ref{table:ohlcvcrypto} and store them into the database.
-=======
 Before we start our analysis, we need to preprocess the data to ensure that the data is clean enough and in the format which can be used as the input of the analysis. The historical daily OHLC data requested from the API is on the crypto by crypto basis. In this case, we extract all the data, combine them into the format of Table \ref{table:ohlccrypto} and store them into the database. Overall, there is a huge growth among the price of most of the cryptocurrencies.
->>>>>>> Stashed changes
 
 {
   \begin{table}[ht]
@@ -536,11 +532,7 @@ Before we start our analysis, we need to preprocess the data to ensure that the 
   \end{table}
 }
 
-<<<<<<< Updated upstream
-Our objective is to evaluate the risk based on price volatility which is the daily price changes ($g$) or daily rate of return ($r$). We can calculate the daily price changes through dividing the close price by the open price. The rate of return ($r$) is then equal to $1 - g$. Table \ref{table:dccrypto} shows the daily price changes after transformation from the historical OHLCV dataset.
-=======
 Our objective is to evaluate the risk based on price volatility which is the daily price changes ($g$) or daily rate of return ($r$). We can calculate the daily price changes through dividing the close price by the open price. The rate of return ($r$) is then equal to $1 - g$. Table \ref{table:drcrypto} shows the daily price changes after transformation from the historical OHLC dataset.
->>>>>>> Stashed changes
 
 {
   \begin{table}[ht]
@@ -676,26 +668,6 @@ We first take the daily returns dataset as our input dataset. Table \ref{table:t
 
 The number of Principal Components can be decided by the amount of variance that has been explained. Figure \ref{fig:cryptopca} shows the percentage of explained variance with different number of PCs. We choose the number 26 as our number of PCs because it explains around 99\% of the attributes and our objective is to make the clustering computationally efficient without losing too much information. With respect to visualisation, because we only want to know the similarity between shapes of the volatilities, we can illustrate line charts of the cryptocurrencies' PCs even on a higher dimensional space.
 
-<<<<<<< Updated upstream
-After the preparation, K-means clustering can be implemented. The number of clusters, K, we select is 6 owing to avoidance of skewness among clusters, minimisation of the cost in each cluster and prevention from overfitting on the training set since we only implement clustering on the training set. The distance metric we are using is DTW (Dynamic Time Warping) because we want to know how similar the activities between cryptocurrencies are instead of the direct similarity which is restricted by strict time criterion. DTW is computationally more expensive than Euclidean distance, but it provides a more flexible way of comparing the distance between two objects.
-
-
-
-\begin{itemize}
-    \item Cluster 1: BURST, MONA, POT, SYS, XCP, XRP
-    \item Cluster 2: CRW
-    \item Cluster 3: DOGE
-    \item Cluster 4: BTC, ETH, FCT, GAME, LTC, NLG, XMR
-    \item Cluster 5: AEON, BLOCK, BTCD, DGB, GRS, PPC, VIA, VTC
-    \item Cluster 6: BAY, DASH, EMC2, FTC, NAV, RDD
-\end{itemize}
-
-\begin{figure}[ht]
-    \includegraphics[width=1\linewidth, center]{resources/crypto_pca_explained.png}
-    \caption{Cumulative Explained Variance Ratio of PCs on Cryptocurrencies}
-    \label{fig:cryptopca}
-\end{figure}
-=======
 \begin{figure}[ht]
     \includegraphics[width=1\linewidth, center]{resources/crypto_pca_explained.png}
     \caption{Cumulative Explained Variance Percentage of PCs on Cryptocurrencies}
@@ -717,7 +689,6 @@ The cryptocurrencies are distributed into 8 clusters after multiple iteration un
 \end{itemize}
 
 There is a skewness among the clusters. \textsl{Cluster 1}, \textsl{Cluster 2} and \textsl{Cluster 6} have more components than other clusters, and \textsl{Cluster 2} contains some of the most popular cryptocurrencies of the market. Apart from this, other cryptocurrencies seem to scatter around clusters.
->>>>>>> Stashed changes
 
 \begin{figure}[ht]
     \includegraphics[width=1\linewidth, center]{resources/crypto_kmeans.png}
@@ -725,11 +696,8 @@ There is a skewness among the clusters. \textsl{Cluster 1}, \textsl{Cluster 2} a
     \label{fig:cryptokmeans}
 \end{figure}
 
-<<<<<<< Updated upstream
-=======
 We can then look at Figure \ref{fig:cryptokmeans} which shows the result of our K-means clustering. The red lines represent the centres or the means of elements in each cluster, and the grey lines are the cryptocurrencies. Each cluster has a distinct shape of the central line. Those elements which are in the same cluster should have similar shapes of lines. The objects in \textsl{Cluster 2} are more stable than other those in other clusters. \textsl{Cluster 1}, \textsl{Cluster 3}, \textsl{Cluster 6}, \textsl{Cluster 7} and \textsl{Cluster 8} are more fluctuated. \textsl{Cluster 4} and \textsl{Cluster 5} have strange activities and have some extreme phenomena.
 
->>>>>>> Stashed changes
 \subsection{Performance}
 \subsubsection{Accuracy and p-value}
 \subsubsection{Improvement After Risk Diversification}
