@@ -2,7 +2,7 @@
 \input{BigDataStyle.txt}      % do not change this line
 \usepackage[hidelinks]{hyperref}
 \usepackage[export]{adjustbox}
-\usepackage{amsmath,amsfonts,amssymb,amsthm,latexsym,graphicx,url,bookmark,enumitem,subcaption}
+\usepackage{amsmath,amsfonts,amssymb,amsthm,latexsym,graphicx,url,bookmark,enumitem,subcaption,color}
 
 \emergencystretch=5mm
 \tolerance=400
@@ -599,12 +599,12 @@ A 95\% confidence level of 1-day VaR estimation will be used in this project, wh
         XRP & -0.08568 & -0.08568 & -0.08568 & ... & -0.07522 & -0.07522 \\
         \hline
     \end{tabular}
-    \caption{VaRs of Cryptocurrencies}
-    \label{table:varcrypto}
+    \caption{VaRs of Cryptocurrencies Before Clustering}
+    \label{table:varcryptobefore}
   \end{table}
 }
 
-Table \ref{table:varcrypto} states the 95\% 1-day VaRs of each cryptocurrency. The values are the daily returns. Negative numbers represent loss in percentage. Normally, the VaRs stay in the same values for several days because the historical data used for the estimation only changes slightly in every steps. When we estimate a new VaR, we only move the window one-day forward. This will not cause the $5_{th}$ percentile of the returns change significantly.
+Table \ref{table:varcryptobefore} states the 95\% 1-day VaRs of each cryptocurrency. The values are the daily returns. Negative numbers represent loss in percentage. Normally, the VaRs stay in the same values for several days because the historical data used for the estimation only changes slightly in every steps. When we estimate a new VaR, we only move the window one-day forward. This will not cause the $5_{th}$ percentile of the returns change significantly.
 
 \subsection{Risk Diversification}
 
@@ -699,8 +699,109 @@ There is a skewness among the clusters. \textsl{Cluster 1}, \textsl{Cluster 2} a
 We can then look at Figure \ref{fig:cryptokmeans} which shows the result of our K-means clustering. The red lines represent the centres or the means of elements in each cluster, and the grey lines are the cryptocurrencies. Each cluster has a distinct shape of the central line. Those elements which are in the same cluster should have similar shapes of lines. The objects in \textsl{Cluster 2} are more stable than other those in other clusters. \textsl{Cluster 1}, \textsl{Cluster 3}, \textsl{Cluster 6}, \textsl{Cluster 7} and \textsl{Cluster 8} are more fluctuated. \textsl{Cluster 4} and \textsl{Cluster 5} have strange activities and have some extreme phenomena.
 
 \subsection{Performance}
-\subsubsection{Accuracy and p-value}
+
+\subsubsection{Original Accuracy and p-value}
+
+The accuracy of a 1-day VaR can be tested by comparing the VaRs with the actual returns of each day. If the actural return is smaller than the VaR, we can say that the VaR is not accurate and mark it as an incorrect estimation of VaR. By using the sliding window method, we can test how many times the daily returns exceed the 1-day VaRs and calculate the percentage of correct estimation. Table \ref{table:acccryptobefore} shows the VaR accuracy of each cryptocurrency.
+
+{
+  \begin{table}[ht]
+    \centering
+    \small
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        Symbol & Accuracy & Symbol & Accuracy & Symbol & Accuracy \\
+        \hline
+        AEON & 95.02\% & BAY & 94.9\% & BLOCK & 94.31\% \\
+        BTC & 93.48\% & BTCD & 94.66\% & BURST & 94.31\% \\
+        CRW & 94.78\% & DASH & 94.07\% & DGB & 94.54\% \\
+        DOGE & 93.59\% & EMC2 & 94.9\% & ETH & 93.12\% \\
+        FCT & 94.31\% & FTC & 94.54\% & GAME & 91.93\% \\
+        GRS & 94.42\% & LTC & 93.71\% & MONA & 93.59\% \\
+        NAV & 94.07\% & NLG & 94.54\% & POT & 94.31\% \\
+        PPC & 93\% & RDD & 94.42\% & SYS & 93.83\% \\
+        VIA & 94.78\% & VTC & 93.95\% & XCP & 94.31\% \\
+        XMR & 94.54\% & XRP & 94.42\% & & \\
+        \hline
+    \end{tabular}
+    \caption{VaR Estimation Accuracies of Cryptocurrencies Before Clustering}
+    \label{table:acccryptobefore}
+  \end{table}
+}
+
+Most of the accuracies are lower than 95\% which is the confidence level of our VaR estimation. Only that of AEON (Aeon) with 95.02\% is slightly higher than the 95\% level of confidence. That means our VaR estimation is not accurate. It might be because the VaR estimation did not capture some of the financial events. Overall, the average of all the accuracies is around 94.15\% over the 29 cryptocurrencies and 843 days of VaR estimation.
+
+To examine if the VaR estimation is just accidentally incorrect, we can construct a null hypothesis of how many times the VaRs are exceeded. The threshold of a 95\% 1-day VaR is around 42 days out of 843 days, which means there should be less than 42 days of daily returns breaking the VaR estimation. We can then assume our null hypothesis as follow:
+
+\begin{itemize}
+    \item \textsl{$H_0$}: Number of VaRs being exceeded $<$ 42
+    \item \textsl{$H_a$}: Number of VaRs being exceeded $\geq$ 42
+\end{itemize}
+
+The null hypothesis means that we believe the number of VaRs that are exceeded should be lower than 42, and the alternative hypothesis is that the number of VaRs being exceeded is greater or equal to 42. We can now calculate the p-value of this null hypotheis to test if the evidence of our alternative hypothesis is significant enough to reject the null hypothesis. The p-value after calculation is approximately 3.45\%. In here, we use the significance level of 5\% which also represents a confidence level of 95\%. The p-value is smaller than the significance level. As a result, we can reject the null hypothesis and say the evidence of that the number of VaRs being exceeded is greater or equal to 42 times is significant enough to say our assumption on the null hypothesis is wrong at the 95\% level of confidence. This means the estimation of VaRs in here is not accurate enough.
+
 \subsubsection{Improvement After Risk Diversification}
+
+Since we have distributed the cryptocurrencies into different clusters, we can try to use the result to improve the estimation of VaRs. Instead of calculating the VaRs of each cryptocurrency, we regard the cryptocurrencies in the same cluster as a huge investment and estimate the 95\% 1-day VaRs among all the scenarios. This can be calculated by choosing the $5_{th}$ percentile of all the returns of scenarios. As a result, the cryptocurrencies in the same cluster will have the same VaRs.
+
+{
+  \begin{table}[ht]
+    \centering
+    \small
+    \begin{tabular}{|c|c c c c c c|}
+        \hline
+        Crypto & 2016-03-10 & 2016-03-11 & 2016-03-12 & ... & 2018-07-30 & 2018-07-31 \\ [0.5ex]
+        \hline
+        AEON & -0.18918 & -0.17296 & -0.17296 & ... & -0.08250 & -0.08250 \\
+        \hline
+        BAY & -0.12574 & -0.11807 & -0.12574 & ... & -0.08953 & -0.09228 \\
+        \hline
+        BLOCK & -0.18918 & -0.17296 & -0.17296 & ... & -0.08250 & -0.08250 \\
+        \hline
+        ... & ... & ... & ... & ... & ... & ... \\
+        \hline
+        XCP & -0.12574 & -0.11807 & -0.12574 & ... & -0.08953 & -0.09228 \\
+        \hline
+        XMR & -0.10639 & -0.11001 & -0.10913 & ... & -0.08023 & -0.08023 \\
+        \hline
+        XRP & -0.10639 & -0.11001 & -0.10913 & ... & -0.08023 & -0.08023 \\
+        \hline
+    \end{tabular}
+    \caption{VaRs of Cryptocurrencies After Clustering}
+    \label{table:varcryptoafter}
+  \end{table}
+}
+
+Table \ref{table:varcryptoafter} illustrates the result of VaR estimation after an implementation of K-means clustering. Some of the values become smaller which means the predicted loss is larger. This is because the cryptocurrency has bigger risks in its cluster at that time under our risk diversification. Bigger values mean that the risk of the product has been overestimated in the previous estimation at that point. We have adjusted the risks based on the result of clustering.
+
+Similar to metric of calculating the VaR accuracies before the clustering, we can test the performance of our VaR estimation after an implementation of clustering. Table \ref{table:acccryptoafter} shows the accuracies after a risk diversification. Red numbers indicate the cryptocurrencies that have an improvement on the VaR estimation in comparison with the accuracies before any actions. Over 50\% of the cryptocurrencies benefit from the risk diversification and many of them are the most popular products such as BTC (Bitcoin), ETH (Ethereum), LTC (Litecoin) and XRP (Ripple) although it results in some decrease on the other cryptocurrencies. In addition, the average accuracy is about 94.91\% which is higher than the average before clustering at 94.15\%.
+
+{
+  \begin{table}[ht]
+    \centering
+    \small
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        Symbol & Accuracy & Symbol & Accuracy & Symbol & Accuracy \\
+        \hline
+        AEON & \color{red}96.09\% & BAY & 93.83\% & BLOCK & \color{red}95.14\% \\
+        BTC & \color{red}97.98\% & BTCD & 93.71\% & BURST & \color{red}94.78\% \\
+        CRW & 94.78\% & DASH & \color{red}98.34\% & DGB & \color{red}95.61\% \\
+        DOGE & 93.59\% & EMC2 & 94.54\% & ETH & \color{red}96.44\% \\
+        FCT & 93.12\% & FTC & 94.31\% & GAME & \color{red}95.02\% \\
+        GRS & \color{red}94.66\% & LTC & \color{red}96.92\% & MONA & \color{red}96.56\% \\
+        NAV & \color{red}95.14\% & NLG & 93.24\% & POT & \color{red}94.9\% \\
+        PPC & \color{red}96.44\% & RDD & 91.22\% & SYS & \color{red}94.31\% \\
+        VIA & 93.95\% & VTC & \color{red}94.19\% & XCP & \color{red}94.66\% \\
+        XMR & 94.36\% & XRP & \color{red}95.49\% & & \\
+        \hline
+    \end{tabular}
+    \caption{VaR Estimation Accuracies of Cryptocurrencies After Clustering}
+    \label{table:acccryptoafter}
+  \end{table}
+}
+
+We then use the same null hypothesis as the previous hypothesis testing to test if the VaR estimation is good enough to retain our null hypothesis which assumes that the number of VaRs being exceeded by the corresponding returns is smaller than 42. After the calculation, the p-value is around 37.93\% which is not significant enough to reject our null hypothesis at the 95\% level of confidence. That means our VaR estimation after the clustering is possiblely a good fit to the data. This result gives us a good indication that K-means clustering might be able to improve the traditional VaR estimation.
 
 \section{Analysis of Stocks}
 
@@ -816,7 +917,7 @@ The same methods will be used in the context of stcoks to estimate the risk of e
 
 \subsubsection{Historical Estimation of VaR}
 
-The 29 by 549 estimated 95\% 1-day VaRs of the stocks are presented on Table \ref{table:varstock}. In comparison with the VaRs of cryptocurrencies on Table \ref{table:varcrypto}, the values for stocks are proportionally much smaller than that of cryptocurrencies, and this means that the risks of investing in stocks are lower. When investors lose money on their investment of stocks, they do not suffer from the same degree of loss as their investment on cryptocurrencies.
+The 29 by 549 estimated 95\% 1-day VaRs of the stocks are presented on Table \ref{table:varstockbefore}. In comparison with the VaRs of cryptocurrencies on Table \ref{table:varcryptobefore}, the values for stocks are proportionally much smaller than that of cryptocurrencies, and this means that the risks of investing in stocks are lower. When investors lose money on their investment of stocks, they do not suffer from the same degree of loss as their investment on cryptocurrencies.
 
 {
   \begin{table}[ht]
@@ -841,8 +942,8 @@ The 29 by 549 estimated 95\% 1-day VaRs of the stocks are presented on Table \re
         XOM & -0.01770 & -0.01770 & -0.01770 & ... & -0.01298 & -0.01298 \\
         \hline
     \end{tabular}
-    \caption{VaRs of Stocks}
-    \label{table:varstock}
+    \caption{VaRs of Stocks Before Clustering}
+    \label{table:varstockbefore}
   \end{table}
 }
 
@@ -937,8 +1038,93 @@ There are some industrial correlations behind each cluster. In \textsl{Cluster 2
 Figure \ref{fig:stockkmeans} shows the movement of the daily returns for each cluster after the implementation of K-means clustering. The returns of the stocks generally fluctuate between a small range between -0.2 and 0.2, and this is significantly smaller than the range of cryptocurrencies. \textsl{Cluster 2}, \textsl{Cluster 3}, \textsl{Cluster 5} and \textsl{Cluster 6} have a bigger range of return movement, which means investment in these clusters might cause significant gain or loss.
 
 \subsection{Performance}
-\subsubsection{Accuracy and p-value}
+
+\subsubsection{Original Accuracy and p-value}
+
+{
+  \begin{table}[ht]
+    \centering
+    \small
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        Symbol & Accuracy & Symbol & Accuracy & Symbol & Accuracy \\
+        \hline
+        AAPL & 93.26\% & AXP & 94.35\% & BA & 93.62\% \\
+        CAT & 93.44\% & CSCO & 93.44\% & CVX & 94.35\% \\
+        DIS & 93.26\% & GS & 93.99\% & HD & 93.99\% \\
+        IBM & 93.99\% & INTC & 93.44\% & JNJ & 93.08\% \\
+        JPM & 94.17\% & KO & 93.44\% & MCD & 94.72\% \\
+        MMM & 93.08\% & MRK & 93.26\% & MSFT & 94.17\% \\
+        NKE & 95.45\% & PFE & 94.17\% & PG & 94.17\% \\
+        TRV & 93.08\% & UNH & 94.35\% & UTX & 93.99\% \\
+        V & 94.35\% & VZ & 93.62\% & WBA & 93.44\% \\
+        WMT & 94.17\% & XOM & 93.81\% & & \\
+        \hline
+    \end{tabular}
+    \caption{VaR Estimation Accuracies of Stocks Before Clustering}
+    \label{table:accstockbefore}
+  \end{table}
+}
+
+\begin{itemize}
+    \item \textsl{$H_0$}: Number of VaRs being exceeded $<$ 27
+    \item \textsl{$H_a$}: Number of VaRs being exceeded $\geq$ 27
+\end{itemize}
+
 \subsubsection{Improvement After Risk Diversification}
+
+{
+  \begin{table}[ht]
+    \centering
+    \small
+    \begin{tabular}{|c|c c c c c c|}
+        \hline
+        Crypto & 2016-03-11 & 2016-03-12 & 2016-03-13 & ... & 2018-07-30 & 2018-07-31 \\ [0.5ex]
+        \hline
+        AAPL & -0.02346 & -0.02346 & -0.02326 & ... & -0.02061 & -0.02068 \\
+        \hline
+        AXP & -0.02099 & -0.02099 & -0.02076 & ... & -0.02263 & -0.02303 \\
+        \hline
+        BA & -0.02099 & -0.02099 & -0.02076 & ... & -0.02263 & -0.02303 \\
+        \hline
+        ... & ... & ... & ... & ... & ... & ... \\
+        \hline
+        WBA & -0.02099 & -0.02099 & -0.02076 & ... & -0.02263 & -0.02303 \\
+        \hline
+        WMT & -0.01541 & -0.01541 & -0.01541 & ... & -0.01523 & -0.01523 \\
+        \hline
+        XOM & -0.01950 & -0.01950 & -0.01950 & ... & -0.01521 & -0.01521 \\
+        \hline
+    \end{tabular}
+    \caption{VaRs of Stocks After Clustering}
+    \label{table:varstockafter}
+  \end{table}
+}
+
+{
+  \begin{table}[ht]
+    \centering
+    \small
+    \begin{tabular}{|c|c|c|c|c|c|}
+        \hline
+        Symbol & Accuracy & Symbol & Accuracy & Symbol & Accuracy \\
+        \hline
+        AAPL & \color{red}93.62\% & AXP & \color{red}96.9\% & BA & \color{red}94.35\% \\
+        CAT & 93.44\% & CSCO & \color{red}94.9\% & CVX & 93.81\% \\
+        DIS & \color{red}93.99\% & GS & 93.08\% & HD & \color{red}94.17\% \\
+        IBM & 93.81\% & INTC & \color{red}94.17\% & JNJ & \color{red}95.08\% \\
+        JPM & \color{red}95.45\% & KO & \color{red}96.17\% & MCD & \color{red}95.26\% \\
+        MMM & 93.08\% & MRK & 92.71\% & MSFT & \color{red}94.54\% \\
+        NKE & \color{red}96.17\% & PFE & 93.99\% & PG & \color{red}96.72\% \\
+        TRV & \color{red}94.72\% & UNH & \color{red}94.9\% & UTX & \color{red}94.54\% \\
+        V & \color{red}94.72\% & VZ & 91.07\% & WBA & 91.99\% \\
+        WMT & 93.99\% & XOM & \color{red}95.45\% & & \\
+        \hline
+    \end{tabular}
+    \caption{VaR Estimation Accuracies of Stocks After Clustering}
+    \label{table:accstockafter}
+  \end{table}
+}
 
 \clearpage
 
