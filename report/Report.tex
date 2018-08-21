@@ -31,12 +31,15 @@
   }
 }
 
+\pagenumbering{roman}
+
 \begin{document}
 \maketitle
 
 \declaration
 
 \begin{abstract}
+\thispagestyle{plain}
 Cryptocurrencies like Bitcoin and Ripple are becoming popular in these years. They can be obtained through mining or transactions. Every individual cryptocurrency can be transferred directly using a public key in digital wallets. Their price is mostly tied to supply/demand and hard to be interfered by governments. In addition, cryptocurrencies have some dependencies because some of them like Dogecoin can only be bought by some major cryptocurrencies such as Bitcoin and Ethereum in cryptocurrency exchanges.
 
 Value at Risk is a popular traditional method in financial technical analysis for estimating potential total risks of a financial portfolio. A well-estimated risk can prevent an investor or a financial institution from losing more than their expectation. In reality, the financial markets sometimes are unpredictable. Investors are striving for putting all the risks under their control.
@@ -48,16 +51,18 @@ A modern machine learning algorithm for diversifying investment before a traditi
 
 \listoffigures
 \listoftables
+\setcounter{page}{4}
 
 \clearpage
 
 \section*{\hfil Acknowledgement\hfil}
 
-
-
 \clearpage
 
+\pagenumbering{arabic}
+
 \section{Introduction}
+\setcounter{page}{1}
 
 Hedging is an important investing strategy to avoid risks that will result in substantial losses or gains. Investors have been developing and implementing traditional technical analysis on evaluating risks of an investment, but it is still tricky to capture some events such as a financial crash which breaks the previous risk estimation. Some of the tasks are computationally expensive and human beings are hard to achieve, therefore, computer science and machine learning has been used for improving the performance of analysis.
 
@@ -115,7 +120,7 @@ In this project, the following technologies are used for different purposes:
 
   \item Frameworks
   \begin{itemize}
-    \item \textsl{Apache Spark}\cite{spark} : An open source framework for cluster computing. We will use Spark SQL to accelerate reading data from the database and the MLlib for analysis with machine learning.
+    \item \textsl{Apache Spark}\cite{spark} : An open source framework for cluster computing. This is for preparation of productionisation of this project and changing the scripting python code to an automated programme. We will use Spark SQL to accelerate reading data from the database and the MLlib for analysis with machine learning.
     \item \textsl{Spring Framework}\cite{spring} : An open source Java framework for implementation of inversion of control. We use it to facilitate programming process and for preparation of building a web server in the future.
   \end{itemize}
 
@@ -582,7 +587,7 @@ A 95\% confidence level of 1-day VaR estimation will be used in this project, wh
     \small
     \begin{tabular}{|c|c c c c c c|}
         \hline
-        Crypto & 2016-03-10 & 2016-03-11 & 2016-03-12 & ... & 2018-07-30 & 2018-07-31 \\ [0.5ex]
+        Crypto & 2016-04-10 & 2016-04-11 & 2016-04-12 & ... & 2018-07-30 & 2018-07-31 \\ [0.5ex]
         \hline
         AEON & -0.17212 & -0.17212 & -0.17212 & ... & -0.06261 & -0.06261 \\
         \hline
@@ -750,7 +755,7 @@ Since we have distributed the cryptocurrencies into different clusters, we can t
     \small
     \begin{tabular}{|c|c c c c c c|}
         \hline
-        Crypto & 2016-03-10 & 2016-03-11 & 2016-03-12 & ... & 2018-07-30 & 2018-07-31 \\ [0.5ex]
+        Crypto & 2016-04-10 & 2016-04-11 & 2016-04-12 & ... & 2018-07-30 & 2018-07-31 \\ [0.5ex]
         \hline
         AEON & -0.18918 & -0.17296 & -0.17296 & ... & -0.08250 & -0.08250 \\
         \hline
@@ -913,7 +918,7 @@ Table \ref{table:drstock} illustrates the daily retruns transfromed from the pre
 
 \subsection{Risk Estimation}
 
-The same methods will be used in the context of stcoks to estimate the risk of each product. The whole daily returns data is split into sliding windows and the data in each window is used to estimate the 95\% 1-day VaRs for the next days from \date{10th March 2016} to \date{31st July 2018} excluding the holidays.
+The same methods will be used in the context of stcoks to estimate the risk of each product. The whole daily returns data is split into sliding windows with 100 days in each window and the data in each window is used to estimate the 95\% 1-day VaRs for the next days from \date{26th May 2016} to \date{31st July 2018} excluding the holidays.
 
 \subsubsection{Historical Estimation of VaR}
 
@@ -925,7 +930,7 @@ The 29 by 549 estimated 95\% 1-day VaRs of the stocks are presented on Table \re
     \small
     \begin{tabular}{|c|c c c c c c|}
         \hline
-        Crypto & 2016-03-11 & 2016-03-12 & 2016-03-13 & ... & 2018-07-30 & 2018-07-31 \\ [0.5ex]
+        Crypto & 2016-05-26 & 2016-05-27 & 2016-05-31 & ... & 2018-07-30 & 2018-07-31 \\ [0.5ex]
         \hline
         AAPL & -0.02591 & -0.02591 & -0.02568 & ... & -0.02049 & -0.02049 \\
         \hline
@@ -947,7 +952,7 @@ The 29 by 549 estimated 95\% 1-day VaRs of the stocks are presented on Table \re
   \end{table}
 }
 
-The VaR estimation of stocks starts from \date{11th March 2016} which is one day later than the previous VaR estimation at cryptos because \date{10th Macth 2016} is Sunday. Also, the number of dates is smaller due to the trading hours of the exchanges. With respect to the variance between the VaRs, those of stocks are much smaller than those of cryptos, which means the loss can be smaller when suffering from a crash.
+The VaR estimation of stocks starts from \date{26th May 2016} which is different to the previous VaR estimation at cryptos because of the trading day restrictions of the exchanges. With respect to the variance between the VaRs, those of stocks are much smaller than those of cryptos, which means the loss can be smaller when suffering from a crash.
 
 \subsection{Risk Diversification}
 
@@ -1041,6 +1046,8 @@ Figure \ref{fig:stockkmeans} shows the movement of the daily returns for each cl
 
 \subsubsection{Original Accuracy and p-value}
 
+There are 549 VaRs calculated from the sliding windows with a size of 100 in each subset. These VaRs represent the estimation of the corresponding $101_{th}$ day. The accuracy can then be evaluated by comparing the VaR with the actual return at that day, and this method is the same as how we evaluate the perfomance on the analysis of cryptocurrencies. If the return is lower than the VaR, the result will be indicated as a bad estimation.
+
 {
   \begin{table}[ht]
     \centering
@@ -1066,12 +1073,22 @@ Figure \ref{fig:stockkmeans} shows the movement of the daily returns for each cl
   \end{table}
 }
 
+Table \ref{table:accstockbefore} illustrates the result of the analysis performance. Each stock has its corresponding estimation accuracy. Almost every stocks have a dissatisfactory estimation accuracy except NKE (Nike) with an accuracy of 95.45\%. It can be caused by the size of sliding windows which only includes 100 data points for each portion. That is, insufficiently covering the information might result in an underestimation of the risks. The average accuracy is slightly below 94\% at 93.85\%.
+
+Again, a null hypothesis can be implemented in here to test the performance of the estimation. The $5_{th}$ percentile of 549 days is at around 27 days. If the VaRs fail more than 27 times, the estimation breaks the 95\% confidence level. The null hypothesis and its corresponding alternative hypothesis are described as follow:
+
 \begin{itemize}
     \item \textsl{$H_0$}: Number of VaRs being exceeded $<$ 27
     \item \textsl{$H_a$}: Number of VaRs being exceeded $\geq$ 27
 \end{itemize}
 
+In the above hypothesis testing, we generally believe that the failures of VaR estimation will be less than 27 times. We want to prove if the evidence is strong enough to say that the number of failures can be larger or equal to 27 times. The p-value of this null hypothesis is about 6.9\%. The setting of confidence level is 95\%, and this means the significance level is 5\%. The p-value is higher than the 5\% level of significance. The evidence is not strong enough for us to reject the null hypothesis. It states that more than 27 VaRs being exceeded can be just an accident under the 95\% level of confidence.
+
 \subsubsection{Improvement After Risk Diversification}
+
+Although the performance of the previous VaR estimation on stocks has satisfied the hypothesis testing at the 95\% confidence level, but a p-value of 6.9\% is still not good enough. A K-means clustering before estimating the VaRs might improve the performance of the VaR estimation. Table \ref{table:varstockafter} contains the VaRs after the implementation of K-means clustering from \date{26th May 2016} to \date{31st July 2018} with a total of 549 values for each stock. Some of the stocks have same VaRs because every data points of a single cluster are used for estimating the VaRs, and the VaRs are regarded as the VaRs of every stocks under the cluster.
+
+Some VaRs are different to the previous ones. Bigger VaRs mean the model reckons the risk used to be overestimated, and vice versa. A clustering helps us rebalance the risks by considering all the stocks with similar risks.
 
 {
   \begin{table}[ht]
@@ -1079,7 +1096,7 @@ Figure \ref{fig:stockkmeans} shows the movement of the daily returns for each cl
     \small
     \begin{tabular}{|c|c c c c c c|}
         \hline
-        Crypto & 2016-03-11 & 2016-03-12 & 2016-03-13 & ... & 2018-07-30 & 2018-07-31 \\ [0.5ex]
+        Crypto & 2016-05-26 & 2016-05-27 & 2016-05-31 & ... & 2018-07-30 & 2018-07-31 \\ [0.5ex]
         \hline
         AAPL & -0.02346 & -0.02346 & -0.02326 & ... & -0.02061 & -0.02068 \\
         \hline
@@ -1100,6 +1117,8 @@ Figure \ref{fig:stockkmeans} shows the movement of the daily returns for each cl
     \label{table:varstockafter}
   \end{table}
 }
+
+With regard to evaluating of the VaR estimation perfomance after the risk diversification, Table \ref{table:accstockafter} lists the accuracies of the VaR estimation on each stock. The same metric as the previous risk estimation for performance evaluation is used in this part. We compare the VaRs with the actual returns and compute the percentage of correct VaR estimation. Red colour indicates an increase of the accuracy compared to the original performance. About 2/3 of the stocks benefit from the risk diversification on their VaR estimation. The accuracy of KO (Coca-Cola) has a remarkable improvement with around 2.73\%. In \textsl{Cluster 4}, the VaR estimation of every stocks has improved, and all of them are related to technologies.
 
 {
   \begin{table}[ht]
@@ -1126,7 +1145,7 @@ Figure \ref{fig:stockkmeans} shows the movement of the daily returns for each cl
   \end{table}
 }
 
-\clearpage
+The average accuracy is about 94.37\% which is higher than the estimation before clustering at around 93.85\%. The same null hypothesis is used in this part to test how convincing the VaR estimation is. The p-value in here is approximately 24.14\%, and this means we should retain the null hypothesis which states that the errors of VaR estimation are less than 27 times. Also, the p-value is now much larger than the previous p-value at 6.9\%. We may now confirm that a risk diversification with K-means clustering does improve the performance of traditional VaR estimation on stocks.
 
 \section{Evaluation and Conclusion}
 \subsection{Comparison Between Cryptocurrencis and Stocks}
