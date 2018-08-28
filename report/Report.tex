@@ -55,7 +55,11 @@ A modern machine learning algorithm for diversifying investment before a traditi
 
 \clearpage
 
-\section*{\hfil Acknowledgement\hfil}
+\section*{\hfil Acknowledgement \hfil}
+
+Thanks to Dr. Yuri Kalnishkan for his supervision and guidance on this project. He shows his passion and expertise in the area of machine learning, data analysis and finance. His effort and comprehensive knowledge have guided this project and myself onto the right path of concrete analysis on financial data. In addition, thanks to Professor Alberto Paccanaro for his help in the early stages of this project and introducing me to Dr. Yuri Kalnishkan.
+
+Some of the contents referenced the slides and notes of CS5100-Data Analysis and CS5920-Machine Learning which are compiled by Professor Vladimir Vovk and Professor Zhiyuan Luo. Any other references have been clarified in the end of this project on the Reference section. This project is used for non-profit purposes. Any other uses of this project should be informed, and the author reserves the right to refuse any inappropriate or illegal usage.
 
 \clearpage
 
@@ -83,8 +87,6 @@ A diversification of investment before generating a portfolio can remove the con
 K-means clustering is an appropriate method for diversifying financial investments. It can create natural grouping on the financial products by putting those with similar price volatilities together. That is, it looks at the shape of each product along the timeline and estimates the similarity between two lines to decide if the two products should be in the same cluster.
 
 This project aims on seeing if K-means clustering can diversify financial products with their daily volatilities and improve the result of risk estimation on cryptocurrencies. In addition, it will examine if the effect on cryptocurrencies is different from that on stocks.
-
-Finally, a trading strategy will be constructed based on the result of analysis. This trading strategy will contain investment portfolios which will diversify risks as much as possible to avoid substantial loss. Generating an optimal hedging method is the ultimate goal of this project.
 
 \subsection{Project Structure}
 
@@ -124,6 +126,11 @@ In this project, the following technologies are used for different purposes:
     \item \textsl{Spring Framework}\cite{spring} : An open source Java framework for implementation of inversion of control. We use it to facilitate programming process and for preparation of building a web server in the future.
   \end{itemize}
 
+  \item Project Management
+  \begin{itemize}
+    \item \textsl{Apache Maven}\cite{maven} : A tool for project management in Java. It can create an automatic pipeline for installing libraries, packaging programmes, managing package dependencies, etc.
+  \end{itemize}
+
   \item Python Packages
   \begin{itemize}
     \item \textsl{Numpy}\cite{scipy} : Array manipulation.
@@ -144,7 +151,25 @@ In this project, the following technologies are used for different purposes:
 \end{itemize}
 
 \subsubsection{Programme Structure}
+
+The programme is mainly composed by the following 3 parts:
+\begin{itemize}
+    \item Database
+    \item Java Server
+    \item Jupyter Notebook
+\end{itemize}
+
+The database is built by Docker and PostgreSQL. The \textsl{\textbf{Dockerfile}} under the \textsl{\textbf{$<$root$>$/db/}} directory contains the script for building a PostgreSQL image and implementing the \textsl{\textbf{$<$root$>$/db/init.sql}} SQL query for database initialisation. Then we use docker-compose to generate the container of the image and assign the port to the local container. The \textsl{\textbf{$<$root$>$/docker-compose.yml}} file owns the configuration. Also, there is a \textsl{\textbf{$<$root$>$/.env-dev}} file containing the environment variables of the Docker container. The database will set up the database name, database user and the database password through referencing these variable settings. This local database is used for temporary development purposes. There are two major schemas which are input and output. All the input and transformed data will be stored into the input schema. The output schema is used to store the output data once we have productionised the analysis. The website or the prgramme being built in the future can then access the data and visualise them onto the website.
+
+We use Maven for managing our Java project. It facilitates the process of acquiring libraries and managing the dependencies between projects or services. The \textsl{\textbf{$<$root$>$/parent/pom.xml}} manages the Java programme. It controls the versions of dependencies and the project hierarchy. The main services are in \textsl{\textbf{$<$root$>$/analysis/}}. The \textsl{\textbf{$<$root$>$/analysis/pom.xml}} contains the dependencies of the analysis server. We use Spring Framework for development and database access in the future. The \textsl{\textbf{application.properties}} in \textsl{\textbf{$<$root$>$/analysis/src/main/resources/}} holds the database and Spark configuration. Spring Boot is used for preparation of productionisation with websites. It can help us quickly build up a single page web application in the future.
+
+There are mainly 2 services currently, which are ETL and analysis. \textsl{\textbf{Application.java}} is the entry point. If we keep running the server, it will run the data updates and analysis routinely every day. \textsl{\textbf{TaskRunner.java}} is responsible for arrangement of all the tasks. The tasks and classes for ETL are in the \textsl{\textbf{com.kenlu.crypto.extraction}} package. \textsl{\textbf{com.kenlu.crypto.domain}} contains the data models and enums. Analysis are implemented in the \textsl{\textbf{com.kenlu.crypto.analysis}} package. However, currently, we only implement the ETL service because the productionisation is not completed yet.
+
+All the experiments and visualisations are writen in Python and stored under \textsl{\textbf{$<$root$>$/experiment/}}. The 2 main scripts are \textsl{\textbf{var\_crypto.ipynb}} and \textsl{\textbf{var\_stock.ipynb}} with the format of Jupyter Notebook. The scripts import the data either from the local database or the csv files in case the database connection or the API of cryptos and stocks collapse. The result of these experiments will be transformed to a productionised version in Java once it is ready.
+
 \subsubsection{Report Structure}
+
+This report is mainly composed by several parts including an introduction, a background research, analysis and a conclusion. We use LaTeX for facilitation of the writing process. \textsl{\textbf{$<$root$>$/report/}} contains all the LaTeX files and resources for compilation of the report. \textsl{\textbf{Report.tex}} includes the main scripts. \textsl{\textbf{$<$root$>$/report/resources/}} holds the images for the report. After compilation, a \textsl{\textbf{Report.pdf}} file will be built for a complete presentation.
 
 \section{Background Research}
 \subsection{Value at Risk}
@@ -342,9 +367,23 @@ Imagine that we have a dataset X with data points $\{{x_1} ... {x_n}\}$. Each po
   \item Computational efficiency: The curse of dimensionality. A large number of dimensions will decrease the speed of computation in algorithms.
 \end{itemize}
 
-% TODO equations, pseudocode, explanation chart
+To obtain the first principal component, the $\lambda_{1}$ in equation \eqref{eq:2.7} should be maximised. $u_{1}$ is then known as the first principal component. $u_{1}^{T}u_{1}$ should be equal to 1. We can then define other principal components by choosing new directions of the projection which disregards the elements that are already considered.
 
-% \cite{bishop/praml:2006}
+{
+  \begin{equation}
+    \label{eq:2.7}
+    \tag{2.7}
+    {u_{1}^{T}Su_{1} = \lambda_{1}}
+  \end{equation}
+
+  \footnotesize
+  where:
+  \begin{itemize}[label=-, leftmargin=4em, itemsep=0.1em]
+    \item ${\lambda_{1}}$ is the eigenvalue
+    \item ${u}$ is the eigenvector having the largest eigenvalue ${\lambda_{1}}$
+    \item $S$ is the data covariance
+  \end{itemize}
+}
 
 \subsection{Clustering}
 
@@ -371,12 +410,12 @@ K-means clustering is a intuitive approach which allows us to separate data poin
     \end{itemize}
 }
 
-These properties mean that each single object will be in exactly one cluster and the clusters does not overlap. After this initial setting, we want to optimise\eqref{eq:2.7} the grouping because the previous assignment is just a random initialisation. We want to make sure that the objects are concentrated which means the data point fit the best in the assigned cluster.
+These properties mean that each single object will be in exactly one cluster and the clusters does not overlap. After this initial setting, we want to optimise\eqref{eq:2.8} the grouping because the previous assignment is just a random initialisation. We want to make sure that the objects are concentrated which means the data point fit the best in the assigned cluster.
 
 {
   \begin{equation}
-    \label{eq:2.7}
-    \tag{2.7}
+    \label{eq:2.8}
+    \tag{2.8}
     {{\underset {\mathbf {C_1,...,C_K} }{\operatorname {minimize} }}\left\{\sum _{k=1}^{K}\,{\frac {1}{|C_{k}|}}\,\sum _{ {i} , {i^\prime} \in C_{k}}\sum_{j=1}^{p}(x_{ij}-x_{{i^\prime}j})\right\}}
   \end{equation}
 
@@ -388,7 +427,7 @@ These properties mean that each single object will be in exactly one cluster and
   \end{itemize}
 }
 
-To fulfil the condition above which is \eqref{eq:2.7}, we can simplify the apporach as below to classify our data points into the multiple clusters\cite{james/itsl:2009}:
+To fulfil the condition above which is \eqref{eq:2.8}, we can simplify the apporach as below to classify our data points into the multiple clusters\cite{james/itsl:2009}:
 {
   \begin{enumerate}
     \item Randomly assign an initial number from 1 to K to each observation.
@@ -681,7 +720,7 @@ The number of Principal Components can be decided by the amount of variance that
 
 After the preparation, K-means clustering can be implemented. The number of clusters, K, we select is 8 because of minimisation of the cost in each cluster and properly distribute the cryptos into clusters. The distance metric we are using is DTW (Dynamic Time Warping) because we want to know how similar the activities between cryptocurrencies are instead of the direct similarity which is restricted by strict time criterion. DTW is computationally more expensive than Euclidean distance, but it provides a more flexible way of comparing the distance between two objects.
 
-The cryptocurrencies are distributed into 8 clusters after multiple iteration until the cost\eqref{eq:2.7} is minimised. The cluster contents are described as follow:
+The cryptocurrencies are distributed into 8 clusters after multiple iteration until the cost\eqref{eq:2.8} is minimised. The cluster contents are described as follow:
 \begin{itemize}
     \item \textsl{Cluster 1}: DGB, MONA, POT, VIA, VTC
     \item \textsl{Cluster 2}: BTC, BTS, ETH, FCT, LTC, NLG, XMR, XRP
@@ -1149,8 +1188,58 @@ The average accuracy is about 94.37\% which is higher than the estimation before
 
 \section{Evaluation and Conclusion}
 \subsection{Comparison Between Cryptocurrencis and Stocks}
-\subsection{Trading Strategy}
+
+Same analysis methods and processes have been used on both cryptocurrencies and stocks. The data formats are also similar except for the length of timeline and the product type. They all use OHLC data as their input. Both analysis follows the order of data preprocessing, risk estimation, risk diversification and risk estimation after risk diversification. However, the performance and results are slightly between each other.
+
+The correlation matrix of cryptocurrencies is harder to correlate with the backgrounds of the products themselves. There is no obvious connections like the industrial relationship of stocks. Cryptocurrencies are less intuitive because of their virtual properties. Although some of the cryptocurrencies are highly positively correlated, we can not explain the causation behind them whereas the correlations behind stocks can be explained easier by their industrial relationships.
+
+In the context of K-means clustering, both analysis suffers from skewness. Stocks spread into multiple clusters more evenly whereas cryptocurrencies seem to be more centralised. The reason of these phenomena might be an inappropriate choice of K. The number of cluster was not optimally chosen for each dataset because we tried to use the same metrics and compare the result of analysis on both datasets.
+
+{
+  \begin{table}[ht]
+    \centering
+    \small
+    \begin{tabular}{|c|c|c|c|c|}
+        \hline
+         & \multicolumn{2}{|c|}{Before Clustering} & \multicolumn{2}{|c|}{After Clustering} \\ [0.5ex]
+        \hline
+        Product Type & Average Accuracy & p-value & Average Accuracy & p-value\\ [0.5ex]
+        \hline
+        Cryptocurrencies & 94.15\% & 0.03448 & 94.91\% & 0.37931 \\
+        \hline
+        Stocks & 93.85\% & 0.06897 & 94.37\% & 0.24138 \\
+        \hline
+    \end{tabular}
+    \caption{Performance Comparison Between Cryptocurrencies and Stocks}
+    \label{table:comparison}
+  \end{table}
+}
+
+Table \ref{table:comparison} compares the results of the risk estimation between cryptocurrencies and stocks. The risk estimation before risk diversification performs better on the data of cryptocurrencies in the aspect of accuracy, but the p-value of stocks is higher, and it helps retain the null hypothesis. The 94.15\% accuracy in cryptocurrencies seem to be less convincing because of a lower p-value.
+
+After a K-means clustering, both risk estimations improve significantly. The result of analysis on cryptocurrencies outperform that of stocks. The improvement accuracy on the cryptocurrencies is approximately 0.76\%, and the p-value dramatically improves from 0.03448 to 0.37931 which is a 0.34483 increase. The optimisation on the analysis of stocks also performs well in the context of accuracy, as well as the p-value. The risk diversification seems to be more effective on the cryptocurrencies because it changes the risk estimation from a rejection to retaining the null hypothesis. And the increase of the accuracy is also higher then that of stocks which is around 0.52\%. The p-value of cryptocurrencies surpasses that of stocks, and this is a remarkable improvement because it used to be lower than the p-value of stocks.
+
+\subsection{Self Assessment}
+
+Despite the analysis has produced a satisfactory result, there are some drawbacks and insufficient consideration among the whole process. The actions need to be completed can be organised as follow:
+
+\begin{itemize}
+    \item \textbf{Systematic process for crypto selection}: The 29 cryptocurrencies we used were selected by inspecting if the data is complete in the specific period. As most of the cryptocurrencies emerged in the past 2 years, the cryptocurrencies that can be analysed beginning from \date{1st January 2016} is limited. We need to select the products for analysis based on their backgrounds instead of filtering out the cryptocurrencies by the completeness. Some of the most popular cryptocurrencies might be launched later, but they are important for comprehension of the market behaviour.
+    \item \textbf{Better way of reducing the dimensionality}: Currently, we are using PCA for dimensionality reduction, but the features might lose the interpretability. The original dimensions represent the dates and are in orders. When we extract the information for the features and transform them to the PCs, they become unordered and not interpretable.
+    \item \textbf{Enforcement of exactly same metrics on both analysis}: The size of dates and time is different between the data of cryptocurrencies and stocks because of different trading hours. The market of cryptocurrencies operate 24 hours a day without any gaps whereas that of stocks only operates in certain hours of a day and stops working on holidays. This might result in a price incontinuity on the data of stocks.
+    \item \textbf{Consideration of other algoritms}: This project only considers historical simulation as the method of estimating VaRs. There are still other approaches for VaR estimation such as Monte Carlo methods. Also, we should consider other clustering methods, and these can be hierarchical clustering or Mixture of Gaussians.
+    \item \textbf{Modularised code for analysis}: The analysis is now implemented through the Jupyter notebook and Python. This is an ad hoc analysis process because the code is written in a scripting way without generating reusable methods. We should create a modularised codebase for scalable and reusable units.
+\end{itemize}
+
 \subsection{Further Work}
+
+This project can be develped further in the future. Some of the tasks have not been completed because of the time and project size limitation. A single page web application can be built though construction of a RESTful API on the Java programme and a React.js based front-end, and this can be simply implemented by the Spring Boot. This website will visualise the result of the analysis. Also, we should separate the services into components. For example, we can split the analysis service and ETL service.
+
+The whole analysis can be transformed into a near real time analysis on a daily basis. We can finish the analysis part of the Java programme and organise the routine tasks. The daily analysis can then be applied to trading strategy generations. In addition, another service for connecting to the exchanges and trading can be built. This service can use the trading strategies to implement a real time algo trading. Finally, a code refactoring should be executed to improve the maintainability of the programme.
+
+\section{Professional Issues}
+
+
 
 \section{Appendix}
 \subsection{Programme Usage}

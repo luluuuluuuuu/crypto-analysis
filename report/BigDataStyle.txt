@@ -64,10 +64,10 @@
   \end{center}
   This report has been prepared on the basis of my own work.
   Where other published and unpublished source materials have been used,
-  these have been acknowledged. 
+  these have been acknowledged.
   \begin{description}
   \item[Word Count:]
-  \item[Student Name:]
+  \item[Student Name:] Chengkai Lu
   \item[Date of Submission:]
   \item[Signature:]
   \end{description}
