@@ -2,7 +2,7 @@
 \input{BigDataStyle.txt}      % do not change this line
 \usepackage[hidelinks]{hyperref}
 \usepackage[export]{adjustbox}
-\usepackage{amsmath,amsfonts,amssymb,amsthm,latexsym,graphicx,url,bookmark,enumitem,subcaption,color}
+\usepackage{amsmath,amsfonts,amssymb,amsthm,latexsym,graphicx,url,bookmark,enumitem,subcaption,color,xcolor,listings}
 
 \emergencystretch=5mm
 \tolerance=400
@@ -29,6 +29,13 @@
     \text{#1}
     \par\medskip
   }
+}
+
+\lstset{basicstyle=\ttfamily,
+    showstringspaces = false,
+    commentstyle = \color{red},
+    keywordstyle = \color{blue},
+    otherkeywords = {docker-compose, mvn, jupyter, pdflatex}
 }
 
 \pagenumbering{roman}
@@ -367,7 +374,7 @@ Imagine that we have a dataset X with data points $\{{x_1} ... {x_n}\}$. Each po
   \item Computational efficiency: The curse of dimensionality. A large number of dimensions will decrease the speed of computation in algorithms.
 \end{itemize}
 
-To obtain the first principal component, the $\lambda_{1}$ in equation \eqref{eq:2.7} should be maximised. $u_{1}$ is then known as the first principal component. $u_{1}^{T}u_{1}$ should be equal to 1. We can then define other principal components by choosing new directions of the projection which disregards the elements that are already considered.
+To obtain the first principal component, the $\lambda_{1}$ in equation \eqref{eq:2.7} should be maximised. $u_{1}$ is then known as the first principal component. $u_{1}^{T}u_{1}$ should be equal to 1. We can then define other principal components by choosing new directions of the projection which disregards the elements that are already considered\cite{bishop/praml:2006}.
 
 {
   \begin{equation}
@@ -483,12 +490,12 @@ The calculation of the DTW distance needs to satisfy the following conditions\ci
   \end{enumerate}
 }
 
-We can use a recursion\eqref{eq:2.8} to find out the minimal accumulative distance $A(M,N)$ which is our goal of the DTW distance\cite{wiki/dtw:2018}.
+We can use a recursion\eqref{eq:2.9} to find out the minimal accumulative distance $A(M,N)$ which is our goal of the DTW distance\cite{wiki/dtw:2018}.
 
 {
     \begin{equation}
-        \label{eq:2.8}
-        \tag{2.8}
+        \label{eq:2.9}
+        \tag{2.9}
         {A(i,j) = d(i,j) + min
         \left \{
             \begin{tabular}{c}
@@ -1239,10 +1246,91 @@ The whole analysis can be transformed into a near real time analysis on a daily 
 
 \section{Professional Issues}
 
+As an analyst, researcher and investor, we have the responsibilities to ensure our result brings positive impact on the society and improve the environment at the same time. This section will mainly discuss about the issues that we might encounter in the financial area.
 
+\subsection{Ethical and Socially Responsible Investing}
+
+Socially Responsible Investing (SRI) is investment behaviour that considers both financial returns and social/environmental freindlies. A basic way of choosing the investments is to use an exclusionary or inclusionary SRI filter. The most popular approach is an exclusionary method. It filters out the products or companies that are involved in violations of labor norms or violence that has impact on the peace of societies. Products that are reckoned to harm people's health are also considered to be excluded. The products normally include weapons, alcohol, tobacco and gambling. The inclusionary method is harder to be developed because people need to adjust the weights of investments in a portfolio based on how socially responsible the company is\cite{Berry2013}.
+
+\subsection{Cryptocurrencies and Business Ethics}
+
+Cryptocurrencies are considered as threats of traditional centralised bank system because of its decentralised attributes. They cannot be regularised by the government, and the liquidity and prices cannot be manipulated easily by a small group of people. There are difficulties on the legal regulation and assessment on cryptocurrencies. They harm the conventional payment systems and existing financial and monetary policies.
+
+The societal and business risks can be classified into 3 levels, micro, meso and macro. Micro level focuses on individuals. The major risks come from attacks of hackers who try to steal or take cryptocurrencies illegally through an unauthorised way. Risks on the meso level emphasise that cryptocurrencies cannot replace the functionality of standard currencies. The volatilities are the main consideration of whether a company will accept the cryptocurrencies. Companies, institutions and governments are on the macro level. Because of lacking regulation, organisations tend to use cryptocurrencies for speculation. They try to escape the additional payment to the governments, and this might lead to economic collapse\cite{Dierksmeier2016}.
+
+\subsection{Ethics and Data Analysis}
+
+One of the research ethics raised by Robinson and Moulton (1985) states the falsification and misinterpretation of the results, and this is relevant to the ethics of data analysis. Gibbons (1973) also suggests that data collection, data presentation and data interpretation are the main elements of ethical consideration in data analysis. Researchers and analysts should define the success of a research as rejecting the proposed null hypothesis and the desired results. They also need to confront the failure of the research and interpret it properly\cite{10.2307/1177102}.
 
 \section{Appendix}
 \subsection{Programme Usage}
+
+This section explains how to use the programme under a development purpose. Users should follow this manual in orders. The instruction only illustrates the steps of the programme for the current version in linux/unix commands.
+
+\subsubsection{Prerequisite}
+
+Before starting the services, the following softwares/tools should be installed.
+
+\begin{itemize}
+    \item Python - \url{https://www.python.org/downloads/}
+    \item Jupyter Notebook - \url{http://jupyter.org/install}
+    \item Java - \url{https://docs.oracle.com/javase/8/docs/technotes/guides/install/install_overview.html}
+    \item Maven - \url{https://maven.apache.org/install.html}
+    \item Docker - \url{https://docs.docker.com/install/}
+    \item Docker Compose - \url{https://docs.docker.com/compose/install/}
+    \item LaTeX - \url{https://www.latex-project.org/get/}
+\end{itemize}
+
+\subsubsection{Database}
+
+Create a file called \textsl{\textbf{.env-dev}} in the \textsl{\textbf{$<$root$>$}} directory and insert the following configuration:
+
+\begin{lstlisting}[language=bash]
+    POSTGRES_DB=postgres
+    POSTGRES_USER=postgres
+    POSTGRES_PASSWORD=Crypto01
+\end{lstlisting}
+
+\noindent
+Execute the following commands:
+
+\begin{lstlisting}[language=bash]
+    #!/bin/bash
+    cd <root>/
+    docker-compose up
+\end{lstlisting}
+
+\subsubsection{Server}
+
+Execute the following commands:
+
+\begin{lstlisting}[language=bash]
+    #!/bin/bash
+    cd <root>/parent/
+    mvn clean install
+    cd <root>/analysis/
+    mvn exec:Java
+\end{lstlisting}
+
+\subsubsection{Experiment}
+
+Execute the following commands, and then open the \textsl{\textbf{var\_crypto.ipynb}} or \textsl{\textbf{var\_stock.ipynb}} file in the browser.:
+
+\begin{lstlisting}[language=bash]
+    #!/bin/bash
+    cd <root>/experiment/
+    jupyter notebook
+\end{lstlisting}
+
+\subsubsection{Report}
+
+Execute the following commands to compile the LaTeX file:
+
+\begin{lstlisting}[language=bash]
+    #!/bin/bash
+    cd <root>/report/
+    pdflatex Report.tex
+\end{lstlisting}
 
 \bibliographystyle{plain}
 \bibliography{bibliography}
