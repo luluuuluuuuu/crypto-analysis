@@ -53,7 +53,7 @@ public class TaskRunner implements CommandLineRunner {
             public void run() {
                 try {
                     CompletableFuture.runAsync(extractionService::update)
-//                            .thenRunAsync(analysisService::runAll)
+                            .thenRunAsync(analysisService::runAll)
                             .get();
                 } catch (InterruptedException | ExecutionException e) {
                     log.error(e.getMessage());
