@@ -53,9 +53,9 @@ Cryptocurrencies like Bitcoin and Ripple are becoming popular in these years. Th
 
 Value at Risk is a popular traditional method in financial technical analysis for estimating potential total risks of a financial portfolio. A well-estimated risk can prevent an investor or a financial institution from losing more than their expectation. In reality, the financial markets sometimes are unpredictable. Investors are striving for putting all the risks under their control.
 
-K-means clustering is a popular unsupervised learning algorithm for grouping unlabelled data. It aims on finding the natural way of separating observations into diffident clusters and is quite popular in the area of marketing for discovering potential customer behaviour. However, it might be also applicable to group stocks/cryptocurrencies having similar price movement together, which means a clustering algorithm may help categorise investors' investment. It states that a systematic way of hedging is achievable.
+K-means clustering is a popular unsupervised learning algorithm for grouping unlabelled data. It aims on finding the natural way of separating observations into diffident clusters and is quite popular in the area of marketing for discovering potential customer behaviour. However, it might be also applicable to group stocks/cryptocurrencies having similar price movement together. It states that a systematic way of hedging is achievable.
 
-A modern machine learning algorithm for categorising investment before a traditional technical analysis might improve the performance of risk estimation. A better hedging can prevent investors from suffering disastrous loss. Especially in the market of cryptocurrency, the price movement is more irrational and abnormal because of lacking regulation. This project will try to research if the optimisation of risk estimation performs well in the market of cryptocurrency.
+A modern machine learning algorithm for clustering investments before a traditional technical analysis might improve the performance of risk estimation. A better hedging can prevent investors from suffering disastrous loss. Especially in the market of cryptocurrency, the price movement is more irrational and abnormal because of lacking regulation. This project will try to research if the optimisation of risk estimation performs well in the market of cryptocurrency.
 \end{abstract}
 
 \listoffigures
@@ -83,7 +83,7 @@ Machine learning has become a popular area which focuses on enabling machines or
 
 \subsection{Motivation}
 
-When we talk about the risk of an investment, we are normally curious about the risk for the future. Prediction of risks can be tricky because a randomly unpredictable event will impact on the market movement. An unexpected financial event might collapse the market and result in a crash. All the products in the market will be influenced by the risks. These kinds of risks are called \textsl{Systematic Risk}, which cannot be avoided through a categorised investment portfolio. However, we can spread the risks over diffirent investments by generating a well-categorised investment portfolio.
+When we talk about the risk of an investment, we are normally curious about the risk for the future. Prediction of risks can be tricky because a randomly unpredictable event will impact on the market movement. An unexpected financial event might collapse the market and result in a crash. All the products in the market will be influenced by the risks. These kinds of risks are called \textsl{Systematic Risk}, which cannot be avoided through a clustered investment portfolio. However, we can spread the risks over diffirent investments by generating a well-clustered investment portfolio.
 
 Traditional risk management methods have been developed for centuries and they can produce reasonable result of hedges, but there still exists possibilities to improve the performance. Machine learning are also used for avoidance of risk or market prediction. We want to seek for a way of improving traditional risk management methods by applying machine learning algorithms on top.
 
@@ -91,11 +91,11 @@ Traditional risk management methods have been developed for centuries and they c
 
 Value at Risk is a traditional method which can evaluate the risk of a investment portfolio or a single investment. It is widely used by a large number of financial institutions, especially banks because it provides a quantitative criterion for risk estimation. However, the risk might be overestimated or underestimated since the products in a portfolio might have varied volatilities and activities. There also might be some events that have happened on one product, and another product might experience it in the future. For example, we might apply VaR of the combination of two products with similar activities and cover the worst/best cases of a product. Another product will then have the ability to consider the possible worst cases.
 
-A categorisation of investment before generating a portfolio can remove the concern of wrongly evaluating the risks. Well-categorised financial portfolios will ensure that products in a investment combination have similar risks or volatilities.
+A clustering of investment before generating a portfolio can remove the concern of wrongly evaluating the risks. Well-clustered financial portfolios will ensure that products in a investment combination have similar risks or volatilities.
 
-K-means clustering is an appropriate method for categorising financial investments. It can create natural grouping on the financial products by putting those with similar price volatilities together. That is, it looks at the shape of each product along the timeline and estimates the similarity between two lines to decide if the two products should be in the same cluster.
+K-means clustering is an appropriate method for putting financial investments into different groups. It can create natural grouping on the financial products by putting those with similar price volatilities together. That is, it looks at the shape of each product along the timeline and estimates the similarity between two lines to decide if the two products should be in the same cluster.
 
-This project aims on seeing if K-means clustering can categorise financial products with their daily volatilities and improve the result of risk estimation on cryptocurrencies. In addition, it will examine if the effect on cryptocurrencies is different from that on stocks.
+This project aims on seeing if K-means clustering can group financial products with their daily volatilities and improve the result of risk estimation on cryptocurrencies. In addition, it will examine if the effect on cryptocurrencies is different from that on stocks.
 
 \subsection{Project Structure}
 
@@ -623,7 +623,7 @@ In order to test how good the risk estimation is, we will use sliding window met
 
 \subsection{Risk Estimation}
 
-We will use VaR to evaluate the risk of cryptocurrencies since it provides a simple way of estimating the degree of our loss under risks. In here, we regard each cryptocurrency as a single investment instead of generating a combined portfolio because we want to construct a metric to compare the performance improvement after a risk categorisation which will be conducted later. As a result, there will be 29 VaRs corresponding to the 29 cryptocurrencies.
+We will use VaR to evaluate the risk of cryptocurrencies since it provides a simple way of estimating the degree of our loss under risks. In here, we regard each cryptocurrency as a single investment instead of generating a combined portfolio because we want to construct a metric to compare the performance improvement after a clustering which will be conducted later. As a result, there will be 29 VaRs corresponding to the 29 cryptocurrencies.
 
 \subsubsection{Historical Simulation of VaR}
 
@@ -659,13 +659,13 @@ A 95\% confidence level of 1-day VaR estimation will be used in this project, wh
 
 Table \ref{table:varcryptobefore} states the 95\% 1-day VaRs of each cryptocurrency. The values are the daily returns. The numbers represent loss in percentage. Normally, the VaRs stay in the same values for several days because the historical data used for the estimation only changes slightly in every steps. When we estimate a new VaR, we only move the window one-day forward. This will not cause the $5^{\mathrm{th}}$ percentile of the returns change significantly.
 
-\subsection{Risk Categorisation}
+\subsection{Relationship Between Investments}
 
-There are many ways of categorising our investments, either through observation of direct correlations between daily volatilities of individual products or discovery of long-term similarity between volatility movements of the products. We will use both methods to help our construction of trading strategies because short-term and long-term hedging strategies are equally important for investors.
+There are many ways of grouping our investments, either through observation of direct correlations between daily volatilities of individual products or discovery of long-term similarity between volatility movements of the products. We will use both methods to help our construction of trading strategies because short-term and long-term hedging strategies are equally important for investors.
 
 \subsubsection{Product Correlations}
 
-The Pearson correlation coefficient is useful and straight forward in here for researching the direct relationships between two cryptocurrencies. It summarises the relationships of pairwise observations between two cryptocurrencies and restricts the result in the range between -1 and +1, and this allows us to observe the strength of connections on those cryptocurrencies based on the daily returns. A larger correlation coefficient means there exists a stronger correlation between their daily returns. This analysis aims on helping the construction of trading strategies. The whole dataset should be involved to generate a well-categorised hedging strategy.
+The Pearson correlation coefficient is useful and straight forward in here for researching the direct relationships between two cryptocurrencies. It summarises the relationships of pairwise observations between two cryptocurrencies and restricts the result in the range between -1 and +1, and this allows us to observe the strength of connections on those cryptocurrencies based on the daily returns. A larger correlation coefficient means there exists a stronger correlation between their daily returns. This analysis aims on helping the construction of trading strategies. The whole dataset should be involved to generate a well-clustered hedging strategy.
 
 We can generate a correlation matrix which states the pairwise correlations of all the cryptocurrencies. Next, a visualisation of the matrix helps us to analyse and observe the degree of correlations easier. Figure \ref{fig:cryptocorr} illustrates the result of a visualisation. The colour bar explains the meaning of different colours. Lighter colours represent a stronger correlation, and vice versa.
 
@@ -807,7 +807,7 @@ We can then test if the VaRs are underestimated using the above null hypothesis.
 
 After the 1-sided hypothesis testing, we know that our VaRs are underestimated, and we can then use a 2-sided null hypothesis to inspect if the VaRs are also overestimated. The p-value of the null hypothesis above is approximately 86.21\% which is the same as that of 1-sided null hypothesis. This result shows that all of the VaRs are underestimated if they are not accurately estimated.
 
-\subsubsection{Improvement After Risk Categorisation}
+\subsubsection{Improvement of Value at Risk Estimates After Clustering}
 
 Since we have distributed the cryptocurrencies into different clusters, we can try to use the result to improve the estimation of VaRs. Instead of calculating the VaRs of each cryptocurrency, we calculate the 95\% 1-day VaR of each cluster. For example, if there are 500 scenarios in each cryptocurrency, the VaR will be the $5^{\mathrm{th}}$ percentile of the scenarios which is the $25^{\mathrm{th}}$ worst scenario. However, if we calculate the VaR of a cluster with 5 cryptocurrencies, there will be 2500 possible scenarios. The VaR will then be the the $125^{\mathrm{th}}$ worst scenario instead. This scenario is the VaR of every cryptocurrencies in this cluster.
 
@@ -839,9 +839,9 @@ Since we have distributed the cryptocurrencies into different clusters, we can t
   \end{table}
 }
 
-Table \ref{table:varcryptoafter} illustrates the result of VaR estimation after an implementation of K-means clustering. Some of the values become larger which means the predicted loss is bigger. This is because the cryptocurrency has bigger risks in its cluster at that time under our risk categorisation. Smaller values compared to the previous values mean that the risk of the product has been overestimated in the previous estimation at that point. We have adjusted the risks based on the result of clustering.
+Table \ref{table:varcryptoafter} illustrates the result of VaR estimation after an implementation of K-means clustering. Some of the values become larger which means the predicted loss is bigger. This is because the cryptocurrency has bigger risks in its cluster at that time under our clustering. Smaller values compared to the previous values mean that the risk of the product has been overestimated in the previous estimation at that point. We have adjusted the risks based on the result of clustering.
 
-Similar to metric of calculating the VaR accuracies before the clustering, we can test the performance of our VaR estimation after an implementation of clustering. Table \ref{table:acccryptoafter} shows the accuracies after a risk categorisation. Red numbers indicate the cryptocurrencies that have an improvement on the VaR estimation in comparison with the accuracies before any actions. Over 50\% of the cryptocurrencies benefit from the risk categorisation and many of them are the most popular products such as BTC (Bitcoin), ETH (Ethereum), LTC (Litecoin) and XRP (Ripple) although it results in some decrease on the other cryptocurrencies. In addition, the average accuracy is about 94.91\% which is higher than the average before clustering at 94.15\%.
+Similar to metric of calculating the VaR accuracies before the clustering, we can test the performance of our VaR estimation after an implementation of clustering. Table \ref{table:acccryptoafter} shows the accuracies after a K-means clustering. Red numbers indicate the cryptocurrencies that have an improvement on the VaR estimation in comparison with the accuracies before any actions. Over 50\% of the cryptocurrencies benefit from the clustering and many of them are the most popular products such as BTC (Bitcoin), ETH (Ethereum), LTC (Litecoin) and XRP (Ripple) although it results in some decrease on the other cryptocurrencies. In addition, the average accuracy is about 94.91\% which is higher than the average before clustering at 94.15\%.
 
 {
   \begin{table}[ht]
@@ -874,7 +874,7 @@ We continue to use the 1-sided hypothesis testing that we have used previously. 
 
 \section{Analysis of Stocks}
 
-Since the risk categorisation helps our estimation of risks on cryptocurrencies, it might be also applicable to stock data. The stock data is retrieved from the RESTful API \url{https://iextrading.com/developer/}\cite{iextrading} which is also an open source. As what has been conducted on cryptocurrencies, we extract the data to our local database and use the Java programme to implement daily ETL.
+Since the K-means clustering helps our estimation of risks on cryptocurrencies, it might be also applicable to stock data. The stock data is retrieved from the RESTful API \url{https://iextrading.com/developer/}\cite{iextrading} which is also an open source. As what has been conducted on cryptocurrencies, we extract the data to our local database and use the Java programme to implement daily ETL.
 
 The analysis of stocks will use the same criterion and standard as that of cryptocurrencies, which means the input dataset is also the historical dialy OHLC. It contains the data from \date{1st January 2016} to \date{31st July 2018} of 29 stocks in Dow Jones 30, and this excludes DWDP (DowDuPont) because there is no complete data for DWDP (DowDuPont) over the period.
 
@@ -1018,9 +1018,9 @@ The 29 by 549 estimated 95\% 1-day VaRs of the stocks are presented on Table \re
 
 The VaR estimation of stocks starts from \date{26th May 2016} which is different to the previous VaR estimation at cryptos because of the trading day restrictions of the exchanges. With respect to the variance between the VaRs, those of stocks are much smaller than those of cryptos, which means the loss can be smaller when suffering from a crash.
 
-\subsection{Risk Categorisation}
+\subsection{Relationship Between Investments}
 
-A popular way of categorise investments in stock products is to find the industrial relationships between them. The stocks of the companies in the same industry normally have the similar risk factor which is called industrial risk. Industrial risks can be hedged by putting investments into different industry sectors. In this part, we will also use correlations and K-means clustering to find the dissimilarities between stocks and try to see if there is an industrial causation behind the correlations.
+A popular way of grouping investments in stock products is to find the industrial relationships between them. The stocks of the companies in the same industry normally have the similar risk factor which is called industrial risk. Industrial risks can be hedged by putting investments into different industry sectors. In this part, we will also use correlations and K-means clustering to find the dissimilarities between stocks and try to see if there is an industrial causation behind the correlations.
 
 \subsubsection{Product Correlations}
 
@@ -1162,7 +1162,7 @@ We can then use the 1-sided null hypothesis described above to test if the VaRs 
 
 We then inspect the 2-sided hypothesis testing to see if the VaRs in here are also overestimated. After calculation, the p-value is 100\%, and this says that we can retain the null hypothesis and the VaR estimation is probably not accurate and all of the VaRs are underestimated or overestimated. The VaR estimation in here fails to accuratly evaluate the risks.
 
-\subsubsection{Improvement After Risk Categorisation}
+\subsubsection{Improvement of Value at Risk Estimates After Clustering}
 
 Although the performance of the previous VaR estimation on stocks has satisfied the hypothesis testing at the 95\% confidence level, but a p-value of 6.9\% is still not good enough. A K-means clustering before estimating the VaRs might improve the performance of the VaR estimation. Table \ref{table:varstockafter} contains the VaRs after the implementation of K-means clustering from \date{26th May 2016} to \date{31st July 2018} with a total of 549 values for each stock. Some of the stocks have same VaRs because every data points of a single cluster are used for estimating the VaRs, and the VaRs are regarded as the VaRs of every stocks under the cluster.
 
@@ -1196,7 +1196,7 @@ Some VaRs are different to the previous ones. Smaller VaRs mean the model reckon
   \end{table}
 }
 
-With regard to evaluating of the VaR estimation perfomance after the risk categorisation, Table \ref{table:accstockafter} lists the accuracies of the VaR estimation on each stock. The same metric as the previous risk estimation for performance evaluation is used in this part. We compare the VaRs with the actual losses and compute the percentage of correct VaR estimation. Red colour indicates an increase of the accuracy compared to the original performance. About 2/3 of the stocks benefit from the risk categorisation on their VaR estimation. The accuracy of KO (Coca-Cola) has a remarkable improvement with around 2.73\%. In \textsl{Cluster 4}, the VaR estimation of every stocks has improved, and all of them are related to technologies.
+With regard to evaluating of the VaR estimation perfomance after the K-means clustering, Table \ref{table:accstockafter} lists the accuracies of the VaR estimation on each stock. The same metric as the previous risk estimation for performance evaluation is used in this part. We compare the VaRs with the actual losses and compute the percentage of correct VaR estimation. Red colour indicates an increase of the accuracy compared to the original performance. About 2/3 of the stocks benefit from clustering on their VaR estimation. The accuracy of KO (Coca-Cola) has a remarkable improvement with around 2.73\%. In \textsl{Cluster 4}, the VaR estimation of every stocks has improved, and all of them are related to technologies.
 
 {
   \begin{table}[ht]
@@ -1227,12 +1227,12 @@ The average accuracy is about 94.37\% which is higher than the estimation before
 
 In the 1-sided null hypothesis for evaluating if there exists an underestimation, the p-value after the K-means clustering is around 65.52\%. This number is much smaller than the previous p-value at 96.55\% although there is still no evidence to reject the null hypothesis of an underestimation.
 
-Again, we use the 2-sided null hypothesis to test if there is an overestimation. The p-value is approximately 86.21\%, and this is larger than the 1-sided null hypothesis. That means an overestimation indeed exists. However, according to the above hypothesis testings, the performance of the VaR estimation after a risk categorisation outperforms the one without any optimisation because the VaRs are estimated more accurately. We may now confirm that a risk categorisation with K-means clustering does improve the performance of traditional VaR estimation on stocks.
+Again, we use the 2-sided null hypothesis to test if there is an overestimation. The p-value is approximately 86.21\%, and this is larger than the 1-sided null hypothesis. That means an overestimation indeed exists. However, according to the above hypothesis testings, the performance of the VaR estimation after a clustering outperforms the one without any optimisation because the VaRs are estimated more accurately. We may now confirm that K-means clustering does improve the performance of traditional VaR estimation on stocks.
 
 \section{Evaluation and Conclusion}
 \subsection{Comparison Between Cryptocurrencis and Stocks}
 
-Same analysis methods and processes have been used on both cryptocurrencies and stocks. The data formats are also similar except for the length of timeline and the product type. They all use OHLC data as their input. Both analysis follows the order of data preprocessing, risk estimation, risk categorisation and risk estimation after risk categorisation. However, the performance and results are slightly between each other.
+Same analysis methods and processes have been used on both cryptocurrencies and stocks. The data formats are also similar except for the length of timeline and the product type. They all use OHLC data as their input. Both analysis follows the order of data preprocessing, risk estimation, clustering and risk estimation after clustering. However, the performance and results are slightly between each other.
 
 The correlation matrix of cryptocurrencies is harder to correlate with the backgrounds of the products themselves. There is no obvious connections like the industrial relationship of stocks. Cryptocurrencies are less intuitive because of their virtual properties. Although some of the cryptocurrencies are highly positively correlated, we can not explain the causation behind them whereas the correlations behind stocks can be explained easier by their industrial relationships.
 
@@ -1266,9 +1266,9 @@ In the context of K-means clustering, both analysis suffers from skewness. Stock
   \end{table}
 }
 
-Table \ref{table:comparison} compares the results of the risk estimation between cryptocurrencies and stocks. The risk estimation before risk categorisation performs better on the data of cryptocurrencies in the aspect of accuracy and the p-value. The 93.85\% accuracy in stocks seem to be less convincing because of a lower p-value.
+Table \ref{table:comparison} compares the results of the risk estimation between cryptocurrencies and stocks. The risk estimation before clustering performs better on the data of cryptocurrencies in the aspect of accuracy and the p-value. The 93.85\% accuracy in stocks seem to be less convincing because of a lower p-value.
 
-After a K-means clustering, both risk estimations improve significantly. The result of analysis on cryptocurrencies outperform that of stocks. The improvement accuracy on the cryptocurrencies is approximately 0.76\%, but the p-value dropped from 0.06897 to 0.03448 which is a 0.03449 decrease. The optimisation on the analysis of stocks performs better in the context of accuracy, as well as the p-value. The risk categorisation seems to be more effective on the stocks because the improvement is more convincing when we look at the p-values although the increase of the accuracy on cryptocurrencies is higher then that of stocks which is around 0.52\%.
+After a K-means clustering, both risk estimations improve significantly. The result of analysis on cryptocurrencies outperform that of stocks. The improvement accuracy on the cryptocurrencies is approximately 0.76\%, but the p-value dropped from 0.06897 to 0.03448 which is a 0.03449 decrease. The optimisation on the analysis of stocks performs better in the context of accuracy, as well as the p-value. K-means clustering seems to be more effective on the stocks because the improvement is more convincing when we look at the p-values although the increase of the accuracy on cryptocurrencies is higher then that of stocks which is around 0.52\%.
 
 \subsection{Self Assessment}
 
