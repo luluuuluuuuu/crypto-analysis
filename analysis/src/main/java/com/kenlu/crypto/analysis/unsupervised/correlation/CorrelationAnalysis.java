@@ -31,12 +31,12 @@ public class CorrelationAnalysis {
 
     public void run() {
         JavaRDD<Vector> vectorJavaRDD =
-                dataFormatter.toVectorJavaRDD(dataFactory.getDailyChangeDataset());
+                dataFormatter.toVectorJavaRDD(dataFactory.getCryptoDailyChangeDataset());
         Matrix correlation = Statistics.corr(vectorJavaRDD.rdd());
         List<Vector> vectorList =
                 new ArrayList<>(JavaConverters.asJavaCollectionConverter(correlation.rowIter().toList()).asJavaCollection());
 
-        this.save(vectorList, "correlation");
+        this.save(vectorList, "crypto_correlation");
     }
 
     private void save(List<Vector> vectorList, String table) {

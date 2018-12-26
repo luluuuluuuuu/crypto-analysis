@@ -35,6 +35,10 @@ public class DBUpdater {
             int daysBetween = Days.daysBetween(new DateTime(startDate).plusDays(1), new DateTime(endDate)).getDays();
             List<OHLC> OHLCList = new ArrayList<>();
 
+            if (daysBetween <= 0) {
+                log.warn("No data available...");
+                return;
+            }
             queryHandler.getCryptos()
                     .forEach(crypto -> {
                         try {
@@ -44,15 +48,11 @@ public class DBUpdater {
                             e.printStackTrace();
                         }
                     });
-            if (OHLCList.size() == 0) {
-                log.warn("No data available...");
-                return;
-            }
 
             queryHandler.insertCryptoOHLCVQuery(OHLCList);
             queryHandler.insertCryptoDailyChangeQuery(OHLCList);
         } catch (Exception e) {
-            log.error("Unable to update table daily_changes...");
+            log.error("Unable to update tables...");
             e.printStackTrace();
         }
     }

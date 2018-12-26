@@ -1,14 +1,16 @@
 package com.kenlu.crypto;
 
-import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
+import com.kenlu.crypto.config.AppConfig;
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
-@SpringBootApplication
 public class Application {
 
     public static void main(String[] args) {
-        SpringApplication.run(Application.class, args);
-    }
+        ApplicationContext ctx = new AnnotationConfigApplicationContext(AppConfig.class);
+        TaskRunner taskRunner = ctx.getBean(TaskRunner.class);
 
+        taskRunner.run();
+    }
 
 }

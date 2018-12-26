@@ -22,7 +22,7 @@ import java.util.List;
 @Component
 public class KMeansClusteringAnalysis {
 
-    private static final int MAX_CLUSTER_NUM = 6;
+    private static final int MAX_CLUSTER_NUM = 8;
     private static final int NUM_ITERATIONS = 100;
 
     private DataFactory dataFactory;
@@ -35,7 +35,7 @@ public class KMeansClusteringAnalysis {
 
     public void run() {
         JavaRDD<Vector> vectorJavaRDD =
-                dataFormatter.toVectorJavaRDD(dataFactory.getPCADataset());
+                dataFormatter.toVectorJavaRDD(dataFactory.getCryptoPCADataset());
 
         KMeans kMeans = new KMeans()
                 .setK(1)
@@ -65,8 +65,8 @@ public class KMeansClusteringAnalysis {
 
         String WSSSE = String.format("%.15f", cost);
 
-        this.saveCentersAndCost(centers, WSSSE, "kmeans_centers");
-        this.saveClusters(predictions, "kmeans_clusters");
+        this.saveCentersAndCost(centers, WSSSE, "crypto_kmeans_centers");
+        this.saveClusters(predictions, "crypto_kmeans_clusters");
 
     }
 
