@@ -32,7 +32,7 @@ public class DBUpdater {
             long today = System.currentTimeMillis();
             long startDate = new DateTime(lastDate).plusDays(1).getMillis();
             long endDate = new DateTime(today).plusDays(1).getMillis();
-            int daysBetween = Days.daysBetween(new DateTime(startDate).plusDays(1), new DateTime(endDate)).getDays();
+            int daysBetween = Days.daysBetween(new DateTime(startDate), new DateTime(endDate)).minus(1).getDays();
             List<OHLC> OHLCList = new ArrayList<>();
 
             if (daysBetween <= 0) {
