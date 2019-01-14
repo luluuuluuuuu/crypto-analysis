@@ -33,7 +33,7 @@ public class PrincipalComponentAnalysis {
 
     public void run() {
         JavaRDD<Vector> vectorJavaRDD =
-                dataFormatter.toVectorJavaRDD(dataFactory.getDailyChangeDataset());
+                dataFormatter.toVectorJavaRDD(dataFactory.getCryptoDailyChangeDataset());
         JavaRDD<Vector> normalisedRDD =
                 new Normalizer().transform(vectorJavaRDD);
         JavaRDD<Vector> inputData =
@@ -43,7 +43,7 @@ public class PrincipalComponentAnalysis {
         Matrix pc = rowMatrix.computePrincipalComponents(NUM_OF_PCS);
         RowMatrix projected = rowMatrix.multiply(pc);
 
-        this.save(projected, "pca");
+        this.save(projected, "crypto_pca");
     }
 
     private void save(RowMatrix projected, String table) {

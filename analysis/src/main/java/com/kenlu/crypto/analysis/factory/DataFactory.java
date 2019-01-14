@@ -6,7 +6,6 @@ import com.kenlu.crypto.analysis.config.DBConfig;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SaveMode;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -20,19 +19,19 @@ public class DataFactory {
         this.dbConfig = dbConfig;
     }
 
-    public Dataset<Row> getDailyChangeDataset() {
+    public Dataset<Row> getCryptoDailyChangeDataset() {
         List<String> cryptoList = getCryptoDataset()
                 .toJavaRDD()
                 .map(row -> row.get(0).toString())
                 .collect();
 
-        return dbConfig.readDatasetFromDB("input", "daily_changes")
+        return dbConfig.readDatasetFromDB("input", "crypto_daily_changes")
                 .selectExpr(cryptoList.stream().toArray(String[]::new))
                 .orderBy(asc("date"));
     }
 
-    public Dataset<Row> getDateDataset() {
-        return dbConfig.readDatasetFromDB("input", "daily_changes")
+    public Dataset<Row> getCryptoDateDataset() {
+        return dbConfig.readDatasetFromDB("input", "crypto_daily_changes")
                 .select("date")
                 .orderBy(asc("date"));
     }
@@ -43,8 +42,8 @@ public class DataFactory {
                 .orderBy(asc("symbol"));
     }
 
-    public Dataset<Row> getPCADataset() {
-        return dbConfig.readDatasetFromDB("output", "pca")
+    public Dataset<Row> getCryptoPCADataset() {
+        return dbConfig.readDatasetFromDB("output", "crypto_pca")
                 .select("feature0", "feature1")
                 .orderBy(asc("crypto"));
     }

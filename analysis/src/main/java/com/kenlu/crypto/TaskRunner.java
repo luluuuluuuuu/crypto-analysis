@@ -3,7 +3,6 @@ package com.kenlu.crypto;
 import com.kenlu.crypto.analysis.AnalysisServiceImpl;
 import com.kenlu.crypto.extraction.ExtractionServiceImpl;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Service;
 
 import java.util.Calendar;
@@ -16,7 +15,7 @@ import java.util.concurrent.TimeUnit;
 
 @Slf4j
 @Service("Main")
-public class TaskRunner implements CommandLineRunner {
+public class TaskRunner {
 
     private Timer timer;
     private Calendar today;
@@ -31,11 +30,11 @@ public class TaskRunner implements CommandLineRunner {
         this.analysisService = analysisService;
     }
 
-    @Override
     public void run(String... args) {
         try {
             CompletableFuture
                     .runAsync(extractionService::initialize)
+                    .thenRunAsync(analysisService::runAll)
                     .thenRunAsync(this::schedule)
                     .get();
         } catch (InterruptedException | ExecutionException e) {
