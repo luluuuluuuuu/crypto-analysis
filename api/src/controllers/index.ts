@@ -1,14 +1,20 @@
 import bodyParser from 'body-parser'
-import { Router, Express, Request, Response } from 'express'
+import { Express, Router } from 'express'
+import { Logger } from 'winston'
+import DBConnection from '../config/DBConnection'
+import AnalysisContoller from './AnalysisController'
 
-export default (app: Express): Express => {
-  const router = Router()
-  router.get('/hello', (req: Request, res: Response) => res.send('Hello World!'))
-  app.use('/api', router)
-  app.use(bodyParser.json())
-  app.use(bodyParser.urlencoded({
-    extended: false,
-  }))
+export default (dbConnection: DBConnection, logger: Logger) =>
+  (app: Express): Express => {
+    const router = Router()
+    const analysisController = new AnalysisContoller(dbConnection, logger)
 
-  return app
-}
+    router.use('/analysis', analysisController.getRouter())
+    app.use('/api', router)
+    app.use(bodyParser.json())
+    app.use(bodyParser.urlencoded({
+      extended: false,
+    }))
+
+    return app
+  }

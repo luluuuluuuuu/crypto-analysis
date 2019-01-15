@@ -1,7 +1,5 @@
 {
-  "extends": [
-    "tslint-config-airbnb"
-  ],
+  "extends": [],
   "jsRules": {},
   "rules": {
     "no-trailing-whitespace": true,
@@ -10,7 +8,6 @@
     "no-unused-expression": true,
     "no-unused-variable": true,
     "no-unnecessary-type-assertion": true,
-    "import-name": false,
     "max-len": [
       2,
       {
