@@ -10,6 +10,16 @@
     "no-unused-expression": true,
     "no-unused-variable": true,
     "no-unnecessary-type-assertion": true,
+    "import-name": false,
+    "max-len": [
+      2,
+      {
+        "code": 150,
+        "tabWidth": 2,
+        "ignoreUrls": true,
+        "ignoreComments": true
+      }
+    ],
     "semicolon": [
       true,
       "never"
@@ -32,5 +42,10 @@
       2
     ]
   },
-  "rulesDirectory": []
+  "rulesDirectory": [],
+  "linterOptions": {
+    "exclude": [
+      "node_modules/**"
+    ]
+  }
 }
