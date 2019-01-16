@@ -4,7 +4,7 @@
 
 ### Environment
 
-Create a file called `.env-local` and insert the following configuration.
+Create a file called `.env-local` under `<root>/api` and insert the following configuration.
 
 ```bash
 $ DB_HOST=localhost

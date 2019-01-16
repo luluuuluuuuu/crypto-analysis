@@ -35,14 +35,14 @@ export default class DBConnection {
       this.pool = new Pool(this.config)
 
       this.pool.on('error', (err: Error) => {
-        this.logger.error('DBConnection:', err)
+        this.logger.error(`DBConnection: ${err}`)
         this.retry()
       })
 
       this.client = await this.pool.connect()
 
       this.client.on('error', (err: Error) => {
-        this.logger.error('DBConnection:', err)
+        this.logger.error(`DBConnection: ${err}`)
       })
 
       this.resolver(this.client)
@@ -50,7 +50,7 @@ export default class DBConnection {
       this.retrycount = 0
 
     } catch (e) {
-      this.logger.error('DBConnection:', e)
+      this.logger.error(`DBConnection: ${e}`)
       this.retry()
     }
   }
@@ -59,7 +59,7 @@ export default class DBConnection {
     this.retrycount += 1
     const interval = Math.min(2 * 60 * 1000, this.retrycount * this.CONNECTION_RETRY)
     this.logger.error(`DBConnection: Attemping reconnection in ${interval / 1000} seconds... - ${this.retrycount} attempt`)
-    setTimeout(() => this.getConnection(), interval)
+    setTimeout(() => this.makeNewConnection(), interval)
   }
 
   public async release() {

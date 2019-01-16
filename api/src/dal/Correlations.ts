@@ -15,7 +15,7 @@ export default class Correlations {
       return correlations
     }
     catch (e) {
-      this.logger.error('Failed to load correlations', e)
+      this.logger.error(`Failed to load correlations: ${e}`)
     }
   }
 

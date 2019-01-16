@@ -26,9 +26,9 @@ const init = async () => {
   })
 
   process.on('exit', async () => {
-    logger.warn('SVC:', 'Shutting down')
+    logger.warn('SVC: Shutting down')
     await dbConnection.release()
-    logger.warn('SVC:', 'Exited')
+    logger.warn('SVC: Exited')
   })
 }
 
