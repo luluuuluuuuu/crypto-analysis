@@ -58,7 +58,7 @@ export default class DBConnection {
   private retry() {
     this.retrycount += 1
     const interval = Math.min(2 * 60 * 1000, this.retrycount * this.CONNECTION_RETRY)
-    this.logger.error(`DBConnection: Attemping reconnection in ${interval / 1000} seconds...`)
+    this.logger.error(`DBConnection: Attemping reconnection in ${interval / 1000} seconds... - ${this.retrycount} attempt`)
     setTimeout(() => this.getConnection(), interval)
   }
 
