@@ -1,0 +1,48 @@
+{
+  "extends": [],
+  "jsRules": {},
+  "rules": {
+    "no-trailing-whitespace": true,
+    "no-duplicate-imports": true,
+    "no-duplicate-variable": true,
+    "no-unused-expression": true,
+    "no-unused-variable": true,
+    "no-unnecessary-type-assertion": true,
+    "max-len": [
+      2,
+      {
+        "code": 150,
+        "tabWidth": 2,
+        "ignoreUrls": true,
+        "ignoreComments": true
+      }
+    ],
+    "semicolon": [
+      true,
+      "never"
+    ],
+    "trailing-comma": [
+      true,
+      {
+        "multiline": "always",
+        "singleline": "never"
+      }
+    ],
+    "quotemark": [
+      true,
+      "single",
+      "avoid-escape"
+    ],
+    "indent": [
+      true,
+      "spaces",
+      2
+    ]
+  },
+  "rulesDirectory": [],
+  "linterOptions": {
+    "exclude": [
+      "node_modules/**"
+    ]
+  }
+}
