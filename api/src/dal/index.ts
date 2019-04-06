@@ -1,16 +1,15 @@
-import { Logger } from 'winston'
-import Correlations from './Correlations'
-import DBConnection from '../config/DBConnection'
+import { Logger } from 'winston';
+import { DBConnection } from '../config';
+import Correlations from './Correlations';
 
 export default class Dal {
-
-  private correlations: Correlations
+  private correlations: Correlations;
 
   constructor(private dbconnection: DBConnection, private logger: Logger) {
-    this.correlations = new Correlations(dbconnection, logger)
+    this.correlations = new Correlations(dbconnection, logger);
   }
 
   public getCorrelations() {
-    return this.correlations
+    return this.correlations;
   }
 }
