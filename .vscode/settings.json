@@ -2,6 +2,7 @@
   "editor.tabSize": 2,
   "editor.trimAutoWhitespace": true,
   "files.insertFinalNewline": true,
+  "prettier.tslintIntegration": true,
   "[javascript]": {
     "editor.formatOnType": true,
     "editor.formatOnSave": true,

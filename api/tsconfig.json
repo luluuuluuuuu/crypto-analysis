@@ -13,16 +13,8 @@
     "removeComments": true,
     "strictNullChecks": false,
     "outDir": "dist",
-    "types": [
-      "node"
-    ],
-    "lib": [
-      "es6",
-      "es7",
-      "dom"
-    ]
+    "types": ["node"],
+    "lib": ["es6", "es7", "dom"]
   },
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }

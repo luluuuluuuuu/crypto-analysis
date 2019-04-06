@@ -1,13 +1,14 @@
-import express, { Express } from 'express'
-import errorhandler from 'errorhandler'
+import errorhandler from 'errorhandler';
+import express, { Express } from 'express';
 
-declare type Provider = (app: Express) => Express
+declare type Provider = (app: Express) => Express;
 
-const app = express()
+const app = express();
 
 if (process.env.NODE_ENV !== 'production') {
-  app.use(errorhandler())
+  app.use(errorhandler());
 }
 
 export default (...providers: Provider[]): Express =>
-  providers.reduce((acc: Express, current: Function) => current(acc), app) || app
+  providers.reduce((acc: Express, current: Function) => current(acc), app) ||
+  app;

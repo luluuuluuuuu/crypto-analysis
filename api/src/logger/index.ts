@@ -1,18 +1,13 @@
-import * as winston from 'winston'
+import * as winston from 'winston';
 
-const {
-  combine, simple, colorize,
-} = winston.format
+const { combine, simple, colorize } = winston.format;
 
 const outputLoggers = [
   new winston.transports.Console({
     level: process.env.LOGGING_LEVEL || 'info',
-    format: combine(
-      colorize(),
-      simple(),
-    ),
+    format: combine(colorize(), simple()),
   }),
-]
+];
 
 const loggerLevels = {
   levels: {
@@ -39,14 +34,14 @@ const loggerLevels = {
     warn: 'yellow',
     error: 'red',
   },
-}
+};
 
-winston.addColors(loggerLevels.colors)
+winston.addColors(loggerLevels.colors);
 
-const logger = winston.createLogger({
+const Logger = winston.createLogger({
   level: process.env.LOGGING_LEVEL || 'info',
   levels: loggerLevels.levels,
   transports: outputLoggers,
-})
+});
 
-export default logger
+export default Logger;
