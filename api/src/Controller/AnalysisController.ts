@@ -1,6 +1,6 @@
 import { Request, Response, Router } from 'express';
 import { Logger } from 'winston';
-import { DBConnection } from '../config';
+import { DBConnection } from '../Config';
 import Dal from '../Dal';
 
 export default class AnalysisContoller {

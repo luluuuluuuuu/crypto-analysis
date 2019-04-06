@@ -1,5 +1,5 @@
 import { Logger } from 'winston';
-import { DBConnection } from '../config';
+import { DBConnection } from '../Config';
 import Correlations from './Correlations';
 
 export default class Dal {

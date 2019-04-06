@@ -1,6 +1,6 @@
 import { AddressInfo } from 'net';
 import App from './App';
-import { DBConnection } from './config';
+import { DBConnection } from './Config';
 import Controller from './Controller';
 import Logger from './Logger';
 

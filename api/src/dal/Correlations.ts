@@ -1,5 +1,5 @@
 import { Logger } from 'winston';
-import { DBConnection } from '../config';
+import { DBConnection } from '../Config';
 
 export default class Correlations {
   constructor(private db: DBConnection, private logger: Logger) {}
